@@ -415,6 +415,53 @@ export function boardNotice(wanted, index, showHidden) {
   return null;
 }
 
+function railRowMatches(row, rail) {
+  return row.Rail === rail || row.EN === rail || row.PWM === rail || row.PG === rail;
+}
+
+/** Query string writeUrl will put in the address bar. */
+export function permalinkQuery({ showHidden, boardId, rail }) {
+  const params = new URLSearchParams();
+  if (showHidden) params.set("hidden", "1");
+  if (boardId) params.set("board", boardId);
+  if (rail) params.set("rail", rail);
+  const query = params.toString();
+  return query ? `?${query}` : "";
+}
+
+/**
+ * First-paint decision for ?board= and ?rail=.
+ * The rail stays when the board on screen is the board that was requested.
+ * A rail that is on that graph selects the Rails reading. An unknown rail
+ * stays in the URL and produces a notice.
+ */
+export function permalinkState({ wanted, rail, showHidden, index, graph }) {
+  const notice = boardNotice(wanted, index, showHidden);
+  const boards = index.boards || [];
+  const visible = boards.filter((row) => showHidden || !row.hidden);
+  let start = visible.find((row) => row.id === wanted) ||
+    visible.find((row) => row.id === DEFAULT_BOARD) ||
+    visible[0];
+  if (!start) start = boards.find((row) => row.id === DEFAULT_BOARD) || boards[0] || null;
+  let pinnedNotice = notice || "";
+  if (!pinnedNotice && start && start.hidden && !showHidden) {
+    pinnedNotice = `${start.id} is not listed publicly.`;
+  }
+  const sameBoard = Boolean(start && (wanted == null || wanted === "" || start.id === wanted));
+  const keepRail = sameBoard ? (rail || "") : "";
+  const rows = graph ? railTable(graph) : [];
+  const selected = Boolean(keepRail && rows.some((row) => railRowMatches(row, keepRail)));
+  return {
+    boardId: start ? start.id : "",
+    rail: keepRail,
+    reading: selected ? "rails" : "tree",
+    pinnedNotice,
+    railNotice: keepRail && graph && !selected ? `No rail ${keepRail}.` : "",
+    selected,
+    url: permalinkQuery({ showHidden, boardId: start ? start.id : "", rail: keepRail }),
+  };
+}
+
 function setNotice(text) {
   const host = document.getElementById("notices");
   host.replaceChildren();
@@ -655,7 +702,7 @@ function paintRails(rows) {
   for (const row of rows) {
     if (hiddenDomains.has(domainOf(row.Group))) continue;
     const tr = document.createElement("tr");
-    if (railQuery && (row.Rail === railQuery || row.EN === railQuery || row.PWM === railQuery || row.PG === railQuery)) {
+    if (railQuery && railRowMatches(row, railQuery)) {
       tr.className = "power-hit";
     }
     for (const name of RAIL_COLUMNS) {
@@ -713,12 +760,16 @@ function render() {
     }
   }
   paintToggles();
-  if (railQuery) {
-    const known = rows.some((row) => row.Rail === railQuery || row.EN === railQuery || row.PWM === railQuery || row.PG === railQuery);
-    if (!known) addNotice(`No rail ${railQuery}.`);
-    const hit = document.querySelector("tr.power-hit");
-    if (hit) hit.scrollIntoView({ block: "nearest" });
-  }
+  const railState = permalinkState({
+    wanted: meta && meta.id,
+    rail: railQuery,
+    showHidden,
+    index,
+    graph,
+  });
+  if (railState.railNotice) addNotice(railState.railNotice);
+  const hit = document.querySelector("tr.power-hit");
+  if (hit) hit.scrollIntoView({ block: "nearest" });
 }
 
 function paintToggles() {
@@ -823,11 +874,15 @@ async function loadBoard(row) {
   if (!response.ok) throw new Error(`data/${row.id}.json`);
   graph = await response.json();
   openSet = defaultOpen(graph);
-  if (railQuery) {
-    const rows = railTable(graph);
-    const known = rows.some((item) => item.Rail === railQuery || item.EN === railQuery || item.PWM === railQuery || item.PG === railQuery);
-    if (!known) railQuery = "";
-  }
+  const railState = permalinkState({
+    wanted: meta.id,
+    rail: railQuery,
+    showHidden,
+    index,
+    graph,
+  });
+  railQuery = railState.rail;
+  reading = railState.reading;
   const select = document.getElementById("board-select");
   if ([...select.options].some((option) => option.value === row.id)) select.value = row.id;
   render();
@@ -863,24 +918,16 @@ async function init() {
   railQuery = params.get("rail") || "";
   buildSelect();
   const wanted = params.get("board");
-  const notice = boardNotice(wanted, index, showHidden);
-  const visible = visibleBoards();
-  let start = visible.find((row) => row.id === wanted) ||
-    visible.find((row) => row.id === DEFAULT_BOARD) ||
-    visible[0];
-  if (!start) {
-    start = (index.boards || []).find((row) => row.id === DEFAULT_BOARD) || (index.boards || [])[0];
-  }
-  pinnedNotice = notice || "";
-  if (!pinnedNotice && start && start.hidden && !showHidden) {
-    pinnedNotice = `${start.id} is not listed publicly.`;
-  }
+  const opened = permalinkState({ wanted, rail: railQuery, showHidden, index, graph: null });
+  pinnedNotice = opened.pinnedNotice;
+  railQuery = opened.rail;
   if (pinnedNotice) setNotice(pinnedNotice);
-  if (!start) {
+  if (!opened.boardId) {
     addNotice("No board is selected.");
     return;
   }
-  if (wanted && notice && start) writeUrl(start.id, "");
+  if (wanted && opened.pinnedNotice) writeUrl(opened.boardId, opened.rail);
+  const start = (index.boards || []).find((row) => row.id === opened.boardId);
   try {
     await loadBoard(start);
   } catch (_error) {
@@ -910,6 +957,8 @@ if (typeof window !== "undefined") {
     badgeText,
     railTable,
     boardNotice,
+    permalinkState,
+    permalinkQuery,
     unresolvedLine,
     collapsedParts,
     countText,

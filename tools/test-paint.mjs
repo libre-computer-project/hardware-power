@@ -6,6 +6,7 @@ import {
   NO_ENABLE_DETAIL,
   badgeText,
   boardNotice,
+  permalinkState,
   defaultOpen,
   draw,
   railTable,
@@ -163,6 +164,56 @@ same("hidden notice", boardNotice("aml-a311d-cc", index, false), "aml-a311d-cc i
 same("missing notice", boardNotice("no-such-board", index, false), "No board no-such-board.");
 same("empty notice", boardNotice("", index, false), null);
 
+const alta = load("../data/aml-a311d-cc.json");
+const kept = permalinkState({
+  wanted: "aml-a311d-cc",
+  rail: "5V_IN",
+  showHidden: false,
+  index,
+  graph: alta,
+});
+same("permalink keeps rail", kept.rail, "5V_IN");
+same("permalink url", kept.url, "?board=aml-a311d-cc&rail=5V_IN");
+same("permalink reading", kept.reading, "rails");
+check("permalink selects the rail", kept.selected === true);
+same("permalink hidden notice", kept.pinnedNotice, "aml-a311d-cc is not listed publicly.");
+same("permalink has no rail notice", kept.railNotice, "");
+
+const early = permalinkState({
+  wanted: "aml-a311d-cc",
+  rail: "5V_IN",
+  showHidden: false,
+  index,
+  graph: null,
+});
+same("permalink keeps rail before the graph loads", early.rail, "5V_IN");
+same("permalink url before the graph loads", early.url, "?board=aml-a311d-cc&rail=5V_IN");
+check("permalink does not select before the graph loads", early.selected === false);
+
+const missingRail = permalinkState({
+  wanted: "aml-a311d-cc",
+  rail: "NOT_A_RAIL",
+  showHidden: false,
+  index,
+  graph: alta,
+});
+same("unknown rail stays in the url", missingRail.rail, "NOT_A_RAIL");
+same("unknown rail url", missingRail.url, "?board=aml-a311d-cc&rail=NOT_A_RAIL");
+same("unknown rail notice", missingRail.railNotice, "No rail NOT_A_RAIL.");
+same("unknown rail keeps the tree", missingRail.reading, "tree");
+check("unknown rail is not a selection", missingRail.selected === false);
+
+const otherBoard = permalinkState({
+  wanted: "no-such-board",
+  rail: "5V_IN",
+  showHidden: false,
+  index,
+  graph: alta,
+});
+same("different board drops the rail", otherBoard.rail, "");
+same("different board url", otherBoard.url, "?board=aml-a311d-cc");
+same("different board notice", otherBoard.pinnedNotice, "No board no-such-board.");
+
 console.log("PRIMARY reading tree");
 console.log("PRIMARY discrete-open " + discreteOpen.join(","));
 console.log("PRIMARY discrete-badge-1u2 " + badgeText(discrete, "n-1u2", defaultOpen(discrete)));
@@ -176,6 +227,8 @@ console.log("PRIMARY pmic-external " + pmicDrawn.external.length);
 console.log("PRIMARY pmic-frame " + pmicDrawn.frame.map((frame) => frame.refdes).join(","));
 console.log("PRIMARY columns " + RAIL_COLUMNS.join("|"));
 console.log("PRIMARY no-enable " + NO_ENABLE_DETAIL);
+console.log("PRIMARY permalink " + kept.url + " " + kept.reading + " " + kept.selected);
+console.log("PRIMARY unknown-rail " + missingRail.url + " " + missingRail.railNotice);
 
 if (failures) {
   console.log(`FAIL ${failures}`);
