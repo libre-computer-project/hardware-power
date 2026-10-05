@@ -27,6 +27,11 @@ export const FILE_NOTICE =
 export const NO_ENABLE_DETAIL =
   "No enable net on this board. If the PMIC sequences this channel, the netlist does not say so.";
 
+export const NO_FEED_NOTICE =
+  "No regulator pin name in this layout joins a rail, so nothing is drawn as feeding a rail.";
+
+export const SEARCH_PLACEHOLDER = "5V_IN, 1J1";
+
 const ID_GRAMMAR = /^[a-z0-9-]+$/;
 const FLOW = new Set(["in", "out", "channel", "series", "load"]);
 const DOMAINS = [
@@ -36,6 +41,7 @@ const DOMAINS = [
   ["io", "IO", ["io"]],
   ["connector", "Connectors", ["display", "storage", "connector"]],
   ["audio", "Audio", ["audio"]],
+  ["other", "Other", ["other"]],
 ];
 
 function byId(graph) {
@@ -265,9 +271,33 @@ function channelGroups(graph, pmicId, openSet) {
 }
 
 export function unresolvedLine(graph) {
-  const count = (graph.unresolved || []).length;
-  if (!count) return "";
-  return `${count} parts have no pin list, so they are not drawn as feeding anything.`;
+  const rows = [...(graph.unresolved || [])].sort((a, b) =>
+    String(a.refdes || "").localeCompare(String(b.refdes || "")));
+  if (!rows.length) return "";
+  const names = rows.map((row) => row.refdes).filter(Boolean);
+  const one = rows.length === 1;
+  const who = names.length ? `, ${names.join(", ")},` : "";
+  const reasons = new Set(rows.map((row) => row.reason || "no pin_pads"));
+  const reason = reasons.size === 1 ? [...reasons][0] : "no pin_pads";
+  const because = reason === "pin list did not join a supply"
+    ? (one
+      ? "has a pin list that did not join a supply, so it is not drawn as feeding anything."
+      : "have pin lists that did not join a supply, so they are not drawn as feeding anything.")
+    : (one
+      ? "has no pin list, so it is not drawn as feeding anything."
+      : "have no pin list, so they are not drawn as feeding anything.");
+  return `${rows.length} ${one ? "part" : "parts"}${who} ${because}`;
+}
+
+export function feedNotice(graph) {
+  if (!graph || graph.coverage !== "graph") return "";
+  const nodes = byId(graph);
+  const fed = (graph.edges || []).some((edge) => {
+    if (edge.provenance !== "pin-join" || edge.role !== "out") return false;
+    const src = nodes.get(edge.src);
+    return Boolean(src && src.kind === "regulator");
+  });
+  return fed ? "" : NO_FEED_NOTICE;
 }
 
 function membersOf(graph, railId) {
@@ -305,6 +335,16 @@ function discreteColumns(graph, openSet) {
       const member = inbound.some((edge) => edge.role === "member");
       if (fed || !member) continue;
     }
+    const children = [];
+    if (open) {
+      const nodes = byId(graph);
+      for (const edge of outgoing(graph, node.id)) {
+        if (edge.role !== "out") continue;
+        const child = nodes.get(edge.dst);
+        if (!child) continue;
+        children.push({ id: child.id, label: nodeLabel(child), group: child.group || "" });
+      }
+    }
     rows.push({
       id: node.id,
       kind: node.kind,
@@ -312,6 +352,7 @@ function discreteColumns(graph, openSet) {
       open,
       badge: badgeText(graph, node.id, openSet),
       members: node.kind === "rail" ? membersOf(graph, node.id) : [],
+      children,
     });
   }
   rows.sort((a, b) => a.label.localeCompare(b.label));
@@ -330,6 +371,7 @@ export function draw(graph, openSet) {
       external: [],
       columns: discreteColumns(graph, openSet),
       unresolved: line,
+      feed: feedNotice(graph),
     };
   }
   const nodes = byId(graph);
@@ -354,7 +396,7 @@ export function draw(graph, openSet) {
         members: membersOf(graph, rail.id),
       })),
   }));
-  return { hasPmic: true, open, frame, external, columns: [], unresolved: line };
+  return { hasPmic: true, open, frame, external, columns: [], unresolved: line, feed: feedNotice(graph) };
 }
 
 function controlColumn(edges, role) {
@@ -492,6 +534,7 @@ let hiddenDomains = new Set();
 let showProtection = true;
 let showEnables = true;
 let railQuery = "";
+let selectedPart = "";
 let pinnedNotice = "";
 let openSet = null;
 
@@ -526,11 +569,16 @@ function writeUrl(boardId, rail) {
   history.replaceState(null, "", query ? `?${query}` : location.pathname);
 }
 
-function domainOf(group) {
+export function domainOf(group) {
   for (const [id, _label, groups] of DOMAINS) {
     if (groups.includes(group)) return id;
   }
   return null;
+}
+
+export function visibleWhen(hidden, group) {
+  const domain = domainOf(group);
+  return domain ? !hidden.has(domain) : true;
 }
 
 function hiddenByDomain(node) {
@@ -565,12 +613,7 @@ function paintDetail(drawn) {
 function paintTree(drawn) {
   const host = document.getElementById("tree");
   host.replaceChildren();
-  if (drawn.unresolved) {
-    const line = document.createElement("p");
-    line.className = "power-unresolved";
-    line.textContent = drawn.unresolved;
-    host.appendChild(line);
-  }
+  if (drawn.unresolved) host.appendChild(unresolvedParagraph(drawn.unresolved, selectedPart));
   if (graph && graph.nodes.length === 0) {
     const line = document.createElement("p");
     line.textContent = graph.reason || "No power tree.";
@@ -671,6 +714,7 @@ function paintTree(drawn) {
         badge.textContent = liveBadge;
         line.appendChild(badge);
       }
+      if (selectedPart && node && node.refdes === selectedPart) line.classList.add("power-hit");
       if (row.members && row.members.length) {
         const tag = document.createElement("span");
         tag.className = "power-tag";
@@ -678,6 +722,14 @@ function paintTree(drawn) {
         line.appendChild(tag);
       }
       column.appendChild(line);
+      for (const child of row.children || []) {
+        if (hiddenByDomain({ kind: "rail", group: child.group })) continue;
+        const childLine = document.createElement("p");
+        childLine.className = "power-node power-child";
+        childLine.dataset.id = child.id;
+        childLine.textContent = child.label;
+        column.appendChild(childLine);
+      }
     }
     layout.appendChild(column);
   }
@@ -728,6 +780,7 @@ function render() {
   const drawn = draw(graph, openSet);
   const rows = railTable(graph);
   setNotice(pinnedNotice);
+  if (drawn.feed) addNotice(drawn.feed);
   document.getElementById("view-tree").setAttribute("aria-pressed", reading === "tree" ? "true" : "false");
   document.getElementById("view-rails").setAttribute("aria-pressed", reading === "rails" ? "true" : "false");
   document.getElementById("tree").hidden = reading !== "tree";
@@ -809,51 +862,104 @@ function toggleButton(label, pressed, onClick) {
   return button;
 }
 
-function searchHits(term) {
-  const query = term.trim().toLowerCase();
-  if (!query || !graph) return [];
+export function searchHits(term, source = graph) {
+  const query = String(term || "").trim().toLowerCase();
+  if (!query || !source) return [];
   const hits = [];
-  for (const node of graph.nodes || []) {
+  for (const node of source.nodes || []) {
     const hay = [node.refdes, node.name, node.value, node.footprint].filter(Boolean).join(" ").toLowerCase();
-    if (hay.includes(query)) hits.push({ label: nodeLabel(node), rail: railFor(node) });
+    if (!hay.includes(query)) continue;
+    hits.push({
+      label: nodeLabel(node),
+      rail: railFor(node, source),
+      part: node.refdes || "",
+      id: node.id || "",
+    });
   }
-  for (const edge of graph.edges || []) {
+  for (const edge of source.edges || []) {
     for (const tag of edge.controls || []) {
       if (tag.net && tag.net.toLowerCase().includes(query)) {
-        hits.push({ label: tag.net, rail: tag.net });
+        hits.push({ label: tag.net, rail: tag.net, part: "", id: "" });
       }
     }
   }
-  for (const row of graph.unresolved || []) {
+  for (const row of source.unresolved || []) {
     const hay = [row.refdes, row.value, row.footprint].filter(Boolean).join(" ").toLowerCase();
-    if (hay.includes(query)) hits.push({ label: row.refdes, rail: "" });
+    if (hay.includes(query)) hits.push({ label: row.refdes, rail: "", part: row.refdes, id: "" });
   }
   const seen = new Set();
   return hits.filter((hit) => {
-    const key = `${hit.label}|${hit.rail}`;
+    const key = `${hit.label}|${hit.rail}|${hit.part}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   }).slice(0, 20);
 }
 
-function railFor(node) {
+export function searchReport(source, term) {
+  const text = String(term || "").trim();
+  const hits = searchHits(text, source);
+  if (!text || hits.length) return { hits, miss: "" };
+  return { hits: [], miss: `${text} is not on this board.` };
+}
+
+export function stageForHit(hit) {
+  if (!hit) return { reading: "tree", rail: "", part: "", openId: "" };
+  if (hit.rail) return { reading: "rails", rail: hit.rail, part: "", openId: hit.id || "" };
+  if (hit.part) return { reading: "tree", rail: "", part: hit.part, openId: hit.id || "" };
+  return { reading: "tree", rail: "", part: "", openId: "" };
+}
+
+function railFor(node, source) {
   if (node.kind === "rail" || node.kind === "channel") return node.name || "";
-  const edge = (graph.edges || []).find((item) => item.src === node.id && (item.role === "out" || item.role === "channel"));
-  return edge ? edge.net : "";
+  const edges = (source || graph).edges || [];
+  const fed = edges.find((item) => item.src === node.id && (item.role === "out" || item.role === "channel"));
+  if (fed) return fed.net;
+  const member = edges.find((item) => item.src === node.id && item.role === "member");
+  return member ? member.net : "";
+}
+
+function unresolvedParagraph(text, selected) {
+  const line = document.createElement("p");
+  line.className = "power-unresolved";
+  const token = selected ? `, ${selected},` : "";
+  const at = token ? text.indexOf(token) : -1;
+  if (at < 0) {
+    line.textContent = text;
+    return line;
+  }
+  line.appendChild(document.createTextNode(text.slice(0, at + 2)));
+  const mark = document.createElement("span");
+  mark.className = "power-hit";
+  mark.dataset.refdes = selected;
+  mark.textContent = selected;
+  line.appendChild(mark);
+  line.appendChild(document.createTextNode(text.slice(at + 2 + selected.length)));
+  return line;
 }
 
 function paintSearch(term) {
   const host = document.getElementById("search-hits");
   host.replaceChildren();
-  for (const hit of searchHits(term)) {
+  const report = searchReport(graph, term);
+  if (report.miss) {
+    const line = document.createElement("p");
+    line.className = "power-miss";
+    line.textContent = report.miss;
+    host.appendChild(line);
+    return;
+  }
+  for (const hit of report.hits) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "power-hit-btn";
     button.textContent = hit.label;
     button.addEventListener("click", () => {
-      railQuery = hit.rail || "";
-      if (railQuery) reading = "rails";
+      const stage = stageForHit(hit);
+      railQuery = stage.rail;
+      selectedPart = stage.part;
+      reading = stage.reading;
+      if (stage.openId && openSet) openSet.add(stage.openId);
       hiddenDomains = new Set();
       showProtection = true;
       showEnables = true;
@@ -892,6 +998,7 @@ function chooseBoard(id) {
   const row = (index.boards || []).find((item) => item.id === id);
   if (!row || !ID_GRAMMAR.test(id)) return;
   railQuery = "";
+  selectedPart = "";
   pinnedNotice = "";
   writeUrl(id, "");
   setNotice("");
@@ -944,7 +1051,9 @@ async function init() {
     reading = "rails";
     render();
   });
-  document.getElementById("search").addEventListener("input", (event) => {
+  const search = document.getElementById("search");
+  search.placeholder = SEARCH_PLACEHOLDER;
+  search.addEventListener("input", (event) => {
     paintSearch(event.target.value);
   });
 }
@@ -960,6 +1069,12 @@ if (typeof window !== "undefined") {
     permalinkState,
     permalinkQuery,
     unresolvedLine,
+    feedNotice,
+    domainOf,
+    searchReport,
+    stageForHit,
+    NO_FEED_NOTICE,
+    SEARCH_PLACEHOLDER,
     collapsedParts,
     countText,
     FILE_NOTICE,

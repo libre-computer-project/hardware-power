@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Write schema-1 power graphs from published layout JSON.
 
-Reads the layout index and each ``data/<id>.json``. Writes ``data/<id>.json``,
-``data/<id>.nets.json``, and, on a full run, ``data/boards.json``. A single
-``--board`` updates that board's two files and leaves the index alone.
+Reads the layout index and each production ``data/<id>.json``. Writes
+``data/<id>.json``, ``data/<id>.nets.json``, and, on a full run,
+``data/boards.json``. A full run keeps only ``status == production`` and
+deletes graph files for every other layout id. ``--board`` updates one
+production board and leaves the index alone. An unreleased, preprod, or
+reference id is refused.
 
-Until Sweet Potato, Alta, and Solitude each have a pin-joined regulator edge,
-every index row is hidden. Connector membership is not that edge. La Frite
-stays hidden with them. When the gate opens, ``hidden`` is copied from the
-layout index.
+``hidden`` is copied from the layout index. A pin name that is not a
+regulator output does not become an edge. When no regulator pin joins a
+rail, the page says so instead of hiding the board.
 """
 
 from __future__ import annotations
@@ -41,6 +43,7 @@ PINOUT_REASON = (
     "No layout netlist in this catalogue. The pinout electrical table is "
     "the SoC pad spec, not a board power tree."
 )
+DROPPED_STATUS = frozenset({"unreleased", "preprod", "reference"})
 
 
 def _load(path: Path) -> dict:
@@ -67,8 +70,8 @@ def _pinout_rows() -> list[dict]:
     ]
 
 
-def _index_row(layout_row: dict, built: dict, opened: bool) -> dict:
-    hidden = bool(layout_row.get("hidden")) if opened else True
+def _index_row(layout_row: dict, built: dict) -> dict:
+    hidden = bool(layout_row.get("hidden"))
     share = layout_row.get("shares_layout_with")
     return {
         "id": layout_row["id"],
@@ -92,6 +95,11 @@ def generate(src: Path, out: Path, board: str) -> int:
         rows = [row for row in rows if row["id"] == board]
         if not rows:
             raise SystemExit(f"no layout board {board}")
+        status = rows[0].get("status") or ""
+        if status in DROPPED_STATUS or status != "production":
+            raise SystemExit(f"{board} is not a production board")
+    else:
+        rows = [row for row in rows if row.get("status") == "production"]
     built = {}
     for row in rows:
         path = src / f"{row['id']}.json"
@@ -110,10 +118,19 @@ def generate(src: Path, out: Path, board: str) -> int:
         return 0
     opened = graph.gate_open(built)
     document = {
-        "boards": [_index_row(row, built[row["id"]], opened) for row in rows],
+        "boards": [_index_row(row, built[row["id"]]) for row in rows],
         "pinout_only": _pinout_rows(),
     }
     _dump(out / "boards.json", document)
+    keep = {"boards.json"}
+    for row in rows:
+        keep.add(f"{row['id']}.json")
+        keep.add(f"{row['id']}.nets.json")
+    for path in sorted(out.glob("*.json")):
+        if path.name in keep:
+            continue
+        path.unlink()
+        print(f"removed {path.name}")
     listed = sum(1 for row in document["boards"] if not row["hidden"])
     print(
         f"index boards={len(document['boards'])} listed={listed} "

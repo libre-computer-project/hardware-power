@@ -4,14 +4,21 @@ import {
   RAIL_COLUMNS,
   FILE_NOTICE,
   NO_ENABLE_DETAIL,
+  NO_FEED_NOTICE,
+  SEARCH_PLACEHOLDER,
   badgeText,
   boardNotice,
+  domainOf,
+  draw,
+  feedNotice,
   permalinkState,
   defaultOpen,
-  draw,
   railTable,
+  searchReport,
   seriesBadge,
+  stageForHit,
   unresolvedLine,
+  visibleWhen,
 } from "../js/app.js";
 
 const root = new URL(".", import.meta.url);
@@ -104,6 +111,12 @@ const memberDrawn = draw(memberOnly, defaultOpen(memberOnly));
 const memberRail = memberDrawn.columns.find((row) => row.id === "n-5v-in");
 check("member-only rail stays visible", Boolean(memberRail) && memberRail.members.join(",") === "1J1");
 check("discrete column omits loads", discreteDrawn.columns.every((row) => row.kind !== "load" && row.kind !== "connector"));
+const regulator = discreteDrawn.columns.find((row) => row.id === "n-1u1");
+check(
+  "discrete regulator child",
+  Boolean(regulator) && regulator.open === true && (regulator.children || []).some((child) => child.id === "n-vcck"),
+);
+same("discrete fixture has a feed", feedNotice(discrete), "");
 same("discrete 1u2 badge", badgeText(discrete, "n-1u2", defaultOpen(discrete)), "1 load · 600R@100MHZ · VCC1_8V_EN");
 
 const discreteRows = railTable(discrete);
@@ -125,7 +138,7 @@ const hybridDrawn = draw(hybrid, defaultOpen(hybrid));
 check("hybrid one frame", hybridDrawn.hasPmic === true && hybridDrawn.frame.length === 1 && hybridDrawn.frame[0].refdes === "U2001");
 check("hybrid groups collapsed", hybridDrawn.frame[0].groups.every((group) => group.open === false));
 same("hybrid external", hybridDrawn.external.map((row) => row.refdes), ["U1"]);
-same("hybrid unresolved", unresolvedLine(hybrid), "1 parts have no pin list, so they are not drawn as feeding anything.");
+same("hybrid unresolved", unresolvedLine(hybrid), "1 part, U3, has no pin list, so it is not drawn as feeding anything.");
 const coreGroup = hybridDrawn.frame[0].groups.find((group) => group.group === "cores");
 const sramGroup = hybridDrawn.frame[0].groups.find((group) => group.group === "sram");
 check("hybrid cores have an enable", coreGroup && coreGroup.enables.includes("EXT_PMIC_EN1") && coreGroup.detail === "");
@@ -160,9 +173,17 @@ for (const raw of ["<script>", "not a board!", "Alta", "../etc"]) {
 const pin = index.pinout_only.find((row) => row.id === "roc-rk3399-pc");
 same("pinout notice", boardNotice("roc-rk3399-pc", index, false), pin.reason);
 check("pinout notice has no pmic", !/pmic/i.test(boardNotice("roc-rk3399-pc", index, false)));
-same("hidden notice", boardNotice("aml-a311d-cc", index, false), "aml-a311d-cc is not listed publicly.");
+same("alta notice", boardNotice("aml-a311d-cc", index, false), null);
+same("unreleased stays out", boardNotice("aml-s905x-cc-v3", index, true), "No board aml-s905x-cc-v3.");
 same("missing notice", boardNotice("no-such-board", index, false), "No board no-such-board.");
 same("empty notice", boardNotice("", index, false), null);
+same(
+  "public names",
+  index.boards.filter((row) => row.hidden !== true).map((row) => row.name),
+  ["Sweet Potato", "La Frite", "Alta", "Solitude"],
+);
+check("html placeholder", page.includes(`placeholder="${SEARCH_PLACEHOLDER}"`));
+same("other domain", domainOf("other"), "other");
 
 const alta = load("../data/aml-a311d-cc.json");
 const kept = permalinkState({
@@ -176,7 +197,7 @@ same("permalink keeps rail", kept.rail, "5V_IN");
 same("permalink url", kept.url, "?board=aml-a311d-cc&rail=5V_IN");
 same("permalink reading", kept.reading, "rails");
 check("permalink selects the rail", kept.selected === true);
-same("permalink hidden notice", kept.pinnedNotice, "aml-a311d-cc is not listed publicly.");
+same("permalink listed notice", kept.pinnedNotice, "");
 same("permalink has no rail notice", kept.railNotice, "");
 
 const early = permalinkState({
@@ -213,6 +234,35 @@ const otherBoard = permalinkState({
 same("different board drops the rail", otherBoard.rail, "");
 same("different board url", otherBoard.url, "?board=aml-a311d-cc");
 same("different board notice", otherBoard.pinnedNotice, "No board no-such-board.");
+
+const sweet = load("../data/aml-s905x-cc-v2.json");
+const solitude = load("../data/aml-s905d3-cc.json");
+const frite = load("../data/aml-s805x-ac.json");
+same("alta no feed", feedNotice(alta), NO_FEED_NOTICE);
+same("sweet no feed", feedNotice(sweet), NO_FEED_NOTICE);
+same("solitude no feed", feedNotice(solitude), NO_FEED_NOTICE);
+same("la frite reason", frite.reason, "Mechanical model: placement and values, zero nets.");
+same("la frite has no feed notice", feedNotice(frite), "");
+check("alta has no pin-join", !(alta.edges || []).some((edge) => edge.provenance === "pin-join" && edge.role === "out"));
+check("sweet has no pin-join", !(sweet.edges || []).some((edge) => edge.provenance === "pin-join" && edge.role === "out"));
+check("solitude has no pin-join", !(solitude.edges || []).some((edge) => edge.provenance === "pin-join" && edge.role === "out"));
+const altaDrawn = draw(alta, defaultOpen(alta));
+same("alta feed on the drawing", altaDrawn.feed, NO_FEED_NOTICE);
+check("alta tree has no fed child", altaDrawn.columns.every((row) => !(row.children || []).length));
+check("alta names unresolved refdes", unresolvedLine(alta).includes(", 1U1,"));
+const hiddenOther = new Set(["other"]);
+for (const name of ["VCC3_3V", "VCC5V", "VDDAO_3_3V"]) {
+  const row = railTable(alta).find((item) => item.Rail === name);
+  check(`${name} group other`, Boolean(row) && row.Group === "other");
+  check(`${name} leaves when other is off`, Boolean(row) && visibleWhen(hiddenOther, row.Group) === false);
+  check(`${name} returns when other is on`, Boolean(row) && visibleWhen(new Set(), row.Group) === true);
+}
+const railHit = searchReport(alta, "5V_IN");
+const railStage = stageForHit((railHit.hits || []).find((hit) => hit.rail === "5V_IN"));
+check("5V_IN is a hit", railHit.miss === "" && railStage.reading === "rails" && railStage.rail === "5V_IN");
+const partHit = (searchReport(alta, "1U1").hits || []).find((hit) => hit.part === "1U1" && hit.rail === "");
+same("1U1 stage", stageForHit(partHit), { reading: "tree", rail: "", part: "1U1", openId: "" });
+same("foreign name", searchReport(alta, "U2001").miss, "U2001 is not on this board.");
 
 console.log("PRIMARY reading tree");
 console.log("PRIMARY discrete-open " + discreteOpen.join(","));

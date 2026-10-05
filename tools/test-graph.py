@@ -27,6 +27,20 @@ REQUIRED = (
     "med-mt88-mx",
     "med-mt83-ace",
 )
+PUBLISHED = (
+    "aml-s905x-cc-v2",
+    "aml-s805x-ac",
+    "aml-a311d-cc",
+    "aml-s905d3-cc",
+)
+DROPPED = (
+    "aml-s905x-cc-v3",
+    "aml-s805x-ac-v2",
+    "aml-a311d-cm",
+    "med-mt83-ace",
+    "med-mt88-mx",
+    "mtk-g500-mmd",
+)
 
 LIVIA_NETS = (
     "DRVBUS",
@@ -248,6 +262,13 @@ def _check_synthetic(errors: list[str]) -> None:
                     "prop": {"Value": "SY8120B1ABC", "Part_Type": "IC DC-DC"},
                     "pp": [{"pos": [2.0, 0.0]}],
                 },
+                {
+                    "r": "1U9",
+                    "f": "SY81XX",
+                    "c": "ic",
+                    "prop": {"Value": "SY8120B1ABC", "Part_Type": "IC DC-DC"},
+                    "pp": [{"pins": ["5"], "pos": [0.0, 0.0]}],
+                },
             ],
             "bot": [],
         },
@@ -274,6 +295,14 @@ def _check_synthetic(errors: list[str]) -> None:
             _fail(errors, "synthetic 1U3 is not unresolved no pin_pads")
         else:
             print("PASS synthetic no coordinate edge")
+    if any(edge["src"] == "n-1u9" for edge in document["edges"]):
+        _fail(errors, "synthetic numeric pin 5 became an edge")
+    else:
+        row = _unresolved(document, "1U9")
+        if row is None or row["reason"] != graph.NO_JOIN:
+            _fail(errors, "synthetic 1U9 is not unresolved pin list did not join")
+        else:
+            print("PASS synthetic numeric pin does not join")
     regulator = _node(document, "n-1u1")
     if regulator is None or regulator.get("topology") != "buck":
         _fail(errors, "synthetic 1U1 topology")
@@ -308,14 +337,19 @@ def main() -> int:
             _fail(errors, f"{board_id} net_count")
         written = DATA / f"{board_id}.json"
         written_nets = DATA / f"{board_id}.nets.json"
-        if not written.is_file() or not written_nets.is_file():
-            _fail(errors, f"{board_id} generated file missing")
+        if board_id in PUBLISHED:
+            if not written.is_file() or not written_nets.is_file():
+                _fail(errors, f"{board_id} generated file missing")
+            else:
+                diff = _first_diff(_load(written), document)
+                if diff:
+                    _fail(errors, f"{board_id} file differs from build_graph at {diff}")
+                if _load(written_nets) != citation:
+                    _fail(errors, f"{board_id} citation file differs")
+        elif written.is_file() or written_nets.is_file():
+            _fail(errors, f"{board_id} dropped file is still published")
         else:
-            diff = _first_diff(_load(written), document)
-            if diff:
-                _fail(errors, f"{board_id} file differs from build_graph at {diff}")
-            if _load(written_nets) != citation:
-                _fail(errors, f"{board_id} citation file differs")
+            print(f"PASS {board_id} not published")
         pin_joins = [edge for edge in document["edges"] if edge["provenance"] == "pin-join"]
         if pin_joins:
             _fail(errors, f"{board_id} invented {len(pin_joins)} pin-join edges")
@@ -373,11 +407,32 @@ def main() -> int:
         _fail(errors, "boards.json missing")
     else:
         boards = _load(boards_path)
-        hidden = [row["id"] for row in boards["boards"] if row.get("hidden") is not True]
-        if hidden:
-            _fail(errors, "public picker lists " + " ".join(hidden))
+        got = [(row.get("id"), row.get("name")) for row in boards["boards"]]
+        want = [
+            ("aml-s905x-cc-v2", "Sweet Potato"),
+            ("aml-s805x-ac", "La Frite"),
+            ("aml-a311d-cc", "Alta"),
+            ("aml-s905d3-cc", "Solitude"),
+        ]
+        if got != want:
+            _fail(errors, "picker is " + " ".join(f"{board_id}:{name}" for board_id, name in got))
+        elif any(
+            row.get("hidden") is not False or row.get("status") != "production"
+            for row in boards["boards"]
+        ):
+            _fail(errors, "a listed row is hidden or not production")
         else:
-            print("PASS picker hidden while regulator pin-join is absent")
+            print("PASS picker lists Sweet Potato, La Frite, Alta, Solitude")
+        present = [
+            name for board_id in DROPPED
+            if (DATA / f"{board_id}.json").is_file() or (DATA / f"{board_id}.nets.json").is_file()
+        ]
+        if present:
+            _fail(errors, "dropped files still published: " + " ".join(present))
+        elif any(row.get("status") in {"unreleased", "preprod", "reference"} for row in boards["boards"]):
+            _fail(errors, "index still has a dropped status")
+        else:
+            print("PASS dropped boards are absent")
         pinout_ids = [row["id"] for row in boards["pinout_only"]]
         if "roc-rk3399-pc" not in pinout_ids:
             _fail(errors, "pinout_only missing Renegade Elite")
@@ -388,9 +443,8 @@ def main() -> int:
         board_ids = {row["id"] for row in boards["boards"]}
         if board_ids & set(pinout_ids):
             _fail(errors, "pinout_only overlaps boards")
-        g500 = next((row for row in boards["boards"] if row["id"] == "mtk-g500-mmd"), None)
-        if g500 and g500.get("shares_layout_with"):
-            _fail(errors, "G500 shares_layout_with is set")
+        if "mtk-g500-mmd" in board_ids:
+            _fail(errors, "G500 is published")
 
     print(f"boards {len(REQUIRED)} failures {len(errors)}")
     if errors:

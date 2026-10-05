@@ -28,7 +28,18 @@ INDEX_KEYS = {
     "rev", "coverage", "shape",
 }
 STATUSES = {"production", "unreleased", "preprod", "reference"}
+DROPPED = {"unreleased", "preprod", "reference"}
+PRODUCTION = (
+    "aml-s905x-cc-v2",
+    "aml-s805x-ac",
+    "aml-a311d-cc",
+    "aml-s905d3-cc",
+)
 PUBLIC = ("aml-s905x-cc-v2", "aml-a311d-cc", "aml-s905d3-cc")
+NO_FEED = (
+    "No regulator pin name in this layout joins a rail, "
+    "so nothing is drawn as feeding a rail."
+)
 
 
 def main() -> int:
@@ -126,16 +137,36 @@ def main() -> int:
         if not power_graph.graphs_equal_modulo(alta, solitude):
             bad.append("Alta and Solitude differ after product and SoC substitution")
 
-    if not power_graph.gate_open(graphs):
-        for row in boards:
-            if row.get("hidden") is not True:
-                bad.append(f"{row.get('id')}: listed while the regulator pin-join gate is closed")
+    if [row.get("id") for row in boards] != list(PRODUCTION):
+        bad.append("boards.json is not Sweet Potato, La Frite, Alta, Solitude")
+    for row in boards:
+        board_id = row.get("id")
+        if row.get("status") != "production":
+            bad.append(f"{board_id}: status {row.get('status')!r} is not production")
+        if row.get("status") in DROPPED:
+            bad.append(f"{board_id}: dropped status is still indexed")
+        if row.get("hidden") is not False:
+            bad.append(f"{board_id}: hidden")
+    frite = graphs.get("aml-s805x-ac")
+    if frite is not None:
+        if frite.get("coverage") != "no-netlist" or frite.get("reason") != power_graph.NO_NETLIST_REASON:
+            bad.append("La Frite is not an explicit no-netlist board")
+        if frite.get("edges") or frite.get("nodes"):
+            bad.append("La Frite publishes a tree")
+    app_js = root / "js" / "app.js"
+    page_source = app_js.read_text() if app_js.is_file() else ""
+    if power_graph.gate_open(graphs):
+        for board_id in PUBLIC:
+            document = graphs.get(board_id)
+            if document is None or not power_graph.regulator_pin_join(document):
+                bad.append(f"{board_id}: gate is open without a regulator pin-join")
+    else:
+        if NO_FEED not in page_source:
+            bad.append("gate closed and js/app.js has no no-feed statement")
         for board_id in PUBLIC:
             document = graphs.get(board_id)
             if document is not None and power_graph.regulator_pin_join(document):
-                continue
-            # Gate closed is the expected state. A listed public id would already
-            # have been reported. Nothing else to add when the edge is absent.
+                bad.append(f"{board_id}: pin-join present while the gate is closed")
 
     board_ids = set(ids)
     for row in pinout:

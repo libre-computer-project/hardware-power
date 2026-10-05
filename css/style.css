@@ -73,8 +73,15 @@
 .power-badge,
 .power-tag,
 .power-detail,
-.power-unresolved {
+.power-unresolved,
+.power-miss {
   color: var(--text-dim);
+}
+
+.power-node.power-hit,
+.power-unresolved .power-hit {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .power-badge,
