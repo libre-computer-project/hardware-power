@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "id": "fixture-hybrid",
+  "coverage": "graph",
+  "shape": "hybrid",
+  "nodes": [
+    {"id": "n-cn1", "kind": "connector", "refdes": "CN1", "footprint": "USB_TYPE-C-24P-WT", "group": "input"},
+    {"id": "n-vad-5v", "kind": "rail", "name": "VAD_5V", "group": "input"},
+    {"id": "n-u2001", "kind": "pmic", "refdes": "U2001", "value": "MT6358", "footprint": "MT6358/WLCSP194/P0.4/B0.24/6.4X6", "group": "input"},
+    {"id": "n-ch-dvdd-core", "kind": "channel", "pmic": "n-u2001", "name": "DVDD_CORE", "group": "cores"},
+    {"id": "n-ch-dvdd-sram-core", "kind": "channel", "pmic": "n-u2001", "name": "DVDD_SRAM_CORE", "group": "sram"},
+    {"id": "n-ch-emi-vdd2", "kind": "channel", "pmic": "n-u2001", "name": "EMI_VDD2", "group": "memory"},
+    {"id": "n-u1", "kind": "regulator", "refdes": "U1", "value": "", "footprint": "SOT23-6", "group": "other"},
+    {"id": "n-power-3v3", "kind": "rail", "name": "POWER_3V3", "group": "other"},
+    {"id": "n-load-wifi", "kind": "load", "name": "WIFI", "group": "connector"}
+  ],
+  "edges": [
+    {"src": "n-cn1", "dst": "n-vad-5v", "role": "member", "net": "VAD_5V", "provenance": "connector-pin", "controls": []},
+    {"src": "n-u2001", "dst": "n-ch-dvdd-core", "role": "channel", "net": "DVDD_CORE", "provenance": "pin-join", "controls": [{"role": "en", "net": "EXT_PMIC_EN1", "source": "board-net"}]},
+    {"src": "n-u2001", "dst": "n-ch-dvdd-sram-core", "role": "channel", "net": "DVDD_SRAM_CORE", "provenance": "pin-join", "controls": []},
+    {"src": "n-u2001", "dst": "n-ch-emi-vdd2", "role": "channel", "net": "EMI_VDD2", "provenance": "pin-join", "controls": []},
+    {"src": "n-u1", "dst": "n-power-3v3", "role": "out", "net": "POWER_3V3", "provenance": "pin-join", "controls": []},
+    {"src": "n-power-3v3", "dst": "n-load-wifi", "role": "load", "net": "POWER_3V3", "provenance": "pin-join", "controls": []}
+  ],
+  "unresolved": [
+    {"refdes": "U3", "footprint": "SOT23-6", "value": "", "reason": "no pin_pads"}
+  ],
+  "unresolved_nets": []
+}

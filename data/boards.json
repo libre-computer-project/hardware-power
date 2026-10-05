@@ -1,0 +1,176 @@
+{
+ "boards": [
+  {
+   "id": "aml-s905x-cc-v2",
+   "model": "AML-S905X-CC-V2",
+   "name": "Sweet Potato",
+   "soc": "S905X",
+   "vendor": "Amlogic",
+   "status": "production",
+   "hidden": true,
+   "rev": "V2.0-C",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": null
+  },
+  {
+   "id": "aml-s905x-cc-v3",
+   "model": "AML-S905X-CC-V3",
+   "name": "Das Potato",
+   "soc": "S905X",
+   "vendor": "Amlogic",
+   "status": "unreleased",
+   "hidden": true,
+   "rev": "V3-ICC",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": null
+  },
+  {
+   "id": "aml-s805x-ac",
+   "model": "AML-S805X-AC",
+   "name": "La Frite",
+   "soc": "S805X",
+   "vendor": "Amlogic",
+   "status": "production",
+   "hidden": true,
+   "rev": "V1.0",
+   "coverage": "no-netlist",
+   "shape": "empty",
+   "shares_layout_with": null
+  },
+  {
+   "id": "aml-s805x-ac-v2",
+   "model": "AML-S805X-AC-V2",
+   "name": "Das Frite",
+   "soc": "S805X",
+   "vendor": "Amlogic",
+   "status": "unreleased",
+   "hidden": true,
+   "rev": "V2.0C",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": null
+  },
+  {
+   "id": "aml-a311d-cc",
+   "model": "AML-A311D-CC",
+   "name": "Alta",
+   "soc": "A311D",
+   "vendor": "Amlogic",
+   "status": "production",
+   "hidden": true,
+   "rev": "V1.0C",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": "aml-s905d3-cc"
+  },
+  {
+   "id": "aml-a311d-cm",
+   "model": "AML-A311D-CM",
+   "name": "Alta CM",
+   "soc": "A311D",
+   "vendor": "Amlogic",
+   "status": "preprod",
+   "hidden": true,
+   "rev": "V0.2",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": null
+  },
+  {
+   "id": "aml-s905d3-cc",
+   "model": "AML-S905D3-CC",
+   "name": "Solitude",
+   "soc": "S905D3",
+   "vendor": "Amlogic",
+   "status": "production",
+   "hidden": true,
+   "rev": "V1.0C",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": "aml-a311d-cc"
+  },
+  {
+   "id": "med-mt83-ace",
+   "model": "MED-MT83-ACE",
+   "name": "Livia",
+   "soc": "MT8385",
+   "vendor": "MediaTek",
+   "status": "preprod",
+   "hidden": true,
+   "rev": "V0.1",
+   "coverage": "graph",
+   "shape": "pending",
+   "shares_layout_with": null
+  },
+  {
+   "id": "med-mt88-mx",
+   "model": "MED-MT88-MX",
+   "name": "Virginia",
+   "soc": "MT8370/MT8390",
+   "vendor": "MediaTek",
+   "status": "preprod",
+   "hidden": true,
+   "rev": "V0.1",
+   "coverage": "unnamed",
+   "shape": "empty",
+   "shares_layout_with": null
+  },
+  {
+   "id": "mtk-g500-mmd",
+   "model": "G500 MMD",
+   "name": "MT8385 MMD reference",
+   "soc": "MT8385",
+   "vendor": "MediaTek",
+   "status": "reference",
+   "hidden": true,
+   "rev": "V1",
+   "coverage": "graph",
+   "shape": "pending",
+   "shares_layout_with": null
+  }
+ ],
+ "pinout_only": [
+  {
+   "id": "all-h3-cc-h3",
+   "name": "Tritium H3",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "all-h3-cc-h5",
+   "name": "Tritium H5",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "roc-rk3328-cc",
+   "name": "Renegade",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "roc-rk3328-cc-v2",
+   "name": "Das Renegade",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "roc-rk3399-pc",
+   "name": "Renegade Elite",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "aml-s905x-cc",
+   "name": "Le Potato",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "aml-a311d-cc-v01",
+   "name": "Alta (pre-prod)",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  },
+  {
+   "id": "aml-s905d3-cc-v01",
+   "name": "Solitude (pre-prod)",
+   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree."
+  }
+ ]
+}

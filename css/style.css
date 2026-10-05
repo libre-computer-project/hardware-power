@@ -1,0 +1,113 @@
+/* Power tree. The shell (bar, notices, panel, segmented control, toggles)
+ * comes from css/lc-kit.css. This file is only the tree and the rail table.
+ */
+
+.lc-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0 1rem 2rem;
+}
+
+.lc-panel {
+  flex: 0 0 16rem;
+  position: sticky;
+  top: 0.5rem;
+}
+
+#stage {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#search-hits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.power-hit-btn {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+}
+
+.power-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.power-col,
+.power-frame {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.75rem 1rem;
+  min-width: 14rem;
+}
+
+.power-frame {
+  border-width: 2px;
+}
+
+.power-external {
+  background: var(--bg);
+}
+
+.power-node {
+  margin: 0.35rem 0;
+  cursor: pointer;
+}
+
+.power-child {
+  margin-left: 1rem;
+  cursor: default;
+}
+
+.power-badge,
+.power-tag,
+.power-detail,
+.power-unresolved {
+  color: var(--text-dim);
+}
+
+.power-badge,
+.power-tag {
+  margin-left: 0.4rem;
+}
+
+.power-rails {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.power-rails th,
+.power-rails td {
+  text-align: left;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.power-rails tr.power-hit {
+  background: var(--bg-sunken);
+  outline: 1px solid var(--accent);
+}
+
+@media (max-width: 720px) {
+  .lc-main {
+    flex-direction: column;
+  }
+  .lc-panel {
+    position: static;
+    flex-basis: auto;
+    width: 100%;
+  }
+}

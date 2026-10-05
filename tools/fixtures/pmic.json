@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "id": "fixture-pmic",
+  "coverage": "graph",
+  "shape": "pmic",
+  "nodes": [
+    {"id": "n-cn1", "kind": "connector", "refdes": "CN1", "footprint": "USB_TYPE-C-24P-WT", "group": "input"},
+    {"id": "n-vad-5v", "kind": "rail", "name": "VAD_5V", "group": "input"},
+    {"id": "n-u2001", "kind": "pmic", "refdes": "U2001", "value": "MT6358", "footprint": "MT6358/WLCSP194/P0.4/B0.24/6.4X6", "group": "input"},
+    {"id": "n-ch-dvdd-core", "kind": "channel", "pmic": "n-u2001", "name": "DVDD_CORE", "group": "cores"},
+    {"id": "n-ch-dvdd-gpu", "kind": "channel", "pmic": "n-u2001", "name": "DVDD_GPU", "group": "cores"},
+    {"id": "n-ch-dvdd-sram-core", "kind": "channel", "pmic": "n-u2001", "name": "DVDD_SRAM_CORE", "group": "sram"}
+  ],
+  "edges": [
+    {"src": "n-cn1", "dst": "n-vad-5v", "role": "member", "net": "VAD_5V", "provenance": "connector-pin", "controls": []},
+    {"src": "n-u2001", "dst": "n-ch-dvdd-core", "role": "channel", "net": "DVDD_CORE", "provenance": "pin-join", "controls": []},
+    {"src": "n-u2001", "dst": "n-ch-dvdd-gpu", "role": "channel", "net": "DVDD_GPU", "provenance": "pin-join", "controls": []},
+    {"src": "n-u2001", "dst": "n-ch-dvdd-sram-core", "role": "channel", "net": "DVDD_SRAM_CORE", "provenance": "pin-join", "controls": []}
+  ],
+  "unresolved": [],
+  "unresolved_nets": []
+}

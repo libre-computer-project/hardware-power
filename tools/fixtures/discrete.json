@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "fixture-discrete",
+  "coverage": "graph",
+  "shape": "discrete",
+  "nodes": [
+    {"id": "n-1f1", "kind": "protection", "refdes": "1F1", "value": "FUSE-2.5A", "footprint": "FUSE", "group": "input"},
+    {"id": "n-1u1", "kind": "regulator", "refdes": "1U1", "value": "SY8120B1ABC", "footprint": "SY81XX", "topology": "buck", "group": "cores"},
+    {"id": "n-1u3", "kind": "regulator", "refdes": "1U3", "value": "SY8120B1ABC", "footprint": "SY81XX", "topology": "buck", "group": "cores"},
+    {"id": "n-vcck", "kind": "rail", "name": "VCCK", "group": "cores"},
+    {"id": "n-vdd-ee", "kind": "rail", "name": "VDD_EE", "group": "cores"},
+    {"id": "n-load-soc", "kind": "load", "name": "SoC", "group": "cores"},
+    {"id": "n-load-ddr", "kind": "load", "name": "DDR", "group": "memory"},
+    {"id": "n-1u2", "kind": "regulator", "refdes": "1U2", "value": "WL2803E18-5", "footprint": "WL2003E", "topology": "ldo", "group": "other"},
+    {"id": "n-6fb1", "kind": "protection", "refdes": "6FB1", "value": "600R@100MHZ", "footprint": "FB0603", "group": "other"},
+    {"id": "n-vcc1-8v", "kind": "rail", "name": "VCC1_8V", "group": "other"},
+    {"id": "n-load-io", "kind": "load", "name": "IO", "group": "io"},
+    {"id": "n-6f1", "kind": "protection", "refdes": "6F1", "value": "FUSE-1A", "footprint": "PPTC_FUSE", "group": "connector"},
+    {"id": "n-usbhost-a-5v", "kind": "rail", "name": "USBHOST_A_5V", "group": "connector"},
+    {"id": "n-load-usb", "kind": "load", "name": "USB", "group": "connector"},
+    {"id": "n-6j2", "kind": "connector", "refdes": "6J2", "footprint": "J-USB-A_DUAL", "group": "connector"}
+  ],
+  "edges": [
+    {"src": "n-1f1", "dst": "n-1u1", "role": "series", "net": "DC_5V_IN", "provenance": "pin-join", "controls": []},
+    {"src": "n-1f1", "dst": "n-1u3", "role": "series", "net": "DC_5V_IN", "provenance": "pin-join", "controls": []},
+    {"src": "n-1u1", "dst": "n-vcck", "role": "out", "net": "VCCK", "provenance": "pin-join", "controls": [{"role": "pwm", "net": "VCCK_PWM_D", "source": "board-net"}]},
+    {"src": "n-1u3", "dst": "n-vdd-ee", "role": "out", "net": "VDD_EE", "provenance": "pin-join", "controls": [{"role": "pwm", "net": "VDDEE_PWM_B", "source": "board-net"}]},
+    {"src": "n-vcck", "dst": "n-load-soc", "role": "load", "net": "VCCK", "provenance": "pin-join", "controls": []},
+    {"src": "n-vcck", "dst": "n-load-ddr", "role": "load", "net": "VCCK", "provenance": "pin-join", "controls": []},
+    {"src": "n-vcck", "dst": "n-1u2", "role": "in", "net": "VCCK", "provenance": "pin-join", "controls": []},
+    {"src": "n-1u2", "dst": "n-6fb1", "role": "series", "net": "VCC1_8V", "provenance": "pin-join", "controls": []},
+    {"src": "n-6fb1", "dst": "n-vcc1-8v", "role": "series", "net": "VCC1_8V", "provenance": "pin-join", "controls": [{"role": "en", "net": "VCC1_8V_EN", "source": "board-net"}]},
+    {"src": "n-vcc1-8v", "dst": "n-load-io", "role": "load", "net": "VCC1_8V", "provenance": "pin-join", "controls": []},
+    {"src": "n-6f1", "dst": "n-usbhost-a-5v", "role": "series", "net": "USBHOST_A_5V", "provenance": "pin-join", "controls": []},
+    {"src": "n-usbhost-a-5v", "dst": "n-load-usb", "role": "load", "net": "USBHOST_A_5V", "provenance": "pin-join", "controls": []},
+    {"src": "n-6j2", "dst": "n-usbhost-a-5v", "role": "member", "net": "USBHOST_A_5V", "provenance": "connector-pin", "controls": []}
+  ],
+  "unresolved": [],
+  "unresolved_nets": []
+}

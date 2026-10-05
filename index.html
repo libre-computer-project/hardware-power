@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Libre Computer Board Power</title>
+<meta name="description" content="Power tree for Libre Computer boards: which regulator feeds which rail, from the board's own layout data.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/lc-kit.css">
+<link rel="stylesheet" href="css/style.css">
+<!-- Sets the theme before first paint, so a dark visitor never sees a white
+     flash. Must stay inline and must stay ahead of the stylesheets; the copy
+     is checked by tools/lc-ui-kit/sync.py against HEAD_SNIPPET in lc-kit.js. -->
+<script>try{var p=localStorage.getItem("theme")||"auto";if(p==="dark"||(p==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}</script>
+</head>
+<body>
+
+<header class="lc-topbar">
+  <div class="lc-brand">
+    <a class="lc-brand-name" href="https://libre.computer">Libre Computer</a>
+    <nav class="lc-sites" aria-label="Hardware tools">
+      <a class="lc-site" data-lc-site
+         href="https://gpio.hardware.libre.computer/">GPIO Pinout</a>
+      <a class="lc-site" data-lc-site
+         href="https://layout.hardware.libre.computer/">Layout</a>
+      <span class="lc-site" aria-current="page">Power</span>
+    </nav>
+  </div>
+  <div class="lc-controls">
+    <label for="board-select">Board</label>
+    <select id="board-select" aria-label="Select board"></select>
+    <input id="search" type="search" placeholder="VDD_EE, 1U1, U2001" autocomplete="off" spellcheck="false" aria-label="Search by reference designator, net, value, or footprint">
+    <div id="search-hits"></div>
+  </div>
+</header>
+
+<div class="lc-notices" id="notices"></div>
+<script>
+if (location.protocol === "file:") {
+  var host = document.getElementById("notices");
+  var note = document.createElement("p");
+  note.className = "lc-notice";
+  note.setAttribute("role", "status");
+  note.textContent = "Could not load the board index. If you are opening this from a file:// path, serve the directory over HTTP instead — python3 -m http.server.";
+  host.appendChild(note);
+}
+</script>
+
+<div class="lc-main">
+  <aside class="lc-panel" id="sidebar">
+    <h3>Board</h3>
+    <div id="board-meta"></div>
+
+    <h3>Reading</h3>
+    <div class="lc-seg" role="group" aria-label="Reading">
+      <button type="button" id="view-tree" aria-pressed="true">Tree</button>
+      <button type="button" id="view-rails" aria-pressed="false">Rails</button>
+    </div>
+
+    <h3>Show</h3>
+    <div id="domain-toggles"></div>
+    <div id="detail"></div>
+  </aside>
+
+  <div id="stage">
+    <div id="tree"></div>
+    <div id="rails" hidden></div>
+  </div>
+</div>
+
+<footer class="lc-footer">
+  What feeds what, from each board's published layout ·
+  <a href="https://gpio.hardware.libre.computer/">GPIO pinout</a> ·
+  <a href="https://layout.hardware.libre.computer/">Layout</a> ·
+  <a href="https://libre.computer">libre.computer</a>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

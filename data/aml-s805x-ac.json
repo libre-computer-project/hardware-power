@@ -1,0 +1,19 @@
+{
+ "schema": 1,
+ "id": "aml-s805x-ac",
+ "model": "AML-S805X-AC",
+ "name": "La Frite",
+ "soc": "S805X",
+ "coverage": "no-netlist",
+ "shape": "empty",
+ "source": {
+  "layout_id": "aml-s805x-ac",
+  "net_count": 0,
+  "nets_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "nodes": [],
+ "edges": [],
+ "unresolved": [],
+ "unresolved_nets": [],
+ "reason": "Mechanical model: placement and values, zero nets."
+}

@@ -1,0 +1,271 @@
+{
+ "schema": 1,
+ "id": "aml-s905d3-cc",
+ "model": "AML-S905D3-CC",
+ "name": "Solitude",
+ "soc": "S905D3",
+ "coverage": "graph",
+ "shape": "discrete",
+ "source": {
+  "layout_id": "aml-s905d3-cc",
+  "net_count": 508,
+  "nets_sha256": "f7c41b959e7c18e9f40ad0029fd851a81cfc41a2fdb7924ad4d6931baa37c046"
+ },
+ "nodes": [
+  {
+   "id": "n-1j1",
+   "kind": "connector",
+   "refdes": "1J1",
+   "footprint": "TYPE-C_SOCKET_16",
+   "group": "input"
+  },
+  {
+   "id": "n-4j1",
+   "kind": "connector",
+   "refdes": "4J1",
+   "footprint": "CON_30PIN_0D4_SMT",
+   "group": "connector"
+  },
+  {
+   "id": "n-6j1",
+   "kind": "connector",
+   "refdes": "6J1",
+   "footprint": "TF-CARD-SMALL",
+   "group": "storage"
+  },
+  {
+   "id": "n-7j2",
+   "kind": "connector",
+   "refdes": "7J2",
+   "footprint": "CON40-2X20-2.54MM-DIP",
+   "group": "other"
+  },
+  {
+   "id": "n-8j1",
+   "kind": "connector",
+   "refdes": "8J1",
+   "footprint": "CON22C_0",
+   "group": "other"
+  },
+  {
+   "id": "n-8j2",
+   "kind": "connector",
+   "refdes": "8J2",
+   "footprint": "CON22C_0",
+   "group": "other"
+  },
+  {
+   "id": "n-5v-in",
+   "kind": "rail",
+   "name": "5V_IN",
+   "group": "input"
+  },
+  {
+   "id": "n-vcc-card",
+   "kind": "rail",
+   "name": "VCC_CARD",
+   "group": "storage"
+  },
+  {
+   "id": "n-vcc3-3v",
+   "kind": "rail",
+   "name": "VCC3_3V",
+   "group": "other"
+  },
+  {
+   "id": "n-vcc5v",
+   "kind": "rail",
+   "name": "VCC5V",
+   "group": "other"
+  },
+  {
+   "id": "n-vddao-3-3v",
+   "kind": "rail",
+   "name": "VDDAO_3_3V",
+   "group": "other"
+  },
+  {
+   "id": "n-vddio-boot",
+   "kind": "rail",
+   "name": "VDDIO_BOOT",
+   "group": "io"
+  }
+ ],
+ "edges": [
+  {
+   "src": "n-1j1",
+   "dst": "n-5v-in",
+   "role": "member",
+   "net": "5V_IN",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-4j1",
+   "dst": "n-vcc3-3v",
+   "role": "member",
+   "net": "VCC3_3V",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-4j1",
+   "dst": "n-vddio-boot",
+   "role": "member",
+   "net": "VDDIO_BOOT",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-6j1",
+   "dst": "n-vcc-card",
+   "role": "member",
+   "net": "VCC_CARD",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-7j2",
+   "dst": "n-vcc5v",
+   "role": "member",
+   "net": "VCC5V",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-7j2",
+   "dst": "n-vddao-3-3v",
+   "role": "member",
+   "net": "VDDAO_3_3V",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-8j1",
+   "dst": "n-vcc3-3v",
+   "role": "member",
+   "net": "VCC3_3V",
+   "provenance": "connector-pin",
+   "controls": []
+  },
+  {
+   "src": "n-8j2",
+   "dst": "n-vcc3-3v",
+   "role": "member",
+   "net": "VCC3_3V",
+   "provenance": "connector-pin",
+   "controls": []
+  }
+ ],
+ "unresolved": [
+  {
+   "refdes": "10U3",
+   "footprint": "MP1495_1",
+   "value": "MP8756GD",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U1",
+   "footprint": "TPS56528DDA",
+   "value": "",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U11",
+   "footprint": "SY81XX",
+   "value": "SY8120B1ABC",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U12",
+   "footprint": "SY81XX",
+   "value": "SY8120B1ABC",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U2",
+   "footprint": "WL2003E",
+   "value": "WL2803E25-5",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U3",
+   "footprint": "MP1495_0",
+   "value": "",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U4",
+   "footprint": "WL2003E",
+   "value": "WL2803E25-5",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U5",
+   "footprint": "WL2003E",
+   "value": "WL2803E25-5",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U6",
+   "footprint": "MP1495_0",
+   "value": "",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U7",
+   "footprint": "WL2003E",
+   "value": "WL2803E25-5",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "1U8",
+   "footprint": "SY81XX",
+   "value": "SY8120B1ABC",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "5FB4",
+   "footprint": "FERRITE_BEAD",
+   "value": "",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "6F1",
+   "footprint": "PPTC_FUSE",
+   "value": "FUSE-500mA",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "6F2",
+   "footprint": "PPTC_FUSE",
+   "value": "FUSE-500mA",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "6F3",
+   "footprint": "PPTC_FUSE",
+   "value": "FUSE-500mA",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "6F4",
+   "footprint": "PPTC_FUSE",
+   "value": "FUSE-500mA",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "9FB1",
+   "footprint": "FERRITE_BEAD",
+   "value": "",
+   "reason": "no pin_pads"
+  },
+  {
+   "refdes": "9FB2",
+   "footprint": "FERRITE_BEAD",
+   "value": "",
+   "reason": "no pin_pads"
+  }
+ ],
+ "unresolved_nets": []
+}
