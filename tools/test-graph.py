@@ -30,12 +30,12 @@ REQUIRED = (
 PUBLISHED = (
     "aml-s905x-cc-v2",
     "aml-s805x-ac",
+    "aml-s805x-ac-v2",
     "aml-a311d-cc",
     "aml-s905d3-cc",
 )
 DROPPED = (
     "aml-s905x-cc-v3",
-    "aml-s805x-ac-v2",
     "aml-a311d-cm",
     "med-mt83-ace",
     "med-mt88-mx",
@@ -411,6 +411,7 @@ def main() -> int:
         want = [
             ("aml-s905x-cc-v2", "Sweet Potato"),
             ("aml-s805x-ac", "La Frite"),
+            ("aml-s805x-ac-v2", "Das Frite"),
             ("aml-a311d-cc", "Alta"),
             ("aml-s905d3-cc", "Solitude"),
         ]
@@ -422,7 +423,7 @@ def main() -> int:
         ):
             _fail(errors, "a listed row is hidden or not production")
         else:
-            print("PASS picker lists Sweet Potato, La Frite, Alta, Solitude")
+            print("PASS picker lists Sweet Potato, La Frite, Das Frite, Alta, Solitude")
         present = [
             name for board_id in DROPPED
             if (DATA / f"{board_id}.json").is_file() or (DATA / f"{board_id}.nets.json").is_file()

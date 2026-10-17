@@ -27,6 +27,19 @@
    "shares_layout_with": null
   },
   {
+   "id": "aml-s805x-ac-v2",
+   "model": "AML-S805X-AC-V2",
+   "name": "Das Frite",
+   "soc": "S805X",
+   "vendor": "Amlogic",
+   "status": "production",
+   "hidden": false,
+   "rev": "V2.0C",
+   "coverage": "graph",
+   "shape": "discrete",
+   "shares_layout_with": null
+  },
+  {
    "id": "aml-a311d-cc",
    "model": "AML-A311D-CC",
    "name": "Alta",

@@ -32,10 +32,11 @@ DROPPED = {"unreleased", "preprod", "reference"}
 PRODUCTION = (
     "aml-s905x-cc-v2",
     "aml-s805x-ac",
+    "aml-s805x-ac-v2",
     "aml-a311d-cc",
     "aml-s905d3-cc",
 )
-PUBLIC = ("aml-s905x-cc-v2", "aml-a311d-cc", "aml-s905d3-cc")
+PUBLIC = ("aml-s905x-cc-v2", "aml-s805x-ac-v2", "aml-a311d-cc", "aml-s905d3-cc")
 NO_FEED = (
     "No regulator pin name in this layout joins a rail, "
     "so nothing is drawn as feeding a rail."
@@ -138,7 +139,7 @@ def main() -> int:
             bad.append("Alta and Solitude differ after product and SoC substitution")
 
     if [row.get("id") for row in boards] != list(PRODUCTION):
-        bad.append("boards.json is not Sweet Potato, La Frite, Alta, Solitude")
+        bad.append("boards.json is not Sweet Potato, La Frite, Das Frite, Alta, Solitude")
     for row in boards:
         board_id = row.get("id")
         if row.get("status") != "production":
