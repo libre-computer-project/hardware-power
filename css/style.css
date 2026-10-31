@@ -324,6 +324,7 @@
   box-shadow: var(--shadow);
 }
 
+.pw-v-unknown { --pw-vc: var(--text-dim); }
 .pw-v-power12v { --pw-vc: var(--c-power12v); }
 .pw-v-power5v { --pw-vc: var(--c-power5v); }
 .pw-v-power3v3 { --pw-vc: var(--c-power3v3); }
@@ -446,8 +447,10 @@
 
 /* rails table --------------------------------------------------------------- */
 
+/* no overflow here: #stage scrolls both ways, so the header row can stick
+ * to the top of it */
 .pw-table-wrap {
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .pw-table {

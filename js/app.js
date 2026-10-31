@@ -123,6 +123,7 @@ async function chooseBoard(id, fresh, said = "") {
 }
 
 function paintEmpty(row, failed) {
+  document.body.classList.remove("pw-sheet-open");
   el("board-meta").textContent = "";
   el("board-meta").appendChild(make("p", "pw-meta-name", row.name));
   const sub = [row.model, row.soc].filter(Boolean).join(" · ");
@@ -179,7 +180,12 @@ function render() {
   if (focusKey) {
     const find = (k) => k && document.querySelector(`[data-focus="${CSS.escape(k)}"]`);
     let again = find(focusKey);
-    if (!again || again.disabled) again = find(FOCUS_FALLBACK[focusKey]) || find(view.lastRail);
+    // a key that is gone: its stand-in, else the selected rail's card or
+    // row (a rail link in the detail panel), else the card it was opened from
+    if (!again || again.disabled) {
+      again = find(FOCUS_FALLBACK[focusKey]) || (view.rail && (find(`rail-${view.rail}`) || find(`row-${view.rail}`)))
+        || find(view.lastRail) || (view.lastRail && find(view.lastRail.replace(/^rail-/, "row-")));
+    }
     if (again && !again.disabled) again.focus({ preventScroll: true });
   }
 }
@@ -321,7 +327,7 @@ function railCard(rail, step, makers, rails) {
     view.rail = view.rail === rail.id ? null : rail.id;
     if (!view.rail) view.lastRail = `rail-${rail.id}`;
     render();
-    if (view.rail) announce(`${rail.name} details below`);
+    if (view.rail) announce(`${rail.name} details open`);
   });
   return card;
 }
@@ -351,7 +357,10 @@ function paintTree() {
     drawWires(tree, svg, step);
     if (view.reveal && view.rail) {
       const card = tree.querySelector(`[data-rail="${CSS.escape(view.rail)}"]`);
-      if (card) card.scrollIntoView({ block: "nearest", inline: "nearest" });
+      // with the detail as a bottom sheet, "nearest" would park the card
+      // behind it: bring it to the top of the stage instead
+      const sheet = matchMedia("(max-width: 1100px)").matches;
+      if (card) card.scrollIntoView({ block: sheet ? "start" : "nearest", inline: "nearest" });
     }
     view.reveal = false;
   });
@@ -558,7 +567,8 @@ function closeDetail() {
   const back = view.lastRail;
   view.rail = null;
   render();
-  const card = document.querySelector(`[data-focus="${CSS.escape(back)}"]`);
+  const card = document.querySelector(`[data-focus="${CSS.escape(back)}"]`)
+    || document.querySelector(`[data-focus="${CSS.escape(back.replace(/^rail-/, "row-"))}"]`);
   if (card) card.focus({ preventScroll: true });
 }
 
