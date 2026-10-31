@@ -574,8 +574,9 @@
    "id": "s-1u3",
    "role": "enable",
    "driver": {
-    "kind": "circuit",
-    "pads": []
+    "kind": "pull",
+    "to": null,
+    "dir": "divider"
    }
   },
   {
@@ -664,7 +665,7 @@
    "label": "Plugged in, SoC in reset",
    "rails": {
     "r-5v-in": "on",
-    "r-avdd0v8-hdmi-pcie": "x",
+    "r-avdd0v8-hdmi-pcie": "on",
     "r-avdd18-v": "x",
     "r-eth-avdd33": "x",
     "r-eth-vcc33": "x",
@@ -682,7 +683,7 @@
     "r-vddio-c": "x",
     "r-vddio-x": "on",
     "r-vddq-1v1": "on",
-    "r-vdd-ee": "x"
+    "r-vdd-ee": "on"
    }
   }
  ],
