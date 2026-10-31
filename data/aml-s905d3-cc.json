@@ -93,7 +93,7 @@
   {
    "id": "r-eth-vddio",
    "name": "ETH_VDDIO",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-5r81"
@@ -346,7 +346,7 @@
   {
    "id": "r-vddio-x",
    "name": "VDDIO_X",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-7r1"

@@ -11,7 +11,7 @@ const KIND_TEXT = {
   protection: "Input protection",
 };
 
-const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω jumper" };
+const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω resistor" };
 
 /** What a maker is, in words: a link says which kind of link. */
 export function kindText(kind, link) {
@@ -106,7 +106,7 @@ export function voltageClass(v) {
   if (v == null) return "unknown";
   if (v >= 9) return "power12v";
   if (v >= 4.5) return "power5v";
-  if (v >= 2.5) return "power3v3";
+  if (v >= 3.0) return "power3v3";
   return "powerlv";
 }
 

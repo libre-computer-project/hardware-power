@@ -246,7 +246,7 @@
   {
    "id": "r-vddio-x",
    "name": "VDDIO_X",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-7r1"

@@ -1,8 +1,8 @@
 "use strict";
 
-/* Power tree and power states. The board document (schema 2) is written by
- * the private builder from the board's netlist; js/model.js holds every
- * decision this page makes about it, and this file only paints. */
+/* Power tree and power states. The board document (schema 2) is generated
+ * from the board's netlist; js/model.js holds every decision this page
+ * makes about it, and this file only paints. */
 
 import { mountShell } from "./lc-kit.js";
 import {
@@ -15,6 +15,13 @@ const LAYOUT_SITE = "https://layout.hardware.libre.computer/";
 const X_HELP =
   "Not determined: what switches this rail at this step cannot be settled from the board's " +
   "published design data, so the page does not guess.";
+const STEPS_HELP =
+  "These steps stop at reset. Rails that software turns on later (after boot) show the state " +
+  "they have before it runs.";
+const TREE_HELP =
+  "Level n: n parts between the rail and the board's input. Source not traced: nothing on the " +
+  "board's netlist that this page can follow makes the rail.";
+const VOLT_KEY = [["power5v", "5 V"], ["power3v3", "3.3 V"], ["powerlv", "Below 3 V"], ["unknown", "Not stated"]];
 const DEFAULT_BOARD = "aml-s905x-cc-v2";
 
 const el = (id) => document.getElementById(id);
@@ -51,6 +58,11 @@ function notice(text) {
   host.appendChild(p);
 }
 
+/** One short sentence for screen readers after a step or rail change. */
+function announce(text) {
+  el("announce").textContent = text;
+}
+
 // --- board list --------------------------------------------------------------
 
 function buildSelect() {
@@ -64,42 +76,44 @@ function buildSelect() {
     const g = make("optgroup");
     g.label = label;
     for (const b of rows) {
-      const o = make("option", null, `${b.name} (${b.model})`);
+      const o = make("option", null, b.model ? `${b.name} (${b.model})` : b.name);
       o.value = b.id;
       g.appendChild(o);
     }
     sel.appendChild(g);
   };
   group("Power tree and states", modelled);
-  group("No netlist yet", [...other, ...(index.pinout_only || []).map((p) => ({ ...p, model: p.id.toUpperCase() }))]);
+  group("Power tree not available yet", [...other, ...(index.pinout_only || [])]);
   sel.addEventListener("change", () => chooseBoard(sel.value, true));
 }
 
-async function chooseBoard(id, fresh) {
+async function chooseBoard(id, fresh, said = "") {
   const row = index.boards.find((b) => b.id === id) || index.pinout_only.find((b) => b.id === id);
   if (!row) {
-    notice(`No board "${id}" here; showing ${DEFAULT_BOARD}.`);
-    return chooseBoard(DEFAULT_BOARD, true);
+    const fallback = index.boards.find((b) => b.id === DEFAULT_BOARD);
+    return chooseBoard(DEFAULT_BOARD, true,
+      `No board "${id}" here; showing ${fallback ? fallback.name : DEFAULT_BOARD} instead.`);
   }
   view.board = id;
   el("board-select").value = id;
-  if (fresh) Object.assign(view, { walk: null, step: 1, rail: null });
+  if (fresh) Object.assign(view, { walk: null, step: null, rail: null });
   doc = null;
   if (row.coverage === "model") {
     try {
       const r = await fetch(`data/${id}.json`);
+      if (!r.ok) throw new Error(String(r.status));
       doc = await r.json();
     } catch (e) {
-      notice(`Could not load ${id}.`);
+      said = `Could not load the power data for ${row.name}.`;
     }
   }
+  notice(said);
   if (!doc) {
-    notice("");
-    paintEmpty(row);
+    paintEmpty(row, row.coverage === "model");
+    view.step = null;
     writeUrl();
     return;
   }
-  notice("");
   const walk = (doc.walks || [])[0];
   if (!view.walk || !(doc.walks || []).some((w) => w.id === view.walk)) view.walk = walk ? walk.id : null;
   const n = steps(doc, view.walk).length;
@@ -108,9 +122,12 @@ async function chooseBoard(id, fresh) {
   render();
 }
 
-function paintEmpty(row) {
+function paintEmpty(row, failed) {
   el("board-meta").textContent = "";
   el("board-meta").appendChild(make("p", "pw-meta-name", row.name));
+  const sub = [row.model, row.soc].filter(Boolean).join(" · ");
+  if (sub) el("board-meta").appendChild(make("p", "pw-meta-sub", sub));
+  el("search").disabled = true;
   el("walk").textContent = "";
   el("legend").textContent = "";
   el("state-heading").hidden = true;
@@ -121,9 +138,10 @@ function paintEmpty(row) {
   const tree = el("tree");
   tree.hidden = false;
   tree.textContent = "";
+  if (failed) return;
   const box = make("div", "pw-empty");
   box.appendChild(make("p", null,
-    "This board's power tree is not drawn yet: it is built from the board's layout netlist, and that is not in this catalogue."));
+    "This board's power tree is not available yet: it is drawn from the board's design files, and those are not published for this board."));
   const a = make("a", null, "Its header pins and their I/O voltages are on the GPIO pinout");
   a.href = `${GPIO_SITE}?board=${encodeURIComponent(row.id)}`;
   box.appendChild(a);
@@ -137,10 +155,15 @@ function current() {
   return { all, step: all[view.step] || all[all.length - 1] };
 }
 
+/** Where focus goes when the element that had it is gone or disabled. */
+const FOCUS_FALLBACK = { next: "prev", prev: "next", close: null };
+
 function render() {
   const focusKey = document.activeElement && document.activeElement.dataset
     ? document.activeElement.dataset.focus : null;
   for (const id of ["state-heading", "view-heading", "view-seg"]) el(id).hidden = false;
+  el("search").disabled = false;
+  document.body.classList.toggle("pw-sheet-open", Boolean(view.rail));
   paintMeta();
   paintWalk();
   paintLegend();
@@ -154,8 +177,10 @@ function render() {
   paintDetail();
   writeUrl();
   if (focusKey) {
-    const again = document.querySelector(`[data-focus="${CSS.escape(focusKey)}"]`);
-    if (again) again.focus({ preventScroll: true });
+    const find = (k) => k && document.querySelector(`[data-focus="${CSS.escape(k)}"]`);
+    let again = find(focusKey);
+    if (!again || again.disabled) again = find(FOCUS_FALLBACK[focusKey]) || find(view.lastRail);
+    if (again && !again.disabled) again.focus({ preventScroll: true });
   }
 }
 
@@ -183,7 +208,7 @@ function paintWalk() {
     sel.value = view.walk;
     sel.addEventListener("change", () => {
       view.walk = sel.value;
-      view.step = 0;
+      view.step = steps(doc, view.walk).length - 1;
       render();
     });
     host.appendChild(sel);
@@ -199,14 +224,12 @@ function paintWalk() {
     b.setAttribute("aria-pressed", String(i === view.step));
     const on = Object.values(s.rails).filter((v) => v === "on").length;
     b.title = `${on} of ${Object.keys(s.rails).length} rails on`;
-    b.addEventListener("click", () => {
-      view.step = i;
-      render();
-    });
+    b.addEventListener("click", () => goStep(i));
     li.appendChild(b);
     ol.appendChild(li);
   });
   host.appendChild(ol);
+  host.appendChild(make("p", "pw-help", STEPS_HELP));
   const nav = make("div", "pw-step-nav");
   const prev = focusable(make("button", "pw-nav", "◀ Previous"), "prev");
   const next = focusable(make("button", "pw-nav", "Next ▶"), "next");
@@ -222,10 +245,15 @@ function paintWalk() {
 function stepBy(d) {
   const n = current().all.length;
   const s = Math.min(n - 1, Math.max(0, view.step + d));
-  if (s !== view.step) {
-    view.step = s;
-    render();
-  }
+  if (s !== view.step) goStep(s);
+}
+
+function goStep(i) {
+  view.step = i;
+  render();
+  const { all, step } = current();
+  const on = doc.rails.filter((r) => status(step, r.id) === "on").length;
+  announce(`Step ${i + 1} of ${all.length}: ${step.label}. ${on} of ${doc.rails.length} rails on.`);
 }
 
 function paintLegend() {
@@ -236,11 +264,22 @@ function paintLegend() {
   for (const r of doc.rails) counts[status(step, r.id)]++;
   for (const k of ["on", "off", "x"]) {
     const row = make("span", `pw-legend-item pw-s-${k}`);
-    row.appendChild(make("span", "pw-swatch"));
+    row.appendChild(make("span", "pw-dot"));
     row.appendChild(make("span", null, `${STATUS_TEXT[k]} ${counts[k]}`));
     host.appendChild(row);
   }
   if (counts.x) host.appendChild(make("p", "pw-help", X_HELP));
+  const key = make("div", "pw-vkey");
+  key.setAttribute("role", "group");
+  key.setAttribute("aria-label", "Edge colour: voltage");
+  for (const [cls, text] of VOLT_KEY) {
+    const item = make("span", `pw-vkey-item pw-v-${cls}`);
+    item.appendChild(make("span", "pw-vbar"));
+    item.appendChild(make("span", null, text));
+    key.appendChild(item);
+  }
+  host.appendChild(key);
+  if (view.view === "tree") host.appendChild(make("p", "pw-help", TREE_HELP));
 }
 
 function railCard(rail, step, makers, rails) {
@@ -270,9 +309,19 @@ function railCard(rail, step, makers, rails) {
   card.appendChild(head);
   const loads = loadLines(rail);
   if (loads.length) card.appendChild(make("span", "pw-loads", loads.join(" · ")));
+  // read the rail first, then what makes it: the visual order puts the
+  // maker line on top
+  const makerText = (rail.made_by || []).map((mid) => makers.get(mid)).filter(Boolean)
+    .map((m) => `${m.refdes} ${kindText(m.kind, m.link)}${m.kind !== "link" ? `, ${controlText(doc, m)}` : ""}`);
+  card.setAttribute("aria-label", [
+    `${rail.name}${rail.v != null ? ` ${voltText(rail.v)}` : ""}: ${STATUS_TEXT[st]}`,
+    rail.input ? `${rail.input} input` : "", ...makerText, loads.join(", "),
+  ].filter(Boolean).join(". "));
   card.addEventListener("click", () => {
     view.rail = view.rail === rail.id ? null : rail.id;
+    if (!view.rail) view.lastRail = `rail-${rail.id}`;
     render();
+    if (view.rail) announce(`${rail.name} details below`);
   });
   return card;
 }
@@ -316,25 +365,31 @@ function drawWires(tree, svg, step) {
   const pos = new Map();
   for (const card of tree.querySelectorAll(".pw-rail")) {
     const r = card.getBoundingClientRect();
+    const top = r.top - box.top + tree.scrollTop;
     pos.set(card.dataset.rail, {
       x0: r.left - box.left + tree.scrollLeft, x1: r.right - box.left + tree.scrollLeft,
-      y: r.top - box.top + tree.scrollTop + Math.min(r.height / 2, 28),
+      top, bottom: top + r.height, y: top + Math.min(r.height / 2, 28),
     });
   }
   const kids = children(doc);
   for (const [parent, list] of kids) {
     const a = pos.get(parent);
     if (!a) continue;
-    for (const { rail } of list) {
-      const b = pos.get(rail);
-      if (!b || b.x0 <= a.x1) continue;
+    // fan the wires out along the parent's edge in the order their children
+    // sit, so a bundle from one parent can be told apart
+    const ends = list.map(({ rail }) => ({ rail, b: pos.get(rail) }))
+      .filter(({ b }) => b && b.x0 > a.x1)
+      .sort((p, q) => p.b.y - q.b.y);
+    const span = Math.max(0, a.bottom - a.top - 16);
+    ends.forEach(({ rail, b }, k) => {
+      const ya = ends.length > 1 ? a.top + 8 + (span * k) / (ends.length - 1) : a.y;
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      const mid = (a.x1 + b.x0) / 2;
-      path.setAttribute("d", `M${a.x1},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x0},${b.y}`);
+      const mid = a.x1 + (b.x0 - a.x1) * (0.35 + 0.3 * (k / Math.max(1, ends.length - 1)));
+      path.setAttribute("d", `M${a.x1},${ya} C${mid},${ya} ${mid},${b.y} ${b.x0},${b.y}`);
       path.setAttribute("class", `pw-wire pw-s-${status(step, rail)}`
         + (view.rail && (view.rail === rail || view.rail === parent) ? " pw-wire-hot" : ""));
       svg.appendChild(path);
-    }
+    });
   }
 }
 
@@ -346,7 +401,7 @@ function paintRails() {
   const rails = byId(doc.rails);
   const table = make("table", "pw-table");
   const head = make("tr");
-  for (const t of ["Rail", "Voltage", "Made by", "From", "Control", ...all.map((s) => s.label)]) {
+  for (const t of ["Rail", "Voltage", "Made by", "From", "Control", "Loads", ...all.map((s) => s.label)]) {
     head.appendChild(make("th", null, t));
   }
   const thead = make("thead");
@@ -373,7 +428,9 @@ function paintRails() {
         : ms.map((m) => `${m.refdes} ${kindText(m.kind, m.link)}`).join(", ")));
       tr.appendChild(make("td", null,
         [...new Set(ms.map((m) => (rails.get(m.in) || {}).name).filter(Boolean))].join(", ")));
-      tr.appendChild(make("td", null, ms.map((m) => controlText(doc, m)).join("; ")));
+      tr.appendChild(make("td", null, ms.filter((m) => m.kind !== "link")
+        .map((m) => (ms.length > 1 ? `${m.refdes}: ` : "") + controlText(doc, m)).join("; ")));
+      tr.appendChild(make("td", "pw-cell-loads", loadLines(r).join("; ")));
       all.forEach((s, i) => {
         const st = status(s, r.id);
         const td = make("td", `pw-cell pw-s-${st}${i === view.step ? " pw-cell-now" : ""}`);
@@ -403,10 +460,7 @@ function paintDetail() {
   const close = focusable(make("button", "pw-close", "×"), "close");
   close.type = "button";
   close.setAttribute("aria-label", "Close");
-  close.addEventListener("click", () => {
-    view.rail = null;
-    render();
-  });
+  close.addEventListener("click", closeDetail);
   host.appendChild(close);
   host.appendChild(make("h3", "pw-detail-title", rail.name));
   if (rail.v != null) host.appendChild(make("p", "pw-detail-v", voltText(rail.v)));
@@ -417,10 +471,7 @@ function paintDetail() {
       `chip-${i}`);
     c.type = "button";
     c.setAttribute("aria-pressed", String(i === view.step));
-    c.addEventListener("click", () => {
-      view.step = i;
-      render();
-    });
+    c.addEventListener("click", () => goStep(i));
     chips.appendChild(c);
   });
   host.appendChild(chips);
@@ -501,6 +552,16 @@ function paintDetail() {
   host.appendChild(p);
 }
 
+/** Close the detail and hand focus back to the card it was opened from. */
+function closeDetail() {
+  if (view.rail) view.lastRail = `rail-${view.rail}`;
+  const back = view.lastRail;
+  view.rail = null;
+  render();
+  const card = document.querySelector(`[data-focus="${CSS.escape(back)}"]`);
+  if (card) card.focus({ preventScroll: true });
+}
+
 // --- wiring ------------------------------------------------------------------
 
 function bind() {
@@ -514,16 +575,18 @@ function bind() {
   });
   el("search").addEventListener("input", (e) => {
     view.query = e.target.value;
-    if (doc) render();
+    if (!doc) return;
+    render();
+    if (view.query.trim()) {
+      const n = search(doc, view.query).length;
+      announce(`${n} rail${n === 1 ? "" : "s"} match`);
+    }
   });
   document.addEventListener("keydown", (e) => {
     if (!doc || e.target.closest("input, select, textarea")) return;
     if (e.key === "ArrowRight") stepBy(1);
     else if (e.key === "ArrowLeft") stepBy(-1);
-    else if (e.key === "Escape" && view.rail) {
-      view.rail = null;
-      render();
-    }
+    else if (e.key === "Escape" && view.rail) closeDetail();
   });
   let t = null;
   window.addEventListener("resize", () => {
@@ -544,7 +607,7 @@ async function init() {
   }
   buildSelect();
   const q = parseQuery(location.search);
-  Object.assign(view, { walk: q.walk, step: q.step ?? 1, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
+  Object.assign(view, { walk: q.walk, step: q.step, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
   await chooseBoard(q.board || DEFAULT_BOARD, false);
 }
 

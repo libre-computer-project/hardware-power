@@ -119,7 +119,7 @@
   {
    "id": "r-hub-avdd",
    "name": "HUB-AVDD",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-6fb1"
@@ -364,7 +364,7 @@
   {
    "id": "r-vddio-boot",
    "name": "VDDIO_BOOT",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-4r22"
@@ -412,7 +412,7 @@
   {
    "id": "r-vddio-x",
    "name": "VDDIO_X",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-7r1"

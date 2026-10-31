@@ -7,7 +7,7 @@
  * so it never rests on colour alone. */
 
 :root {
-  --pw-on: #2e9a5a;
+  --pw-on: #1d7a44;   /* 5:1 on the card background */
   --pw-off: var(--text-dim);
   --pw-x: #8a8f98;
   --pw-hatch: repeating-linear-gradient(135deg, transparent 0 5px, rgba(138, 143, 152, 0.22) 5px 7px);
@@ -32,6 +32,50 @@
   min-width: 0;
   overflow: auto;
   padding: 0.75rem 1rem 2rem;
+  /* scroll shadows: a soft edge appears on a side that has more to scroll */
+  background:
+    linear-gradient(to right, var(--bg) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--bg) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.18), transparent) left / 0.9rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.18), transparent) right / 0.9rem 100% no-repeat scroll;
+}
+
+.pw-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.pw-vkey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.7rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.pw-vkey-item {
+  --pw-vc: var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pw-vbar {
+  width: 0.3rem;
+  height: 0.9rem;
+  border-radius: 1px;
+  background: var(--pw-vc);
+}
+
+.pw-cell-loads {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  min-width: 12rem;
 }
 
 .pw-detail {
@@ -224,7 +268,8 @@
 }
 
 .pw-wire.pw-s-off {
-  stroke: var(--border);
+  stroke: var(--text-dim);
+  stroke-opacity: 0.55;
 }
 
 .pw-wire.pw-s-x {
@@ -240,7 +285,7 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 2.2rem;
+  gap: 3rem;
 }
 
 .pw-col {
@@ -544,8 +589,13 @@
 
 /* Below the three-column width the detail panel is a sheet along the
  * bottom of the screen: the header's height varies with the width, the
- * bottom edge does not. */
+ * bottom edge does not. While it is open the columns behind it get room
+ * to scroll their last items clear of it. */
 @media (max-width: 1100px) {
+  .pw-sheet-open #stage,
+  .pw-sheet-open #sidebar {
+    padding-bottom: 57vh;
+  }
   .pw-detail {
     position: fixed;
     left: 0;

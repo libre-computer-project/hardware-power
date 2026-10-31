@@ -34,6 +34,8 @@
   </div>
 </header>
 
+<h1 class="pw-sr">Libre Computer board power</h1>
+<p class="pw-sr" id="announce" role="status" aria-live="polite"></p>
 <div class="lc-notices" id="notices"></div>
 <script>
 if (location.protocol === "file:") {
@@ -53,7 +55,7 @@ if (location.protocol === "file:") {
 
     <h3 id="state-heading">Power state</h3>
     <div id="walk"></div>
-    <div id="legend" class="pw-legend" aria-label="Legend"></div>
+    <div id="legend" class="pw-legend" role="group" aria-label="Legend"></div>
 
     <h3 id="view-heading">View</h3>
     <div class="lc-seg" id="view-seg" role="group" aria-label="View">
@@ -67,7 +69,7 @@ if (location.protocol === "file:") {
     <div id="rails" hidden></div>
   </main>
 
-  <aside class="lc-panel pw-detail" id="detail" aria-live="polite" hidden></aside>
+  <aside class="lc-panel pw-detail" id="detail" aria-label="Rail details" hidden></aside>
 </div>
 
 <footer class="lc-footer">
