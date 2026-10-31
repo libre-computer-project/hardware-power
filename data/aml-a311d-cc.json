@@ -26,9 +26,7 @@
       "header40": false
      }
     ],
-    "parts": [
-     "1U1"
-    ]
+    "parts": []
    }
   },
   {
@@ -50,7 +48,7 @@
   {
    "id": "r-avdd18-v",
    "name": "AVDD18_V",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-9fb1"
@@ -67,7 +65,7 @@
   {
    "id": "r-eth-avdd33",
    "name": "ETH_AVDD33",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-5fb4"
@@ -75,15 +73,13 @@
    "loads": {
     "soc": [],
     "connectors": [],
-    "parts": [
-     "5U1"
-    ]
+    "parts": []
    }
   },
   {
    "id": "r-eth-vcc33",
    "name": "ETH_VCC33",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-5r80"
@@ -91,9 +87,7 @@
    "loads": {
     "soc": [],
     "connectors": [],
-    "parts": [
-     "5U1"
-    ]
+    "parts": []
    }
   },
   {
@@ -109,9 +103,7 @@
      "VDDIO_Z"
     ],
     "connectors": [],
-    "parts": [
-     "5U1"
-    ]
+    "parts": []
    }
   },
   {
@@ -137,9 +129,7 @@
    "loads": {
     "soc": [],
     "connectors": [],
-    "parts": [
-     "6U1"
-    ]
+    "parts": []
    }
   },
   {
@@ -286,7 +276,7 @@
   {
    "id": "r-vddio-ao18",
    "name": "VDDIO_AO18",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-1u5"
@@ -335,7 +325,6 @@
      }
     ],
     "parts": [
-     "4U1",
      "4U2"
     ]
    }
@@ -498,7 +487,8 @@
    "kind": "link",
    "in": "r-vcc3-3v",
    "out": "r-vddio-boot",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5fb4",
@@ -506,7 +496,8 @@
    "kind": "link",
    "in": "r-eth-vcc33",
    "out": "r-eth-avdd33",
-   "control": null
+   "control": null,
+   "link": "bead"
   },
   {
    "id": "m-5r80",
@@ -514,7 +505,8 @@
    "kind": "link",
    "in": "r-vcc3-3v",
    "out": "r-eth-vcc33",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5r81",
@@ -522,7 +514,8 @@
    "kind": "link",
    "in": "r-flash-1-8v",
    "out": "r-eth-vddio",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-7r1",
@@ -530,7 +523,8 @@
    "kind": "link",
    "in": "r-vddao-3-3v",
    "out": "r-vddio-x",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-9fb1",
@@ -538,7 +532,8 @@
    "kind": "link",
    "in": "r-vcc1-8v",
    "out": "r-avdd18-v",
-   "control": null
+   "control": null,
+   "link": "bead"
   },
   {
    "id": "m-9fb2",
@@ -546,7 +541,8 @@
    "kind": "link",
    "in": "r-vdd-ee",
    "out": "r-avdd0v8-hdmi-pcie",
-   "control": null
+   "control": null,
+   "link": "bead"
   }
  ],
  "signals": [
@@ -616,7 +612,8 @@
     "kind": "pad",
     "pads": [
      "GPIOAO_4"
-    ]
+    ],
+    "dir": null
    }
   },
   {

@@ -302,7 +302,8 @@
    "kind": "link",
    "in": "r-dc-5v",
    "out": "r-vcc5v",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-1u1",
@@ -366,7 +367,8 @@
    "kind": "link",
    "in": "r-vccq-emmc",
    "out": "r-vddio-boot",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5r12",
@@ -374,7 +376,8 @@
    "kind": "link",
    "in": "r-vcc1-8v",
    "out": "r-rct-1v8",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-6f1",
@@ -382,7 +385,8 @@
    "kind": "link",
    "in": "r-vcc5v",
    "out": "r-usbhost-a-5v",
-   "control": null
+   "control": null,
+   "link": "fuse"
   },
   {
    "id": "m-7r1",
@@ -390,7 +394,8 @@
    "kind": "link",
    "in": "r-vddio-ao3-3v",
    "out": "r-vddio-x",
-   "control": null
+   "control": null,
+   "link": "jumper"
   }
  ],
  "signals": [
@@ -435,7 +440,8 @@
     "kind": "pad",
     "pads": [
      "GPIOAO_9"
-    ]
+    ],
+    "dir": "up"
    }
   },
   {

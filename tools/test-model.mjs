@@ -5,8 +5,8 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  buildQuery, children, columns, controlText, loadLines, parseQuery, railDepths, search,
-  status, steps, voltText, voltageClass,
+  buildQuery, children, columns, controlText, kindText, loadLines, parseQuery, railDepths,
+  regulatorCount, search, status, steps, voltText, voltageClass,
 } from "../js/model.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -26,8 +26,9 @@ eq("first stage", depth.get("r-a"), 1);
 eq("second stage", depth.get("r-b"), 2);
 eq("untraced rail", untraced, ["r-d"]);
 const cols = columns(fx);
-eq("column titles", cols.map((c) => c.title), ["Input", "First stage", "Second stage", "Source not traced"]);
-eq("first column sorted by voltage then name", cols[1].rails.map((r) => r.name), ["VCC5V", "VCC3V3", "VDD_CORE"]);
+eq("column titles", cols.map((c) => c.title), ["Input", "Level 1", "Level 2"]);
+eq("untraced rails under the input", cols[0].more && cols[0].more.rails.map((r) => r.id), ["r-d"]);
+eq("level 1 sorted by voltage then name", cols[1].rails.map((r) => r.name), ["VCC5V", "VCC3V3", "VDD_CORE"]);
 
 // states: a rail the state does not list is not determined, never off
 const st = steps(fx, "cold-boot");
@@ -63,6 +64,15 @@ const q = { board: "aml-s905x-cc-v2", walk: "cold-boot", step: 1, rail: "r-a", v
 const sorted = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)));
 eq("query round trip", sorted(parseQuery(buildQuery(q))), sorted(q));
 eq("bad step", parseQuery("?step=-3").step, null);
+eq("step 0 is not a step", parseQuery("?step=0").step, null);
+eq("the URL counts from 1", parseQuery("?step=2").step, 1);
+eq("and writes from 1", new URLSearchParams(buildQuery({ step: 0 })).get("step"), "1");
+eq("link kinds", [kindText("link", "fuse"), kindText("link", "bead"), kindText("buck")],
+  ["Fuse", "Ferrite bead", "Buck regulator"]);
+eq("pad with its pull", controlText({ ...fx, signals: [{ id: "s", role: "enable",
+  driver: { kind: "pad", pads: ["GPIODV_25"], dir: "up" } }] }, { kind: "buck", control: "s" }),
+  "Enable from SoC GPIODV_25, pulled up");
+eq("regulator count leaves out links and protection", regulatorCount(fx), 4);
 eq("default view", parseQuery("").view, "tree");
 
 // every committed schema-2 board: references resolve, states are complete

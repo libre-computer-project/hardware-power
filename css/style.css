@@ -133,8 +133,34 @@
   margin: 0.5rem 0;
 }
 
-.pw-step-nav button {
+.pw-nav {
   flex: 1;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+}
+
+.pw-nav:disabled {
+  color: var(--text-dim);
+  cursor: default;
+  opacity: 0.6;
+}
+
+.pw-help {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+
+/* the wires say where a rail comes from; without them the card does */
+.pw-from {
+  display: none;
 }
 
 .pw-legend {
@@ -166,7 +192,7 @@
 }
 
 .pw-s-off .pw-swatch {
-  background: transparent;
+  background: var(--border);
   border-color: var(--pw-off);
 }
 
@@ -214,11 +240,11 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 2.5rem;
+  gap: 2.2rem;
 }
 
 .pw-col {
-  flex: 0 0 15.5rem;
+  flex: 0 0 14.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
@@ -230,6 +256,10 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-dim);
+}
+
+.pw-col-more {
+  margin-top: 1.2rem;
 }
 
 .pw-rail {
@@ -335,6 +365,10 @@
 
 .pw-s-on .pw-state {
   color: var(--pw-on);
+}
+
+.pw-s-x .pw-state {
+  color: var(--text);
 }
 
 .pw-maker,
@@ -508,15 +542,21 @@
   font-size: 0.8rem;
 }
 
+/* Below the three-column width the detail panel is a sheet along the
+ * bottom of the screen: the header's height varies with the width, the
+ * bottom edge does not. */
 @media (max-width: 1100px) {
   .pw-detail {
     position: fixed;
+    left: 0;
     right: 0;
-    top: 3.2rem;
-    bottom: 2rem;
-    width: min(22rem, 92vw);
+    bottom: 0;
+    max-height: 55vh;
+    overflow-y: auto;
+    border-left: none;
+    border-top: 2px solid var(--accent);
     z-index: 5;
-    box-shadow: var(--shadow);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -551,5 +591,8 @@
   }
   .pw-wires {
     display: none;
+  }
+  .pw-from {
+    display: inline;
   }
 }

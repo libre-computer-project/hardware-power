@@ -11,8 +11,17 @@ const KIND_TEXT = {
   protection: "Input protection",
 };
 
-export function kindText(kind) {
+const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω jumper" };
+
+/** What a maker is, in words: a link says which kind of link. */
+export function kindText(kind, link) {
+  if (kind === "link" && LINK_TEXT[link]) return LINK_TEXT[link];
   return KIND_TEXT[kind] || kind;
+}
+
+/** Makers that convert or switch power (not links, not input protection). */
+export function regulatorCount(doc) {
+  return (doc.makers || []).filter((m) => ["buck", "ldo", "switch"].includes(m.kind)).length;
 }
 
 export function byId(list) {
@@ -53,7 +62,9 @@ export function railDepths(doc) {
 }
 
 /** Rails grouped into columns by depth, each column sorted by voltage
- *  (highest first) then name. Untraced rails are their own last column. */
+ *  (highest first) then name. Untraced rails are a second group in the
+ *  first column: never off-screen on a wide tree, and no wire from the
+ *  input has to cross them. */
 export function columns(doc) {
   const { depth, untraced } = railDepths(doc);
   const rails = byId(doc.rails);
@@ -62,16 +73,17 @@ export function columns(doc) {
     (cols[d] ||= []).push(rails.get(id));
   }
   const order = (a, b) => (b.v ?? -1) - (a.v ?? -1) || a.name.localeCompare(b.name);
-  const out = cols.filter(Boolean).map((c, i) => ({ title: columnTitle(i), rails: c.sort(order) }));
+  const out = cols.filter(Boolean).map((c, i) => ({ title: columnTitle(i), rails: c.sort(order), more: null }));
   if (untraced.length) {
-    out.push({ title: "Source not traced", rails: untraced.map((id) => rails.get(id)).sort(order) });
+    const more = { title: "Source not traced", rails: untraced.map((id) => rails.get(id)).sort(order) };
+    if (out.length) out[0].more = more;
+    else out.push({ title: more.title, rails: more.rails, more: null });
   }
   return out;
 }
 
 function columnTitle(i) {
-  if (i === 0) return "Input";
-  return ["First stage", "Second stage", "Third stage", "Fourth stage"][i - 1] || `Stage ${i}`;
+  return i === 0 ? "Input" : `Level ${i}`;
 }
 
 /** The walk's steps, each with its state document. */
@@ -118,7 +130,10 @@ export function controlText(doc, maker) {
     if (d.rail && d.rail === maker.in) return `${word} tied to its input`;
     return d.rail ? `${word} tied to ${name(d.rail)}` : `${word} tied on`;
   }
-  if (d.kind === "pad") return `${word} from SoC ${d.pads.join(", ")}`;
+  if (d.kind === "pad") {
+    const held = { up: ", pulled up", down: ", pulled down", divider: ", on a resistor divider" }[d.dir] || "";
+    return `${word} from SoC ${d.pads.join(", ")}${held}`;
+  }
   if (d.kind === "circuit") {
     return d.pads && d.pads.length
       ? `${word} through a transistor stage from SoC ${d.pads.join(", ")}`
@@ -178,7 +193,8 @@ export function search(doc, term) {
   return hits;
 }
 
-/** Query string -> view state; anything missing or unknown is null. */
+/** Query string -> view state; anything missing or unknown is null. The
+ *  URL counts steps from 1, as the page numbers them; the state from 0. */
 export function parseQuery(search) {
   const q = new URLSearchParams(search);
   const step = Number.parseInt(q.get("step") || "", 10);
@@ -187,7 +203,7 @@ export function parseQuery(search) {
     board: q.get("board"),
     rail: q.get("rail"),
     walk: q.get("walk"),
-    step: Number.isFinite(step) && step >= 0 ? step : null,
+    step: Number.isFinite(step) && step >= 1 ? step - 1 : null,
     view: view === "rails" ? "rails" : "tree",
   };
 }
@@ -196,7 +212,7 @@ export function buildQuery({ board, walk, step, rail, view }) {
   const q = new URLSearchParams();
   if (board) q.set("board", board);
   if (walk) q.set("walk", walk);
-  if (step != null) q.set("step", String(step));
+  if (step != null) q.set("step", String(step + 1));
   if (rail) q.set("rail", rail);
   if (view === "rails") q.set("view", "rails");
   return `?${q}`;

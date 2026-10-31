@@ -44,6 +44,7 @@ PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_]{1,31}$")   # the book's own case (AVDD1
 # grammar: a register (..._REG1, ..._CNTL), a hex word, an address
 FORBIDDEN = re.compile(r"(_REG\d|CNTL|^0X[0-9A-F]+$|^[0-9A-F]{16,}$)", re.I)
 KINDS = {"buck", "ldo", "switch", "link", "protection"}
+LINKS = {"fuse", "bead", "inductor", "jumper"}
 ROLES = {"enable", "gate"}
 DRIVERS = {"tie", "pad", "circuit", "pull"}
 DIRS = {"up", "down", "divider"}
@@ -115,8 +116,10 @@ def check_model(doc: dict, row: dict) -> list[str]:
                     if not isinstance(c.get("header40"), bool):
                         bad.append(f"{tag}: connector header40 is not a boolean")
     for m in makers:
-        if not keys(m, {"id", "refdes", "kind", "in", "out", "control"}, "maker"):
+        if not keys(m, {"id", "refdes", "kind", "in", "out", "control", "link"}, "maker"):
             continue
+        if m.get("kind") == "link" and m.get("link") not in LINKS:
+            bad.append(f"{tag}: link kind {m.get('link')!r}")
         if not ID.match(str(m.get("id"))):
             bad.append(f"{tag}: maker id {m.get('id')!r}")
         name(m.get("refdes"), "maker refdes", REFDES)

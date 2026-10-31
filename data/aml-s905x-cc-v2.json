@@ -23,7 +23,7 @@
   {
    "id": "r-avdd09-hdmi",
    "name": "AVDD09_HDMI",
-   "v": null,
+   "v": 0.9,
    "input": null,
    "made_by": [
     "m-9r10"
@@ -55,7 +55,7 @@
   {
    "id": "r-avdd18-enet",
    "name": "AVDD18_ENET",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-5r3"
@@ -295,7 +295,7 @@
   {
    "id": "r-vddio-ao18",
    "name": "VDDIO_AO18",
-   "v": null,
+   "v": 1.8,
    "input": null,
    "made_by": [
     "m-1u2"
@@ -522,7 +522,8 @@
    "kind": "link",
    "in": "r-vcc1-8v",
    "out": "r-vddio-boot",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5r12",
@@ -530,7 +531,8 @@
    "kind": "link",
    "in": "r-vdd-ee",
    "out": "r-avdd0v9-enet",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5r2",
@@ -538,7 +540,8 @@
    "kind": "link",
    "in": "r-vddio-ao18",
    "out": "r-rct-1v8",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-5r3",
@@ -546,7 +549,8 @@
    "kind": "link",
    "in": "r-vddio-ao18",
    "out": "r-avdd18-enet",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-6f1",
@@ -554,7 +558,8 @@
    "kind": "link",
    "in": "r-vcc5v",
    "out": "r-usbotg-b-5v",
-   "control": null
+   "control": null,
+   "link": "fuse"
   },
   {
    "id": "m-6f2",
@@ -562,7 +567,8 @@
    "kind": "link",
    "in": "r-vcc5v",
    "out": "r-usbhost-a-5v",
-   "control": null
+   "control": null,
+   "link": "fuse"
   },
   {
    "id": "m-6fb1",
@@ -570,7 +576,8 @@
    "kind": "link",
    "in": "r-hub-3v3",
    "out": "r-hub-avdd",
-   "control": null
+   "control": null,
+   "link": "bead"
   },
   {
    "id": "m-6q1",
@@ -594,7 +601,8 @@
    "kind": "link",
    "in": "r-vddio-ao3-3v",
    "out": "r-hub-3v3",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-6u2",
@@ -610,7 +618,8 @@
    "kind": "link",
    "in": "r-vddio-ao3-3v",
    "out": "r-vddio-x",
-   "control": null
+   "control": null,
+   "link": "jumper"
   },
   {
    "id": "m-9r10",
@@ -618,7 +627,8 @@
    "kind": "link",
    "in": "r-vdd-ee",
    "out": "r-avdd09-hdmi",
-   "control": null
+   "control": null,
+   "link": "jumper"
   }
  ],
  "signals": [
@@ -629,7 +639,8 @@
     "kind": "pad",
     "pads": [
      "GPIOH_3"
-    ]
+    ],
+    "dir": "up"
    }
   },
   {
@@ -681,7 +692,8 @@
     "kind": "pad",
     "pads": [
      "GPIODV_25"
-    ]
+    ],
+    "dir": "up"
    }
   },
   {
@@ -707,7 +719,8 @@
     "kind": "pad",
     "pads": [
      "GPIOAO_3"
-    ]
+    ],
+    "dir": "down"
    }
   },
   {
@@ -725,7 +738,8 @@
     "kind": "pad",
     "pads": [
      "GPIOAO_3"
-    ]
+    ],
+    "dir": "down"
    }
   }
  ],
