@@ -651,6 +651,37 @@
      "stage": "power-applied",
      "label": "Plugged in, SoC in reset",
      "state": "power-applied"
+    },
+    {
+     "stage": "u-boot",
+     "label": "U-Boot running",
+     "state": "power-applied"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "power-applied"
+    }
+   ]
+  },
+  {
+   "id": "suspend",
+   "label": "Suspend and resume",
+   "steps": [
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "power-applied"
+    },
+    {
+     "stage": "suspend",
+     "label": "Suspended",
+     "state": "power-applied"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "power-applied"
     }
    ]
   }
@@ -715,6 +746,36 @@
    "from": "off",
    "to": "power-applied",
    "trigger": "power-applied"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "u-boot"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "linux"
+  },
+  {
+   "walk": "suspend",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "linux"
+  },
+  {
+   "walk": "suspend",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "suspend"
+  },
+  {
+   "walk": "suspend",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "linux"
   }
  ]
 }

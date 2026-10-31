@@ -901,6 +901,12 @@
    "walk": "suspend",
    "from": "u-boot",
    "to": "u-boot",
+   "trigger": "linux"
+  },
+  {
+   "walk": "suspend",
+   "from": "u-boot",
+   "to": "u-boot",
    "trigger": "suspend"
   },
   {
