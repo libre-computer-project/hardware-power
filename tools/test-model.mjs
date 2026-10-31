@@ -29,6 +29,17 @@ const cols = columns(fx);
 eq("column titles", cols.map((c) => c.title), ["Input", "Level 1", "Level 2"]);
 eq("untraced rails under the input", cols[0].more && cols[0].more.rails.map((r) => r.id), ["r-d"]);
 eq("level 1 sorted by voltage then name", cols[1].rails.map((r) => r.name), ["VCC5V", "VCC3V3", "VDD_CORE"]);
+eq("three level 1 rails keep their own column", cols[0].stack, null);
+// one input feeding two rails: Level 1 stacks under the input, and Level 2
+// becomes the second column
+const lvl1 = cols[1].rails.map((r) => r.id);
+const keep = lvl1.find((id) => id === "r-a") || lvl1[0];
+const drop = new Set(lvl1.filter((id) => id !== keep).slice(1));
+const two = { ...fx, rails: fx.rails.filter((r) => !drop.has(r.id)) };
+const scols = columns(two);
+eq("two level 1 rails stack under the input", scols[0].stack && scols[0].stack.title, "Level 1");
+eq("and leave their column", scols.map((c) => c.title), ["Input", "Level 2"]);
+eq("untraced rails still last in the first column", scols[0].more && scols[0].more.rails.map((r) => r.id), ["r-d"]);
 
 // states: a rail the state does not list is not determined, never off
 const st = steps(fx, "cold-boot");

@@ -62,9 +62,13 @@ export function railDepths(doc) {
 }
 
 /** Rails grouped into columns by depth, each column sorted by voltage
- *  (highest first) then name. Untraced rails are a second group in the
- *  first column: never off-screen on a wide tree, and no wire from the
- *  input has to cross them. */
+ *  (highest first) then name. One input feeding one or two rails is the
+ *  common board: those Level 1 rails stack under the input in its column
+ *  (`stack`), so the tree is a column narrower. Untraced rails are a last
+ *  group in the first column: never off-screen on a wide tree, and no wire
+ *  from the input has to cross them. */
+export const STACK_MAX = 2;
+
 export function columns(doc) {
   const { depth, untraced } = railDepths(doc);
   const rails = byId(doc.rails);
@@ -73,11 +77,17 @@ export function columns(doc) {
     (cols[d] ||= []).push(rails.get(id));
   }
   const order = (a, b) => (b.v ?? -1) - (a.v ?? -1) || a.name.localeCompare(b.name);
-  const out = cols.filter(Boolean).map((c, i) => ({ title: columnTitle(i), rails: c.sort(order), more: null }));
+  const out = cols.filter(Boolean).map((c, i) => ({
+    title: columnTitle(i), rails: c.sort(order), stack: null, more: null,
+  }));
+  if (out.length > 1 && out[0].rails.length === 1 && out[1].rails.length <= STACK_MAX) {
+    out[0].stack = { title: out[1].title, rails: out[1].rails };
+    out.splice(1, 1);
+  }
   if (untraced.length) {
     const more = { title: "Source not traced", rails: untraced.map((id) => rails.get(id)).sort(order) };
     if (out.length) out[0].more = more;
-    else out.push({ title: more.title, rails: more.rails, more: null });
+    else out.push({ title: more.title, rails: more.rails, stack: null, more: null });
   }
   return out;
 }

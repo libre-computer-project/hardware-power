@@ -307,6 +307,16 @@
   margin-top: 1.2rem;
 }
 
+/* Level 1 stacked under a lone input: indented, so its wires run down the
+ * gutter the indent leaves (app.js drawWires) */
+.pw-col-stacked {
+  margin: 0.7rem 0 0.1rem 1.5rem;
+}
+
+.pw-rail-stacked {
+  margin-left: 1.5rem;
+}
+
 .pw-rail {
   --pw-vc: var(--border);
   display: flex;

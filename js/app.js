@@ -347,6 +347,14 @@ function paintTree() {
     const c = make("section", "pw-col");
     c.appendChild(make("h4", "pw-col-title", col.title));
     for (const r of col.rails) c.appendChild(railCard(r, step, makers, rails));
+    if (col.stack) {
+      c.appendChild(make("h4", "pw-col-title pw-col-stacked", col.stack.title));
+      for (const r of col.stack.rails) {
+        const card = railCard(r, step, makers, rails);
+        card.classList.add("pw-rail-stacked");
+        c.appendChild(card);
+      }
+    }
     if (col.more) {
       c.appendChild(make("h4", "pw-col-title pw-col-more", col.more.title));
       for (const r of col.more.rails) c.appendChild(railCard(r, step, makers, rails));
@@ -394,15 +402,28 @@ function drawWires(tree, svg, step) {
       .filter(({ b }) => b && b.x0 > a.x1)
       .sort((p, q) => p.b.y - q.b.y);
     const span = Math.max(0, a.bottom - a.top - 16);
-    ends.forEach(({ rail, b }, k) => {
-      const ya = ends.length > 1 ? a.top + 8 + (span * k) / (ends.length - 1) : a.y;
+    const wire = (rail, d) => {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      const mid = a.x1 + (b.x0 - a.x1) * (0.35 + 0.3 * (k / Math.max(1, ends.length - 1)));
-      path.setAttribute("d", `M${a.x1},${ya} C${mid},${ya} ${mid},${b.y} ${b.x0},${b.y}`);
+      path.setAttribute("d", d);
       const near = view.related ? view.related.has(rail) && view.related.has(parent) : true;
       path.setAttribute("class", `pw-wire pw-s-${status(step, rail)}`
         + (view.rail && near ? " pw-wire-hot" : "") + (near ? "" : " pw-wire-faded"));
       svg.appendChild(path);
+    };
+    ends.forEach(({ rail, b }, k) => {
+      const ya = ends.length > 1 ? a.top + 8 + (span * k) / (ends.length - 1) : a.y;
+      const mid = a.x1 + (b.x0 - a.x1) * (0.35 + 0.3 * (k / Math.max(1, ends.length - 1)));
+      wire(rail, `M${a.x1},${ya} C${mid},${ya} ${mid},${b.y} ${b.x0},${b.y}`);
+    });
+    // a child stacked (indented) under its parent in the same column: down
+    // the gutter the indent leaves, then into its left edge; the farther
+    // child's wire runs outside the nearer one's, so two never cross
+    const below = list.map(({ rail }) => ({ rail, b: pos.get(rail) }))
+      .filter(({ b }) => b && b.x0 < a.x1 && b.x1 > a.x0 && b.top >= a.bottom)
+      .sort((p, q) => p.b.y - q.b.y);
+    below.forEach(({ rail, b }, k) => {
+      const x = a.x0 + 6 + 6 * (below.length - 1 - k);
+      wire(rail, `M${x},${a.bottom} V${b.y} H${b.x0}`);
     });
   }
 }
@@ -424,7 +445,7 @@ function paintRails() {
   const body = make("tbody");
   const hits = view.query ? new Set(search(doc, view.query)) : null;
   for (const col of columns(doc)) {
-    for (const r of [...col.rails, ...(col.more ? col.more.rails : [])]) {
+    for (const r of [...col.rails, ...(col.stack ? col.stack.rails : []), ...(col.more ? col.more.rails : [])]) {
       if (hits && !hits.has(r.id)) continue;
       const tr = make("tr", view.rail === r.id ? "pw-row-hot"
         : view.related && !view.related.has(r.id) ? "pw-row-faded" : null);

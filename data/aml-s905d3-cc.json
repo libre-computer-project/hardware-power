@@ -125,7 +125,9 @@
    "name": "HUB_5V",
    "v": 5.0,
    "input": null,
-   "made_by": [],
+   "made_by": [
+    "m-6r1"
+   ],
    "loads": {
     "soc": [],
     "connectors": [],
@@ -196,7 +198,9 @@
    "name": "VCC5V",
    "v": 5.0,
    "input": null,
-   "made_by": [],
+   "made_by": [
+    "m-1q3"
+   ],
    "loads": {
     "soc": [],
     "connectors": [
@@ -409,6 +413,14 @@
    "control": "s-1q2"
   },
   {
+   "id": "m-1q3",
+   "refdes": "1Q3",
+   "kind": "switch",
+   "in": "r-5v-in",
+   "out": "r-vcc5v",
+   "control": "s-1q3"
+  },
+  {
    "id": "m-1u11",
    "refdes": "1U11",
    "kind": "buck",
@@ -518,6 +530,15 @@
    "link": "jumper"
   },
   {
+   "id": "m-6r1",
+   "refdes": "6R1",
+   "kind": "link",
+   "in": "r-vcc5v",
+   "out": "r-hub-5v",
+   "control": null,
+   "link": "jumper"
+  },
+  {
    "id": "m-7r1",
    "refdes": "7R1",
    "kind": "link",
@@ -548,6 +569,14 @@
  "signals": [
   {
    "id": "s-1q2",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-1q3",
    "role": "gate",
    "driver": {
     "kind": "circuit",
@@ -713,10 +742,10 @@
     "r-eth-vcc33": "x",
     "r-eth-vddio": "x",
     "r-flash-1-8v": "x",
-    "r-hub-5v": "x",
+    "r-hub-5v": "on",
     "r-vcc1-8v": "x",
     "r-vcc3-3v": "x",
-    "r-vcc5v": "x",
+    "r-vcc5v": "on",
     "r-vddao-3-3v": "on",
     "r-vddcpu-a": "on",
     "r-vddcpu-b": "on",
