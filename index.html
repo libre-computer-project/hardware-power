@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Libre Computer Board Power</title>
-<meta name="description" content="Power tree for Libre Computer boards: which regulator feeds which rail, from the board's own layout data.">
+<meta name="description" content="Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist.">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/lc-kit.css">
 <link rel="stylesheet" href="css/style.css">
@@ -30,8 +30,7 @@
   <div class="lc-controls">
     <label for="board-select">Board</label>
     <select id="board-select" aria-label="Select board"></select>
-    <input id="search" type="search" placeholder="5V_IN, 1J1" autocomplete="off" spellcheck="false" aria-label="Search by reference designator, net, value, or footprint">
-    <div id="search-hits"></div>
+    <input id="search" type="search" placeholder="Find a rail or part" autocomplete="off" spellcheck="false" aria-label="Find a rail, part or SoC pad">
   </div>
 </header>
 
@@ -52,25 +51,27 @@ if (location.protocol === "file:") {
     <h3>Board</h3>
     <div id="board-meta"></div>
 
-    <h3>Reading</h3>
-    <div class="lc-seg" role="group" aria-label="Reading">
+    <h3 id="state-heading">Power state</h3>
+    <div id="walk"></div>
+    <div id="legend" class="pw-legend" aria-label="Legend"></div>
+
+    <h3>View</h3>
+    <div class="lc-seg" role="group" aria-label="View">
       <button type="button" id="view-tree" aria-pressed="true">Tree</button>
       <button type="button" id="view-rails" aria-pressed="false">Rails</button>
     </div>
-
-    <h3>Show</h3>
-    <div id="domain-toggles"></div>
-    <div id="detail"></div>
   </aside>
 
-  <div id="stage">
-    <div id="tree"></div>
+  <main id="stage">
+    <div id="tree" class="pw-tree"></div>
     <div id="rails" hidden></div>
-  </div>
+  </main>
+
+  <aside class="lc-panel pw-detail" id="detail" aria-live="polite" hidden></aside>
 </div>
 
 <footer class="lc-footer">
-  What feeds what, from each board's published layout ·
+  What feeds what, and what is on when, from each board's own netlist ·
   <a href="https://gpio.hardware.libre.computer/">GPIO pinout</a> ·
   <a href="https://layout.hardware.libre.computer/">Layout</a> ·
   <a href="https://libre.computer">libre.computer</a>

@@ -1,0 +1,37 @@
+{
+ "schema": 2,
+ "id": "fixture",
+ "model": "FIXTURE",
+ "name": "Fixture",
+ "soc": "",
+ "tier": "netlist",
+ "rails": [
+  {"id": "r-in", "name": "VIN_5V", "v": 5.0, "input": "USB-C", "made_by": [], "loads": {"soc": [], "connectors": [{"refdes": "J1", "pins": ["A4", "B4"], "header40": false}], "parts": []}},
+  {"id": "r-a", "name": "VCC3V3", "v": 3.3, "input": null, "made_by": ["m-u1"], "loads": {"soc": ["VDDIO_AO"], "connectors": [{"refdes": "J9", "pins": ["1", "17"], "header40": true}], "parts": ["U9"]}},
+  {"id": "r-b", "name": "VCC1V8", "v": 1.8, "input": null, "made_by": ["m-u2"], "loads": {"soc": [], "connectors": [], "parts": []}},
+  {"id": "r-c", "name": "VDD_CORE", "v": null, "input": null, "made_by": ["m-u3"], "loads": {"soc": ["VDDEE"], "connectors": [], "parts": []}},
+  {"id": "r-d", "name": "VCC_ORPHAN", "v": null, "input": null, "made_by": [], "loads": {"soc": [], "connectors": [], "parts": []}},
+  {"id": "r-e", "name": "VCC5V", "v": 5.0, "input": null, "made_by": ["m-q1"], "loads": {"soc": [], "connectors": [], "parts": []}}
+ ],
+ "makers": [
+  {"id": "m-u1", "refdes": "U1", "kind": "buck", "in": "r-in", "out": "r-a", "control": "s-u1"},
+  {"id": "m-u2", "refdes": "U2", "kind": "ldo", "in": "r-a", "out": "r-b", "control": "s-u2"},
+  {"id": "m-u3", "refdes": "U3", "kind": "buck", "in": "r-in", "out": "r-c", "control": "s-u3"},
+  {"id": "m-q1", "refdes": "Q1", "kind": "switch", "in": "r-in", "out": "r-e", "control": "s-q1"}
+ ],
+ "signals": [
+  {"id": "s-u1", "role": "enable", "driver": {"kind": "pull", "to": "r-in", "dir": "up"}},
+  {"id": "s-u2", "role": "enable", "driver": {"kind": "tie", "rail": "r-a"}},
+  {"id": "s-u3", "role": "enable", "driver": {"kind": "pad", "pads": ["GPIOAO_4"]}},
+  {"id": "s-q1", "role": "gate", "driver": {"kind": "circuit", "pads": []}}
+ ],
+ "walks": [{"id": "cold-boot", "label": "Power-on", "steps": [
+  {"stage": "off", "label": "Unplugged", "state": "off"},
+  {"stage": "power-applied", "label": "Plugged in, SoC in reset", "state": "power-applied"}
+ ]}],
+ "states": [
+  {"id": "off", "label": "Unplugged", "rails": {"r-in": "off", "r-a": "off", "r-b": "off", "r-c": "off", "r-d": "off", "r-e": "off"}},
+  {"id": "power-applied", "label": "Plugged in, SoC in reset", "rails": {"r-in": "on", "r-a": "on", "r-b": "on", "r-c": "x", "r-d": "x", "r-e": "off"}}
+ ],
+ "transitions": [{"walk": "cold-boot", "from": "off", "to": "power-applied", "trigger": "power-applied"}]
+}

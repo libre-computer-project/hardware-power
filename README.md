@@ -1,66 +1,70 @@
 # Libre Computer Board Power
 
-Which regulator feeds which rail.
+Which regulator feeds which rail, what switches it, and which rails are on
+in each power state.
 
 Companion to the GPIO pinout and the board layout. GPIO answers what a header
-pin is. Layout answers where a part sits. This page answers what feeds what.
+pin is. Layout answers where a part sits. This page answers what feeds what,
+and when.
 
-## Schema 1
+## Data
 
-`data/<id>.json` is one graph. `kind` on a node is the discriminator. There is
-no control node: enable, PWM, and power-good are tags on the flow edge they
-belong to. `shape` (`discrete`, `hybrid`, `pmic`, `empty`, `pending`) is the
-picker line. The drawing follows whether the graph contains a `pmic` node.
+`data/boards.json` is the board index. `coverage` says what a board has:
 
-A board with no netlist, and a board whose nets are unnamed, is an empty graph.
-A part with no pin list is `unresolved`, not an edge. A regulator-to-rail edge
-exists only when a pin list joins both ends.
+| `coverage` | Board file | What the page shows |
+|---|---|---|
+| `model` | `data/<id>.json`, schema 2 | the power tree and its power states |
+| `no-netlist` | `data/<id>.json` + `.nets.json`, schema 1, empty | a note that the tree needs the board's layout netlist |
 
-## Classifier
+### Schema 2
 
-`tools/classify.py` is the ordered name classifier: what is a rail, what is a
-control tag, what is dropped, and which group and colour a rail takes.
-`tools/test-classify.py` runs `tools/fixtures/classify.json` against that module.
+A state model of one board, built from the board's netlist and written here
+by its generator. `tools/gen-power-data.py` keeps a schema-2 file as it is.
+
+| Key | Holds |
+|---|---|
+| `rails[]` | `id`, `name` (a net the layout site publishes), `v` (the nominal its name states, else null), `input` (the input label when power enters here), `made_by[]`, `loads` (SoC supply balls, connector pins, parts) |
+| `makers[]` | `id`, `refdes`, `kind` (`buck`, `ldo`, `switch`, `link`, `protection`), `in`, `out`, `control` |
+| `signals[]` | `id`, `role` (`enable`, `gate`), `driver` (`tie` to a rail, a SoC `pad`, a transistor `circuit`, or a `pull` up / down / divider) |
+| `walks[]` | a named sequence of `steps`, each a stage with the state it lands in |
+| `states[]` | `rails`: every rail `on`, `off`, or `x` -- not determined |
+| `transitions[]` | the step from one state to the next |
+
+`x` is drawn grey with no reason given. A rail is `x` when what switches it
+cannot be settled from what is stated: a floating enable, a level between a
+part's stated thresholds, or a driver the model does not cover.
+
+## Checks
 
 ```
-python3 tools/test-classify.py
+python3 tools/check-site.py --self-test   # the closed schema refuses each leak shape
+python3 tools/check-site.py               # every published file
+node tools/test-model.mjs                 # js/model.js on a fixture and on every board file
+python3 tools/test-classify.py            # the rail-name grammar
+python3 tools/check-kit.py                # the vendored shell kit
 ```
 
-## Graphs
-
-`tools/graph.py` builds one schema-1 graph from a layout document. A
-regulator-to-rail edge exists only when a pin name joins both ends. A part
-with no pin list is `unresolved`. Connector membership uses the published pad
-coordinates. A board with no nets, and a board whose nets are unnamed, is an
-empty graph.
-
-```
-python3 tools/gen-power-data.py
-python3 tools/test-graph.py
-```
+`check-site.py` holds a schema-2 file to a closed schema: every key is
+named, and every string is an id, an enum value, or a name of a stated shape
+(net, refdes, SoC pad). A path, a URL, a hex digest, a register name or free
+text fails.
 
 ## Page
 
-One page, two readings of one graph. Tree is the default. Rails lists every
-rail and every channel, with EN, PWM, and PG as columns. `?board=` selects a
-board and `?rail=` selects a rail or a control net. `?view=` is not a permalink.
+`js/model.js` is every decision the page makes about a board file, with no
+DOM, so `tools/test-model.mjs` runs it under node. `js/app.js` paints.
 
-`defaultOpen` follows whether the graph contains a `pmic` node. It does not
-read `shape`. A discrete graph opens first-stage regulators and collapses
-loads. A graph with a PMIC draws one frame, channel groups collapsed, and any
-external regulators outside that frame. A PMIC graph with no external
-regulators uses the same frame and draws no external column.
+| Query | Selects |
+|---|---|
+| `?board=` | the board |
+| `?walk=`, `?step=` | the power state |
+| `?rail=` | the rail in the detail panel |
+| `?view=rails` | the rail table instead of the tree |
 
-The three fixtures under `tools/fixtures/` (`discrete.json`, `hybrid.json`,
-`pmic.json`) are paint inputs. They are not board ids and they are not in
-`data/`.
-
-```
-python3 tools/test-classify.py
-node tools/test-paint.mjs
-python3 tools/check-site.py
-python3 tools/check-kit.py
-```
+The tree puts each rail in a column by how many stages it sits from the
+input. A rail's edge colour is its voltage class; its state is the fill, the
+dot and the word together, never colour alone. The arrow keys step through
+the states.
 
 Serve the directory over HTTP. Opening `index.html` as `file://` tells the
 visitor to run `python3 -m http.server` instead of failing silently.

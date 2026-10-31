@@ -1,0 +1,19 @@
+{
+ "schema": 1,
+ "id": "all-h3-cc",
+ "model": "ALL-H3-CC",
+ "name": "Tritium",
+ "soc": "H2+/H3/H5",
+ "coverage": "no-netlist",
+ "shape": "empty",
+ "source": {
+  "layout_id": "all-h3-cc",
+  "net_count": 0,
+  "nets_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "nodes": [],
+ "edges": [],
+ "unresolved": [],
+ "unresolved_nets": [],
+ "reason": "Mechanical model: placement and values, zero nets."
+}

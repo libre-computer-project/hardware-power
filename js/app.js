@@ -1,1089 +1,504 @@
 "use strict";
 
-/* Power tree. Classification already happened in tools/classify.py and is
- * stored on the graph. This file paints that result: what starts open, the
- * badge on a collapsed branch, and the rail table. It does not admit nets.
- *
- * defaultOpen reads hasPmic (any node of kind pmic). It does not read shape.
- * First-paint cap is 48 visible nodes for a discrete board. A PMIC frame
- * targets 24. A click may open more; the rail table always lists every rail.
- */
+/* Power tree and power states. The board document (schema 2) is written by
+ * the private builder from the board's netlist; js/model.js holds every
+ * decision this page makes about it, and this file only paints. */
 
 import { mountShell } from "./lc-kit.js";
+import {
+  STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
+  loadLines, parseQuery, search, status, steps, voltText, voltageClass,
+} from "./model.js";
 
-/** First paint only. Discrete boards target this. A click may open more. */
-export const VISIBLE_CAP = 48;
-/** PMIC frame target. The external-regulator step is a no-op when that set is empty. */
-export const PMIC_CAP = 24;
+const GPIO_SITE = "https://gpio.hardware.libre.computer/";
+const DEFAULT_BOARD = "aml-s905x-cc-v2";
 
-export const RAIL_COLUMNS = ["Rail", "Group", "From", "EN", "PWM", "PG", "Series parts", "Loads"];
-
-export const DEFAULT_BOARD = "aml-a311d-cc";
-
-export const FILE_NOTICE =
-  "Could not load the board index. If you are opening this from a file:// path, " +
-  "serve the directory over HTTP instead — python3 -m http.server.";
-
-export const NO_ENABLE_DETAIL =
-  "No enable net on this board. If the PMIC sequences this channel, the netlist does not say so.";
-
-export const NO_FEED_NOTICE =
-  "No regulator pin name in this layout joins a rail, so nothing is drawn as feeding a rail.";
-
-export const SEARCH_PLACEHOLDER = "5V_IN, 1J1";
-
-const ID_GRAMMAR = /^[a-z0-9-]+$/;
-const FLOW = new Set(["in", "out", "channel", "series", "load"]);
-const DOMAINS = [
-  ["input", "Input", ["input"]],
-  ["cores", "Cores", ["cores", "sram"]],
-  ["memory", "Memory", ["memory"]],
-  ["io", "IO", ["io"]],
-  ["connector", "Connectors", ["display", "storage", "connector"]],
-  ["audio", "Audio", ["audio"]],
-  ["other", "Other", ["other"]],
-];
-
-function byId(graph) {
-  const map = new Map();
-  for (const node of graph.nodes || []) map.set(node.id, node);
-  return map;
-}
-
-function outgoing(graph, id) {
-  return (graph.edges || []).filter((edge) => edge.src === id && FLOW.has(edge.role));
-}
-
-function nodeLabel(node) {
-  if (!node) return "";
-  if (node.refdes && node.value) return `${node.refdes} ${node.value}`;
-  return node.refdes || node.name || node.id;
-}
-
-function isFuse(node) {
-  if (!node || node.kind !== "protection") return false;
-  const footprint = node.footprint || "";
-  const value = node.value || "";
-  return footprint === "FUSE" || footprint === "PPTC_FUSE" || value.startsWith("FUSE");
-}
-
-function isBead(node) {
-  if (!node || node.kind !== "protection" || isFuse(node)) return false;
-  if (/^L\d/.test(node.refdes || "")) return false;
-  const footprint = node.footprint || "";
-  return footprint.includes("FB0603") || /FB[_-]4P/.test(footprint) || footprint === "FERRITE_BEAD";
-}
-
-/** Fuse value, else a fuse count, else one bead value, else a bead count, else nothing. */
-export function seriesBadge(parts) {
-  const fuses = parts.filter(isFuse);
-  const beads = parts.filter(isBead);
-  if (fuses.length === 1) return fuses[0].value || "";
-  if (fuses.length > 1) return `${fuses.length} fuses`;
-  if (beads.length === 1) return beads[0].value || "";
-  if (beads.length > 1) return `${beads.length} beads`;
-  return "";
-}
-
-export function countText(parts) {
-  const bits = [];
-  const channels = parts.filter((part) => part.kind === "channel");
-  const loads = parts.filter((part) => part.kind === "load");
-  const ldos = parts.filter((part) => part.kind === "regulator" && part.topology === "ldo");
-  const bucks = parts.filter((part) => part.kind === "regulator" && part.topology !== "ldo");
-  if (channels.length) bits.push(`${channels.length} channel${channels.length === 1 ? "" : "s"}`);
-  if (ldos.length === 1) bits.push("1 LDO");
-  else if (ldos.length) bits.push(`${ldos.length} LDOs`);
-  if (bucks.length) bits.push(`${bucks.length} regulator${bucks.length === 1 ? "" : "s"}`);
-  if (loads.length === 1) bits.push("1 load");
-  else if (loads.length) bits.push(`${loads.length} loads`);
-  return bits.join(", ");
-}
-
-function enableNames(edges) {
-  const names = [];
-  for (const edge of edges) {
-    for (const tag of edge.controls || []) {
-      if (tag.role === "en" && tag.net && !names.includes(tag.net)) names.push(tag.net);
-    }
-  }
-  return names;
-}
-
-/** Descendants that are not themselves open. Member edges are not part of the set. */
-export function collapsedParts(graph, rootId, openSet) {
-  const nodes = byId(graph);
-  const parts = [];
-  const edges = [];
-  const seen = new Set([rootId]);
-  const stack = [rootId];
-  while (stack.length) {
-    const id = stack.pop();
-    for (const edge of outgoing(graph, id)) {
-      const child = nodes.get(edge.dst);
-      if (!child || seen.has(child.id)) continue;
-      seen.add(child.id);
-      if (openSet.has(child.id)) continue;
-      parts.push(child);
-      edges.push(edge);
-      stack.push(child.id);
-    }
-  }
-  return { parts, edges };
-}
-
-export function badgeText(graph, rootId, openSet, includeEnables = true) {
-  const nodes = byId(graph);
-  const { parts, edges } = collapsedParts(graph, rootId, openSet);
-  const root = nodes.get(rootId);
-  const seriesParts = parts.filter((part) => part.kind === "protection");
-  if (root && root.kind === "protection" && !openSet.has(rootId)) seriesParts.unshift(root);
-  const bits = [];
-  const count = countText(parts);
-  const series = seriesBadge(seriesParts);
-  const enables = includeEnables ? enableNames(edges) : [];
-  if (count) bits.push(count);
-  if (series) bits.push(series);
-  if (enables.length) bits.push(enables.join(", "));
-  return bits.join(" · ");
-}
-
-function isSecondStage(graph, regId) {
-  const nodes = byId(graph);
-  const seen = new Set();
-  const stack = [regId];
-  while (stack.length) {
-    const id = stack.pop();
-    for (const edge of graph.edges || []) {
-      if (edge.dst !== id || !FLOW.has(edge.role)) continue;
-      const src = nodes.get(edge.src);
-      if (!src || seen.has(src.id)) continue;
-      if (src.kind === "regulator" && src.id !== regId) return true;
-      seen.add(src.id);
-      stack.push(src.id);
-    }
-  }
-  return false;
-}
-
-function regulatorsReached(graph, startId) {
-  const nodes = byId(graph);
-  const found = new Set();
-  const seen = new Set([startId]);
-  const stack = [startId];
-  while (stack.length) {
-    const id = stack.pop();
-    for (const edge of outgoing(graph, id)) {
-      const dst = nodes.get(edge.dst);
-      if (!dst || seen.has(dst.id)) continue;
-      if (dst.kind === "regulator") {
-        found.add(dst.id);
-        continue;
-      }
-      seen.add(dst.id);
-      stack.push(dst.id);
-    }
-  }
-  return found;
-}
-
-function openDiscrete(graph) {
-  const open = new Set();
-  const nodes = graph.nodes || [];
-  const first = nodes.filter((node) => node.kind === "regulator" && !isSecondStage(graph, node.id));
-  for (const regulator of first) {
-    open.add(regulator.id);
-    for (const edge of outgoing(graph, regulator.id)) {
-      if (edge.role === "out") open.add(edge.dst);
-    }
-  }
-  for (const node of nodes) {
-    if (node.kind !== "protection" && node.kind !== "switch") continue;
-    if (regulatorsReached(graph, node.id).size > 1) open.add(node.id);
-  }
-  if (open.size > VISIBLE_CAP) {
-    const nodesById = byId(graph);
-    for (const id of [...open]) {
-      const node = nodesById.get(id);
-      if (!node || node.kind !== "rail") continue;
-      const outs = outgoing(graph, id);
-      if (outs.length && outs.every((edge) => edge.role === "load")) open.delete(id);
-      if (open.size <= VISIBLE_CAP) break;
-    }
-  }
-  return open;
-}
-
-function openPmicFrame(graph) {
-  const open = new Set();
-  const inputKinds = new Set(["source", "connector", "protection", "switch", "rail"]);
-  for (const node of graph.nodes || []) {
-    if (node.kind === "pmic") open.add(node.id);
-    if (node.group === "input" && inputKinds.has(node.kind)) open.add(node.id);
-    if (node.kind === "regulator") {
-      open.add(node.id);
-      for (const edge of outgoing(graph, node.id)) {
-        if (edge.role === "out") open.add(edge.dst);
-      }
-    }
-  }
-  if (open.size > PMIC_CAP) {
-    const nodesById = byId(graph);
-    for (const id of [...open]) {
-      const node = nodesById.get(id);
-      if (!node || node.kind !== "rail" || node.group === "input") continue;
-      open.delete(id);
-      if (open.size <= PMIC_CAP) break;
-    }
-  }
-  return open;
-}
-
-export function defaultOpen(graph) {
-  const hasPmic = (graph.nodes || []).some((node) => node.kind === "pmic");
-  return hasPmic ? openPmicFrame(graph) : openDiscrete(graph);
-}
-
-function channelGroups(graph, pmicId, openSet) {
-  const nodes = byId(graph);
-  const grouped = new Map();
-  for (const edge of graph.edges || []) {
-    if (edge.src !== pmicId || edge.role !== "channel") continue;
-    const channel = nodes.get(edge.dst);
-    if (!channel) continue;
-    const group = channel.group || "other";
-    if (!grouped.has(group)) grouped.set(group, []);
-    grouped.get(group).push({ channel, edge });
-  }
-  return [...grouped.entries()].sort().map(([group, rows]) => {
-    const enables = enableNames(rows.map((row) => row.edge));
-    return {
-      group,
-      count: rows.length,
-      ids: rows.map((row) => row.channel.id),
-      names: rows.map((row) => row.channel.name),
-      open: rows.some((row) => openSet.has(row.channel.id)),
-      badge: `${rows.length} channel${rows.length === 1 ? "" : "s"}`,
-      enables,
-      detail: enables.length ? "" : NO_ENABLE_DETAIL,
-    };
-  });
-}
-
-export function unresolvedLine(graph) {
-  const rows = [...(graph.unresolved || [])].sort((a, b) =>
-    String(a.refdes || "").localeCompare(String(b.refdes || "")));
-  if (!rows.length) return "";
-  const names = rows.map((row) => row.refdes).filter(Boolean);
-  const one = rows.length === 1;
-  const who = names.length ? `, ${names.join(", ")},` : "";
-  const reasons = new Set(rows.map((row) => row.reason || "no pin_pads"));
-  const reason = reasons.size === 1 ? [...reasons][0] : "no pin_pads";
-  const because = reason === "pin list did not join a supply"
-    ? (one
-      ? "has a pin list that did not join a supply, so it is not drawn as feeding anything."
-      : "have pin lists that did not join a supply, so they are not drawn as feeding anything.")
-    : (one
-      ? "has no pin list, so it is not drawn as feeding anything."
-      : "have no pin list, so they are not drawn as feeding anything.");
-  return `${rows.length} ${one ? "part" : "parts"}${who} ${because}`;
-}
-
-export function feedNotice(graph) {
-  if (!graph || graph.coverage !== "graph") return "";
-  const nodes = byId(graph);
-  const fed = (graph.edges || []).some((edge) => {
-    if (edge.provenance !== "pin-join" || edge.role !== "out") return false;
-    const src = nodes.get(edge.src);
-    return Boolean(src && src.kind === "regulator");
-  });
-  return fed ? "" : NO_FEED_NOTICE;
-}
-
-function membersOf(graph, railId) {
-  const nodes = byId(graph);
-  const names = [];
-  for (const edge of graph.edges || []) {
-    if (edge.dst !== railId || edge.role !== "member") continue;
-    const src = nodes.get(edge.src);
-    if (src && src.refdes) names.push(src.refdes);
-  }
-  return names;
-}
-
-function discreteColumns(graph, openSet) {
-  const reachable = new Set();
-  const stack = [...openSet];
-  const seen = new Set(openSet);
-  while (stack.length) {
-    const id = stack.pop();
-    for (const edge of outgoing(graph, id)) {
-      if (seen.has(edge.dst)) continue;
-      seen.add(edge.dst);
-      reachable.add(edge.dst);
-      stack.push(edge.dst);
-    }
-  }
-  const rows = [];
-  for (const node of graph.nodes || []) {
-    if (node.kind === "connector" || node.kind === "load" || node.kind === "channel") continue;
-    const open = openSet.has(node.id);
-    if (!open && reachable.has(node.id)) continue;
-    if (!open && !reachable.has(node.id) && node.kind === "rail") {
-      const inbound = (graph.edges || []).filter((edge) => edge.dst === node.id);
-      const fed = inbound.some((edge) => edge.role !== "member");
-      const member = inbound.some((edge) => edge.role === "member");
-      if (fed || !member) continue;
-    }
-    const children = [];
-    if (open) {
-      const nodes = byId(graph);
-      for (const edge of outgoing(graph, node.id)) {
-        if (edge.role !== "out") continue;
-        const child = nodes.get(edge.dst);
-        if (!child) continue;
-        children.push({ id: child.id, label: nodeLabel(child), group: child.group || "" });
-      }
-    }
-    rows.push({
-      id: node.id,
-      kind: node.kind,
-      label: nodeLabel(node),
-      open,
-      badge: badgeText(graph, node.id, openSet),
-      members: node.kind === "rail" ? membersOf(graph, node.id) : [],
-      children,
-    });
-  }
-  rows.sort((a, b) => a.label.localeCompare(b.label));
-  return rows;
-}
-
-export function draw(graph, openSet) {
-  const hasPmic = (graph.nodes || []).some((node) => node.kind === "pmic");
-  const open = [...openSet].sort();
-  const line = unresolvedLine(graph);
-  if (!hasPmic) {
-    return {
-      hasPmic: false,
-      open,
-      frame: null,
-      external: [],
-      columns: discreteColumns(graph, openSet),
-      unresolved: line,
-      feed: feedNotice(graph),
-    };
-  }
-  const nodes = byId(graph);
-  const frame = (graph.nodes || []).filter((node) => node.kind === "pmic").map((pmic) => ({
-    id: pmic.id,
-    refdes: pmic.refdes,
-    groups: channelGroups(graph, pmic.id, openSet),
-  }));
-  const external = (graph.nodes || []).filter((node) => node.kind === "regulator").map((regulator) => ({
-    id: regulator.id,
-    refdes: regulator.refdes,
-    open: openSet.has(regulator.id),
-    badge: badgeText(graph, regulator.id, openSet),
-    rails: outgoing(graph, regulator.id)
-      .filter((edge) => edge.role === "out")
-      .map((edge) => nodes.get(edge.dst))
-      .filter(Boolean)
-      .map((rail) => ({
-        id: rail.id,
-        name: rail.name,
-        badge: badgeText(graph, rail.id, openSet),
-        members: membersOf(graph, rail.id),
-      })),
-  }));
-  return { hasPmic: true, open, frame, external, columns: [], unresolved: line, feed: feedNotice(graph) };
-}
-
-function controlColumn(edges, role) {
-  const names = [];
-  for (const edge of edges) {
-    for (const tag of edge.controls || []) {
-      if (tag.role === role && tag.net && !names.includes(tag.net)) names.push(tag.net);
-    }
-  }
-  return names.join(", ");
-}
-
-export function railTable(graph) {
-  const nodes = byId(graph);
-  const rows = [];
-  for (const node of graph.nodes || []) {
-    if (node.kind !== "rail" && node.kind !== "channel") continue;
-    const inbound = (graph.edges || []).filter((edge) => edge.dst === node.id && edge.role !== "member");
-    let from = "";
-    if (node.kind === "channel") {
-      const pmic = nodes.get(node.pmic);
-      from = `${pmic && pmic.refdes ? pmic.refdes : "PMIC"} channel`;
-    } else {
-      const src = inbound
-        .map((edge) => nodes.get(edge.src))
-        .find((item) => item && item.refdes && item.kind !== "connector");
-      from = src ? src.refdes : "";
-    }
-    const seriesParts = inbound
-      .filter((edge) => edge.role === "series")
-      .map((edge) => nodes.get(edge.src))
-      .filter(Boolean);
-    const loads = (graph.edges || []).filter((edge) => edge.src === node.id && edge.role === "load");
-    rows.push({
-      Rail: node.name,
-      Group: node.group || "",
-      From: from,
-      EN: controlColumn(inbound, "en"),
-      PWM: controlColumn(inbound, "pwm"),
-      PG: controlColumn(inbound, "pg"),
-      "Series parts": seriesBadge(seriesParts),
-      Loads: String(loads.length),
-    });
-  }
-  rows.sort((a, b) => a.Rail.localeCompare(b.Rail) || a.From.localeCompare(b.From));
-  return rows;
-}
-
-/** Notice for a ?board= value. Illegal ids produce a fixed sentence. */
-export function boardNotice(wanted, index, showHidden) {
-  if (wanted == null || wanted === "") return null;
-  if (!ID_GRAMMAR.test(wanted)) return "No board is selected.";
-  const pinout = (index.pinout_only || []).find((row) => row.id === wanted);
-  if (pinout) return pinout.reason;
-  const row = (index.boards || []).find((item) => item.id === wanted);
-  if (row && row.hidden && !showHidden) return `${wanted} is not listed publicly.`;
-  if (!row) return `No board ${wanted}.`;
-  return null;
-}
-
-function railRowMatches(row, rail) {
-  return row.Rail === rail || row.EN === rail || row.PWM === rail || row.PG === rail;
-}
-
-/** Query string writeUrl will put in the address bar. */
-export function permalinkQuery({ showHidden, boardId, rail }) {
-  const params = new URLSearchParams();
-  if (showHidden) params.set("hidden", "1");
-  if (boardId) params.set("board", boardId);
-  if (rail) params.set("rail", rail);
-  const query = params.toString();
-  return query ? `?${query}` : "";
-}
-
-/**
- * First-paint decision for ?board= and ?rail=.
- * The rail stays when the board on screen is the board that was requested.
- * A rail that is on that graph selects the Rails reading. An unknown rail
- * stays in the URL and produces a notice.
- */
-export function permalinkState({ wanted, rail, showHidden, index, graph }) {
-  const notice = boardNotice(wanted, index, showHidden);
-  const boards = index.boards || [];
-  const visible = boards.filter((row) => showHidden || !row.hidden);
-  let start = visible.find((row) => row.id === wanted) ||
-    visible.find((row) => row.id === DEFAULT_BOARD) ||
-    visible[0];
-  if (!start) start = boards.find((row) => row.id === DEFAULT_BOARD) || boards[0] || null;
-  let pinnedNotice = notice || "";
-  if (!pinnedNotice && start && start.hidden && !showHidden) {
-    pinnedNotice = `${start.id} is not listed publicly.`;
-  }
-  const sameBoard = Boolean(start && (wanted == null || wanted === "" || start.id === wanted));
-  const keepRail = sameBoard ? (rail || "") : "";
-  const rows = graph ? railTable(graph) : [];
-  const selected = Boolean(keepRail && rows.some((row) => railRowMatches(row, keepRail)));
-  return {
-    boardId: start ? start.id : "",
-    rail: keepRail,
-    reading: selected ? "rails" : "tree",
-    pinnedNotice,
-    railNotice: keepRail && graph && !selected ? `No rail ${keepRail}.` : "",
-    selected,
-    url: permalinkQuery({ showHidden, boardId: start ? start.id : "", rail: keepRail }),
-  };
-}
-
-function setNotice(text) {
-  const host = document.getElementById("notices");
-  host.replaceChildren();
-  if (!text) return;
-  const note = document.createElement("p");
-  note.className = "lc-notice";
-  note.setAttribute("role", "status");
-  note.textContent = text;
-  host.appendChild(note);
-}
-
-function addNotice(text) {
-  if (!text) return;
-  const host = document.getElementById("notices");
-  const note = document.createElement("p");
-  note.className = "lc-notice";
-  note.setAttribute("role", "status");
-  note.textContent = text;
-  host.appendChild(note);
-}
+const el = (id) => document.getElementById(id);
+const make = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
 
 let index = { boards: [], pinout_only: [] };
-let showHidden = false;
-let graph = null;
-let meta = null;
-let reading = "tree";
-let hiddenDomains = new Set();
-let showProtection = true;
-let showEnables = true;
-let railQuery = "";
-let selectedPart = "";
-let pinnedNotice = "";
-let openSet = null;
+let doc = null;
+const view = { board: null, walk: null, step: 1, rail: null, view: "tree", query: "" };
 
-function visibleBoards() {
-  return (index.boards || []).filter((row) => showHidden || !row.hidden);
+function writeUrl() {
+  history.replaceState(null, "", buildQuery({
+    board: view.board, walk: view.walk, step: view.step, rail: view.rail, view: view.view,
+  }));
 }
+
+function notice(text) {
+  const host = el("notices");
+  host.textContent = "";
+  if (!text) return;
+  const p = make("p", "lc-notice", text);
+  p.setAttribute("role", "status");
+  host.appendChild(p);
+}
+
+// --- board list --------------------------------------------------------------
 
 function buildSelect() {
-  const select = document.getElementById("board-select");
-  select.replaceChildren();
-  const rows = visibleBoards();
-  const vendors = [...new Set(rows.map((row) => row.vendor || "Board"))];
-  for (const vendor of vendors) {
-    const group = document.createElement("optgroup");
-    group.label = vendor;
-    for (const row of rows.filter((item) => (item.vendor || "Board") === vendor)) {
-      const option = document.createElement("option");
-      option.value = row.id;
-      option.textContent = `${row.name} (${row.model})`;
-      group.appendChild(option);
+  const sel = el("board-select");
+  sel.textContent = "";
+  const listed = index.boards.filter((b) => !b.hidden);
+  const modelled = listed.filter((b) => b.coverage === "model");
+  const other = listed.filter((b) => b.coverage !== "model");
+  const group = (label, rows) => {
+    if (!rows.length) return;
+    const g = make("optgroup");
+    g.label = label;
+    for (const b of rows) {
+      const o = make("option", null, `${b.name} (${b.model})`);
+      o.value = b.id;
+      g.appendChild(o);
     }
-    select.appendChild(group);
+    sel.appendChild(g);
+  };
+  group("Power tree and states", modelled);
+  group("No netlist yet", [...other, ...(index.pinout_only || []).map((p) => ({ ...p, model: p.id.toUpperCase() }))]);
+  sel.addEventListener("change", () => chooseBoard(sel.value, true));
+}
+
+async function chooseBoard(id, fresh) {
+  const row = index.boards.find((b) => b.id === id) || index.pinout_only.find((b) => b.id === id);
+  if (!row) {
+    notice(`No board "${id}" here; showing ${DEFAULT_BOARD}.`);
+    return chooseBoard(DEFAULT_BOARD, true);
   }
-}
-
-function writeUrl(boardId, rail) {
-  const params = new URLSearchParams();
-  if (showHidden) params.set("hidden", "1");
-  if (boardId) params.set("board", boardId);
-  if (rail) params.set("rail", rail);
-  const query = params.toString();
-  history.replaceState(null, "", query ? `?${query}` : location.pathname);
-}
-
-export function domainOf(group) {
-  for (const [id, _label, groups] of DOMAINS) {
-    if (groups.includes(group)) return id;
+  view.board = id;
+  el("board-select").value = id;
+  if (fresh) Object.assign(view, { walk: null, step: 1, rail: null });
+  doc = null;
+  if (row.coverage === "model") {
+    try {
+      const r = await fetch(`data/${id}.json`);
+      doc = await r.json();
+    } catch (e) {
+      notice(`Could not load ${id}.`);
+    }
   }
-  return null;
-}
-
-export function visibleWhen(hidden, group) {
-  const domain = domainOf(group);
-  return domain ? !hidden.has(domain) : true;
-}
-
-function hiddenByDomain(node) {
-  if (!showProtection && (node.kind === "protection")) return true;
-  const domain = domainOf(node.group);
-  return domain ? hiddenDomains.has(domain) : false;
-}
-
-function toggleIds(ids) {
-  if (!openSet) return;
-  const anyOpen = ids.some((id) => openSet.has(id));
-  for (const id of ids) {
-    if (anyOpen) openSet.delete(id);
-    else openSet.add(id);
+  if (!doc) {
+    notice("");
+    paintEmpty(row);
+    writeUrl();
+    return;
   }
+  notice("");
+  const walk = (doc.walks || [])[0];
+  if (!view.walk || !(doc.walks || []).some((w) => w.id === view.walk)) view.walk = walk ? walk.id : null;
+  const n = steps(doc, view.walk).length;
+  if (view.step == null || view.step >= n) view.step = Math.max(0, n - 1);
+  if (view.rail && !doc.rails.some((r) => r.id === view.rail)) view.rail = null;
   render();
 }
 
-function paintDetail(drawn) {
-  const host = document.getElementById("detail");
-  if (!host) return;
-  host.replaceChildren();
-  if (!drawn.frame) return;
-  const needs = drawn.frame.some((pmic) => pmic.groups.some((group) => group.detail));
-  if (!needs) return;
-  const line = document.createElement("p");
-  line.className = "power-detail";
-  line.textContent = NO_ENABLE_DETAIL;
-  host.appendChild(line);
+function paintEmpty(row) {
+  el("board-meta").textContent = "";
+  el("board-meta").appendChild(make("p", "pw-meta-name", row.name));
+  el("walk").textContent = "";
+  el("legend").textContent = "";
+  el("detail").hidden = true;
+  el("rails").hidden = true;
+  const tree = el("tree");
+  tree.hidden = false;
+  tree.textContent = "";
+  const box = make("div", "pw-empty");
+  box.appendChild(make("p", null,
+    "This board's power tree is not drawn yet: it is built from the board's layout netlist, and that is not in this catalogue."));
+  const a = make("a", null, "Its header pins and their I/O voltages are on the GPIO pinout");
+  a.href = `${GPIO_SITE}?board=${encodeURIComponent(row.id)}`;
+  box.appendChild(a);
+  tree.appendChild(box);
 }
 
-function paintTree(drawn) {
-  const host = document.getElementById("tree");
-  host.replaceChildren();
-  if (drawn.unresolved) host.appendChild(unresolvedParagraph(drawn.unresolved, selectedPart));
-  if (graph && graph.nodes.length === 0) {
-    const line = document.createElement("p");
-    line.textContent = graph.reason || "No power tree.";
-    host.appendChild(line);
-    return;
-  }
-  const layout = document.createElement("div");
-  layout.className = "power-layout";
-  if (drawn.frame) {
-    for (const pmic of drawn.frame) {
-      const frame = document.createElement("section");
-      frame.className = "power-frame";
-      const title = document.createElement("h3");
-      title.textContent = pmic.refdes;
-      frame.appendChild(title);
-      for (const group of pmic.groups) {
-        if (hiddenDomains.has(domainOf(group.group))) continue;
-        const row = document.createElement("p");
-        row.className = "power-node";
-        row.dataset.open = group.open ? "true" : "false";
-        const name = document.createElement("span");
-        name.textContent = group.group;
-        row.appendChild(name);
-        const badge = document.createElement("span");
-        badge.className = "power-badge";
-        const enable = showEnables && group.enables.length ? ` · ${group.enables.join(", ")}` : "";
-        badge.textContent = `${group.badge}${enable}`;
-        row.appendChild(badge);
-        row.addEventListener("click", () => toggleIds(group.ids));
-        frame.appendChild(row);
-        if (group.open) {
-          for (const channelName of group.names) {
-            const line = document.createElement("p");
-            line.className = "power-node power-child";
-            line.textContent = channelName;
-            frame.appendChild(line);
-          }
-        } else if (group.detail) {
-          const detail = document.createElement("p");
-          detail.className = "power-detail";
-          detail.textContent = group.detail;
-          frame.appendChild(detail);
-        }
-      }
-      layout.appendChild(frame);
-    }
-    if (drawn.external.length) {
-      const column = document.createElement("section");
-      column.className = "power-col power-external";
-      const title = document.createElement("h3");
-      title.textContent = "Regulators";
-      column.appendChild(title);
-      for (const regulator of drawn.external) {
-        const row = document.createElement("p");
-        row.className = "power-node";
-        row.dataset.open = regulator.open ? "true" : "false";
-        row.textContent = regulator.refdes;
-        row.addEventListener("click", () => toggleIds([regulator.id]));
-        const regBadge = badgeText(graph, regulator.id, openSet, showEnables);
-        if (regBadge) {
-          const badge = document.createElement("span");
-          badge.className = "power-badge";
-          badge.textContent = regBadge;
-          row.appendChild(badge);
-        }
-        column.appendChild(row);
-        for (const rail of regulator.rails) {
-          const railRow = document.createElement("p");
-          railRow.className = "power-node";
-          railRow.textContent = rail.name;
-          const railBadge = badgeText(graph, rail.id, openSet, showEnables);
-          if (railBadge) {
-            const badge = document.createElement("span");
-            badge.className = "power-badge";
-            badge.textContent = railBadge;
-            railRow.appendChild(badge);
-          }
-          column.appendChild(railRow);
-        }
-      }
-      layout.appendChild(column);
-    }
-  } else {
-    const column = document.createElement("section");
-    column.className = "power-col";
-    for (const row of drawn.columns) {
-      const node = byId(graph).get(row.id);
-      if (node && hiddenByDomain(node)) continue;
-      const line = document.createElement("p");
-      line.className = "power-node";
-      line.dataset.open = row.open ? "true" : "false";
-      line.textContent = row.label;
-      line.addEventListener("click", () => toggleIds([row.id]));
-      const liveBadge = badgeText(graph, row.id, openSet, showEnables);
-      if (liveBadge) {
-        const badge = document.createElement("span");
-        badge.className = "power-badge";
-        badge.textContent = liveBadge;
-        line.appendChild(badge);
-      }
-      if (selectedPart && node && node.refdes === selectedPart) line.classList.add("power-hit");
-      if (row.members && row.members.length) {
-        const tag = document.createElement("span");
-        tag.className = "power-tag";
-        tag.textContent = row.members.join(", ");
-        line.appendChild(tag);
-      }
-      column.appendChild(line);
-      for (const child of row.children || []) {
-        if (hiddenByDomain({ kind: "rail", group: child.group })) continue;
-        const childLine = document.createElement("p");
-        childLine.className = "power-node power-child";
-        childLine.dataset.id = child.id;
-        childLine.textContent = child.label;
-        column.appendChild(childLine);
-      }
-    }
-    layout.appendChild(column);
-  }
-  host.appendChild(layout);
-}
+// --- render ------------------------------------------------------------------
 
-function paintRails(rows) {
-  const host = document.getElementById("rails");
-  host.replaceChildren();
-  const table = document.createElement("table");
-  table.className = "power-rails";
-  const head = document.createElement("thead");
-  const headRow = document.createElement("tr");
-  for (const name of RAIL_COLUMNS) {
-    const cell = document.createElement("th");
-    cell.textContent = name;
-    headRow.appendChild(cell);
-  }
-  head.appendChild(headRow);
-  table.appendChild(head);
-  const body = document.createElement("tbody");
-  for (const row of rows) {
-    if (hiddenDomains.has(domainOf(row.Group))) continue;
-    const tr = document.createElement("tr");
-    if (railQuery && railRowMatches(row, railQuery)) {
-      tr.className = "power-hit";
-    }
-    for (const name of RAIL_COLUMNS) {
-      const cell = document.createElement("td");
-      let text = row[name];
-      if (!showEnables && (name === "EN" || name === "PWM" || name === "PG")) text = "";
-      cell.textContent = text;
-      tr.appendChild(cell);
-    }
-    body.appendChild(tr);
-  }
-  table.appendChild(body);
-  host.appendChild(table);
+function current() {
+  const all = steps(doc, view.walk);
+  return { all, step: all[view.step] || all[all.length - 1] };
 }
 
 function render() {
-  if (!graph) return;
-  if (graph.schema !== 1) {
-    setNotice("This board's power file is not schema 1.");
-    return;
-  }
-  if (!openSet) openSet = defaultOpen(graph);
-  const drawn = draw(graph, openSet);
-  const rows = railTable(graph);
-  setNotice(pinnedNotice);
-  if (drawn.feed) addNotice(drawn.feed);
-  document.getElementById("view-tree").setAttribute("aria-pressed", reading === "tree" ? "true" : "false");
-  document.getElementById("view-rails").setAttribute("aria-pressed", reading === "rails" ? "true" : "false");
-  document.getElementById("tree").hidden = reading !== "tree";
-  document.getElementById("rails").hidden = reading !== "rails";
-  paintTree(drawn);
-  paintRails(rows);
-  paintDetail(drawn);
-  const metaHost = document.getElementById("board-meta");
-  metaHost.replaceChildren();
-  if (meta) {
-    const line = document.createElement("p");
-    const shape = meta.shape || graph.shape || "";
-    line.textContent = `${meta.name} · ${meta.soc}${shape ? ` · ${shape}` : ""}`;
-    metaHost.appendChild(line);
-    if (meta.shares_layout_with) {
-      const other = (index.boards || []).find((row) => row.id === meta.shares_layout_with);
-      if (other && (showHidden || !other.hidden)) {
-        const same = document.createElement("p");
-        same.appendChild(document.createTextNode("same PCB as "));
-        const link = document.createElement("a");
-        link.textContent = other.model;
-        link.href = `?board=${other.id}${showHidden ? "&hidden=1" : ""}`;
-        link.addEventListener("click", (event) => {
-          event.preventDefault();
-          chooseBoard(other.id);
-        });
-        same.appendChild(link);
-        metaHost.appendChild(same);
-      }
+  paintMeta();
+  paintWalk();
+  paintLegend();
+  const tree = view.view === "tree";
+  el("view-tree").setAttribute("aria-pressed", String(tree));
+  el("view-rails").setAttribute("aria-pressed", String(!tree));
+  el("tree").hidden = !tree;
+  el("rails").hidden = tree;
+  if (tree) paintTree();
+  else paintRails();
+  paintDetail();
+  writeUrl();
+}
+
+function paintMeta() {
+  const box = el("board-meta");
+  box.textContent = "";
+  box.appendChild(make("p", "pw-meta-name", doc.name || doc.id));
+  box.appendChild(make("p", "pw-meta-sub", [doc.model, doc.soc].filter(Boolean).join(" · ")));
+  const nMakers = (doc.makers || []).filter((m) => m.kind !== "link").length;
+  box.appendChild(make("p", "pw-meta-sub", `${doc.rails.length} rails · ${nMakers} regulators and switches`));
+}
+
+function paintWalk() {
+  const host = el("walk");
+  host.textContent = "";
+  const walks = doc.walks || [];
+  if (walks.length > 1) {
+    const sel = make("select", "pw-walk-select");
+    sel.setAttribute("aria-label", "Sequence");
+    for (const w of walks) {
+      const o = make("option", null, w.label);
+      o.value = w.id;
+      sel.appendChild(o);
     }
-  }
-  paintToggles();
-  const railState = permalinkState({
-    wanted: meta && meta.id,
-    rail: railQuery,
-    showHidden,
-    index,
-    graph,
-  });
-  if (railState.railNotice) addNotice(railState.railNotice);
-  const hit = document.querySelector("tr.power-hit");
-  if (hit) hit.scrollIntoView({ block: "nearest" });
-}
-
-function paintToggles() {
-  const host = document.getElementById("domain-toggles");
-  host.replaceChildren();
-  const present = new Set((graph.nodes || []).map((node) => node.group).filter(Boolean));
-  for (const [id, label, groups] of DOMAINS) {
-    if (!groups.some((group) => present.has(group))) continue;
-    host.appendChild(toggleButton(label, !hiddenDomains.has(id), () => {
-      if (hiddenDomains.has(id)) hiddenDomains.delete(id);
-      else hiddenDomains.add(id);
-      render();
-    }));
-  }
-  if ((graph.nodes || []).some((node) => node.kind === "protection") || (graph.unresolved || []).length) {
-    host.appendChild(toggleButton("Protection", showProtection, () => {
-      showProtection = !showProtection;
-      render();
-    }));
-  }
-  const hasEnable = (graph.edges || []).some((edge) => (edge.controls || []).some((tag) => tag.role === "en"));
-  if (hasEnable) {
-    host.appendChild(toggleButton("Enables", showEnables, () => {
-      showEnables = !showEnables;
-      render();
-    }));
-  }
-}
-
-function toggleButton(label, pressed, onClick) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "lc-toggle";
-  button.setAttribute("aria-pressed", pressed ? "true" : "false");
-  button.textContent = label;
-  button.addEventListener("click", onClick);
-  return button;
-}
-
-export function searchHits(term, source = graph) {
-  const query = String(term || "").trim().toLowerCase();
-  if (!query || !source) return [];
-  const hits = [];
-  for (const node of source.nodes || []) {
-    const hay = [node.refdes, node.name, node.value, node.footprint].filter(Boolean).join(" ").toLowerCase();
-    if (!hay.includes(query)) continue;
-    hits.push({
-      label: nodeLabel(node),
-      rail: railFor(node, source),
-      part: node.refdes || "",
-      id: node.id || "",
-    });
-  }
-  for (const edge of source.edges || []) {
-    for (const tag of edge.controls || []) {
-      if (tag.net && tag.net.toLowerCase().includes(query)) {
-        hits.push({ label: tag.net, rail: tag.net, part: "", id: "" });
-      }
-    }
-  }
-  for (const row of source.unresolved || []) {
-    const hay = [row.refdes, row.value, row.footprint].filter(Boolean).join(" ").toLowerCase();
-    if (hay.includes(query)) hits.push({ label: row.refdes, rail: "", part: row.refdes, id: "" });
-  }
-  const seen = new Set();
-  return hits.filter((hit) => {
-    const key = `${hit.label}|${hit.rail}|${hit.part}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).slice(0, 20);
-}
-
-export function searchReport(source, term) {
-  const text = String(term || "").trim();
-  const hits = searchHits(text, source);
-  if (!text || hits.length) return { hits, miss: "" };
-  return { hits: [], miss: `${text} is not on this board.` };
-}
-
-export function stageForHit(hit) {
-  if (!hit) return { reading: "tree", rail: "", part: "", openId: "" };
-  if (hit.rail) return { reading: "rails", rail: hit.rail, part: "", openId: hit.id || "" };
-  if (hit.part) return { reading: "tree", rail: "", part: hit.part, openId: hit.id || "" };
-  return { reading: "tree", rail: "", part: "", openId: "" };
-}
-
-function railFor(node, source) {
-  if (node.kind === "rail" || node.kind === "channel") return node.name || "";
-  const edges = (source || graph).edges || [];
-  const fed = edges.find((item) => item.src === node.id && (item.role === "out" || item.role === "channel"));
-  if (fed) return fed.net;
-  const member = edges.find((item) => item.src === node.id && item.role === "member");
-  return member ? member.net : "";
-}
-
-function unresolvedParagraph(text, selected) {
-  const line = document.createElement("p");
-  line.className = "power-unresolved";
-  const token = selected ? `, ${selected},` : "";
-  const at = token ? text.indexOf(token) : -1;
-  if (at < 0) {
-    line.textContent = text;
-    return line;
-  }
-  line.appendChild(document.createTextNode(text.slice(0, at + 2)));
-  const mark = document.createElement("span");
-  mark.className = "power-hit";
-  mark.dataset.refdes = selected;
-  mark.textContent = selected;
-  line.appendChild(mark);
-  line.appendChild(document.createTextNode(text.slice(at + 2 + selected.length)));
-  return line;
-}
-
-function paintSearch(term) {
-  const host = document.getElementById("search-hits");
-  host.replaceChildren();
-  const report = searchReport(graph, term);
-  if (report.miss) {
-    const line = document.createElement("p");
-    line.className = "power-miss";
-    line.textContent = report.miss;
-    host.appendChild(line);
-    return;
-  }
-  for (const hit of report.hits) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "power-hit-btn";
-    button.textContent = hit.label;
-    button.addEventListener("click", () => {
-      const stage = stageForHit(hit);
-      railQuery = stage.rail;
-      selectedPart = stage.part;
-      reading = stage.reading;
-      if (stage.openId && openSet) openSet.add(stage.openId);
-      hiddenDomains = new Set();
-      showProtection = true;
-      showEnables = true;
-      writeUrl(meta && meta.id, railQuery);
-      host.replaceChildren();
+    sel.value = view.walk;
+    sel.addEventListener("change", () => {
+      view.walk = sel.value;
+      view.step = 0;
       render();
     });
-    host.appendChild(button);
+    host.appendChild(sel);
+  } else if (walks[0]) {
+    host.appendChild(make("p", "pw-walk-name", walks[0].label));
+  }
+  const { all } = current();
+  const ol = make("ol", "pw-steps");
+  all.forEach((s, i) => {
+    const li = make("li");
+    const b = make("button", "pw-step", s.label);
+    b.type = "button";
+    b.setAttribute("aria-pressed", String(i === view.step));
+    const on = Object.values(s.rails).filter((v) => v === "on").length;
+    b.title = `${on} of ${Object.keys(s.rails).length} rails on`;
+    b.addEventListener("click", () => {
+      view.step = i;
+      render();
+    });
+    li.appendChild(b);
+    ol.appendChild(li);
+  });
+  host.appendChild(ol);
+  const nav = make("div", "pw-step-nav");
+  const prev = make("button", "lc-toggle", "◀ Previous");
+  const next = make("button", "lc-toggle", "Next ▶");
+  prev.type = next.type = "button";
+  prev.disabled = view.step <= 0;
+  next.disabled = view.step >= all.length - 1;
+  prev.addEventListener("click", () => stepBy(-1));
+  next.addEventListener("click", () => stepBy(1));
+  nav.append(prev, next);
+  host.appendChild(nav);
+}
+
+function stepBy(d) {
+  const n = current().all.length;
+  const s = Math.min(n - 1, Math.max(0, view.step + d));
+  if (s !== view.step) {
+    view.step = s;
+    render();
   }
 }
 
-async function loadBoard(row) {
-  meta = row;
-  hiddenDomains = new Set();
-  showProtection = true;
-  showEnables = true;
-  const response = await fetch(`data/${row.id}.json`);
-  if (!response.ok) throw new Error(`data/${row.id}.json`);
-  graph = await response.json();
-  openSet = defaultOpen(graph);
-  const railState = permalinkState({
-    wanted: meta.id,
-    rail: railQuery,
-    showHidden,
-    index,
-    graph,
-  });
-  railQuery = railState.rail;
-  reading = railState.reading;
-  const select = document.getElementById("board-select");
-  if ([...select.options].some((option) => option.value === row.id)) select.value = row.id;
-  render();
+function paintLegend() {
+  const host = el("legend");
+  host.textContent = "";
+  const { step } = current();
+  const counts = { on: 0, off: 0, x: 0 };
+  for (const r of doc.rails) counts[status(step, r.id)]++;
+  for (const k of ["on", "off", "x"]) {
+    const row = make("span", `pw-legend-item pw-s-${k}`);
+    row.appendChild(make("span", "pw-swatch"));
+    row.appendChild(make("span", null, `${STATUS_TEXT[k]} ${counts[k]}`));
+    host.appendChild(row);
+  }
 }
 
-function chooseBoard(id) {
-  const row = (index.boards || []).find((item) => item.id === id);
-  if (!row || !ID_GRAMMAR.test(id)) return;
-  railQuery = "";
-  selectedPart = "";
-  pinnedNotice = "";
-  writeUrl(id, "");
-  setNotice("");
-  loadBoard(row).catch(() => setNotice(FILE_NOTICE));
+function railCard(rail, step, makers) {
+  const st = status(step, rail.id);
+  const card = make("button", `pw-rail pw-s-${st} pw-v-${voltageClass(rail.v)}`);
+  card.type = "button";
+  card.dataset.rail = rail.id;
+  card.setAttribute("aria-pressed", String(view.rail === rail.id));
+  card.setAttribute("aria-label", `${rail.name}${rail.v != null ? `, ${voltText(rail.v)}` : ""}, ${STATUS_TEXT[st]}`);
+  if (view.query && !search(doc, view.query).includes(rail.id)) card.classList.add("pw-dim");
+  for (const mid of rail.made_by || []) {
+    const m = makers.get(mid);
+    if (!m) continue;
+    const line = make("span", "pw-maker");
+    line.appendChild(make("span", "pw-ref", m.refdes));
+    line.appendChild(make("span", null, ` ${kindText(m.kind)}`));
+    if (m.kind !== "link") line.appendChild(make("span", "pw-ctl", ` · ${controlText(doc, m)}`));
+    card.appendChild(line);
+  }
+  if (rail.input) card.appendChild(make("span", "pw-maker", `${rail.input} input`));
+  const head = make("span", "pw-rail-head");
+  head.appendChild(make("span", "pw-dot"));
+  head.appendChild(make("span", "pw-name", rail.name));
+  if (rail.v != null) head.appendChild(make("span", "pw-volt", voltText(rail.v)));
+  head.appendChild(make("span", "pw-state", STATUS_TEXT[st]));
+  card.appendChild(head);
+  const loads = loadLines(rail);
+  if (loads.length) card.appendChild(make("span", "pw-loads", loads.join(" · ")));
+  card.addEventListener("click", () => {
+    view.rail = view.rail === rail.id ? null : rail.id;
+    render();
+  });
+  return card;
+}
+
+function paintTree() {
+  const tree = el("tree");
+  tree.textContent = "";
+  const { step } = current();
+  const makers = byId(doc.makers);
+  const grid = make("div", "pw-cols");
+  for (const col of columns(doc)) {
+    const c = make("section", "pw-col");
+    c.appendChild(make("h4", "pw-col-title", col.title));
+    for (const r of col.rails) c.appendChild(railCard(r, step, makers));
+    grid.appendChild(c);
+  }
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.classList.add("pw-wires");
+  svg.setAttribute("aria-hidden", "true");
+  tree.append(svg, grid);
+  requestAnimationFrame(() => drawWires(tree, svg, step));
+}
+
+function drawWires(tree, svg, step) {
+  const box = tree.getBoundingClientRect();
+  svg.setAttribute("width", String(tree.scrollWidth));
+  svg.setAttribute("height", String(tree.scrollHeight));
+  svg.textContent = "";
+  const pos = new Map();
+  for (const card of tree.querySelectorAll(".pw-rail")) {
+    const r = card.getBoundingClientRect();
+    pos.set(card.dataset.rail, {
+      x0: r.left - box.left + tree.scrollLeft, x1: r.right - box.left + tree.scrollLeft,
+      y: r.top - box.top + tree.scrollTop + Math.min(r.height / 2, 28),
+    });
+  }
+  const kids = children(doc);
+  for (const [parent, list] of kids) {
+    const a = pos.get(parent);
+    if (!a) continue;
+    for (const { rail } of list) {
+      const b = pos.get(rail);
+      if (!b || b.x0 <= a.x1) continue;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const mid = (a.x1 + b.x0) / 2;
+      path.setAttribute("d", `M${a.x1},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x0},${b.y}`);
+      path.setAttribute("class", `pw-wire pw-s-${status(step, rail)}`
+        + (view.rail && (view.rail === rail || view.rail === parent) ? " pw-wire-hot" : ""));
+      svg.appendChild(path);
+    }
+  }
+}
+
+function paintRails() {
+  const host = el("rails");
+  host.textContent = "";
+  const { all, step } = current();
+  const makers = byId(doc.makers);
+  const rails = byId(doc.rails);
+  const table = make("table", "pw-table");
+  const head = make("tr");
+  for (const t of ["Rail", "Voltage", "Made by", "From", "Control", ...all.map((s) => s.label)]) {
+    head.appendChild(make("th", null, t));
+  }
+  const thead = make("thead");
+  thead.appendChild(head);
+  table.appendChild(thead);
+  const body = make("tbody");
+  const hits = view.query ? new Set(search(doc, view.query)) : null;
+  for (const col of columns(doc)) {
+    for (const r of col.rails) {
+      if (hits && !hits.has(r.id)) continue;
+      const tr = make("tr", view.rail === r.id ? "pw-row-hot" : null);
+      const name = make("button", "pw-link", r.name);
+      name.type = "button";
+      name.addEventListener("click", () => {
+        view.rail = r.id;
+        render();
+      });
+      const td0 = make("td");
+      td0.appendChild(name);
+      tr.appendChild(td0);
+      tr.appendChild(make("td", null, voltText(r.v)));
+      const ms = (r.made_by || []).map((m) => makers.get(m)).filter(Boolean);
+      tr.appendChild(make("td", null, r.input ? `${r.input} input` : ms.map((m) => `${m.refdes} ${kindText(m.kind)}`).join(", ")));
+      tr.appendChild(make("td", null, ms.map((m) => (rails.get(m.in) || {}).name).filter(Boolean).join(", ")));
+      tr.appendChild(make("td", null, ms.map((m) => controlText(doc, m)).join("; ")));
+      all.forEach((s, i) => {
+        const st = status(s, r.id);
+        const td = make("td", `pw-cell pw-s-${st}${i === view.step ? " pw-cell-now" : ""}`);
+        td.appendChild(make("span", "pw-swatch"));
+        td.appendChild(make("span", "pw-cell-text", STATUS_TEXT[st]));
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    }
+  }
+  table.appendChild(body);
+  const wrap = make("div", "pw-table-wrap");
+  wrap.appendChild(table);
+  host.appendChild(wrap);
+  void step;
+}
+
+function paintDetail() {
+  const host = el("detail");
+  host.textContent = "";
+  const rail = view.rail && doc.rails.find((r) => r.id === view.rail);
+  host.hidden = !rail;
+  if (!rail) return;
+  const makers = byId(doc.makers);
+  const rails = byId(doc.rails);
+  const { all } = current();
+  const close = make("button", "pw-close", "×");
+  close.type = "button";
+  close.setAttribute("aria-label", "Close");
+  close.addEventListener("click", () => {
+    view.rail = null;
+    render();
+  });
+  host.appendChild(close);
+  host.appendChild(make("h3", "pw-detail-title", rail.name));
+  if (rail.v != null) host.appendChild(make("p", "pw-detail-v", voltText(rail.v)));
+  const chips = make("div", "pw-chips");
+  all.forEach((s, i) => {
+    const st = status(s, rail.id);
+    const c = make("button", `pw-chip pw-s-${st}`, `${s.label}: ${STATUS_TEXT[st]}`);
+    c.type = "button";
+    c.setAttribute("aria-pressed", String(i === view.step));
+    c.addEventListener("click", () => {
+      view.step = i;
+      render();
+    });
+    chips.appendChild(c);
+  });
+  host.appendChild(chips);
+  const railLink = (id) => {
+    const r = rails.get(id);
+    const b = make("button", "pw-link", r ? r.name : id);
+    b.type = "button";
+    b.addEventListener("click", () => {
+      view.rail = id;
+      render();
+    });
+    return b;
+  };
+  const section = (title) => {
+    host.appendChild(make("h4", null, title));
+    const ul = make("ul", "pw-list");
+    host.appendChild(ul);
+    return ul;
+  };
+  if (rail.input) {
+    section("Source").appendChild(make("li", null, `${rail.input}: power enters the board here`));
+  }
+  if ((rail.made_by || []).length) {
+    const ul = section("Made by");
+    for (const mid of rail.made_by) {
+      const m = makers.get(mid);
+      if (!m) continue;
+      const li = make("li");
+      li.appendChild(make("strong", null, `${m.refdes} `));
+      li.appendChild(document.createTextNode(`${kindText(m.kind)} from `));
+      if (m.in) li.appendChild(railLink(m.in));
+      li.appendChild(make("div", "pw-sub", controlText(doc, m)));
+      ul.appendChild(li);
+    }
+  } else if (!rail.input) {
+    section("Made by").appendChild(make("li", "pw-sub", "Nothing on the netlist that this page can trace makes this rail."));
+  }
+  const kids = children(doc).get(rail.id) || [];
+  if (kids.length) {
+    const ul = section("Feeds");
+    const through = new Map();
+    for (const { rail: rid, maker } of kids) {
+      if (!through.has(rid)) through.set(rid, []);
+      through.get(rid).push((makers.get(maker) || {}).refdes);
+    }
+    for (const [rid, refs] of through) {
+      const li = make("li");
+      li.appendChild(railLink(rid));
+      li.appendChild(make("span", "pw-sub", ` through ${refs.join(", ")}`));
+      ul.appendChild(li);
+    }
+  }
+  const l = rail.loads || {};
+  if ((l.soc || []).length || (l.connectors || []).length || (l.parts || []).length) {
+    const ul = section("Loads");
+    if ((l.soc || []).length) ul.appendChild(make("li", null, `SoC supply balls: ${l.soc.join(", ")}`));
+    for (const c of l.connectors || []) {
+      const li = make("li");
+      if (c.header40) {
+        const a = make("a", null, `40-pin header pin${c.pins.length > 1 ? "s" : ""} ${c.pins.join(", ")}`);
+        a.href = `${GPIO_SITE}?board=${encodeURIComponent(doc.id)}`;
+        li.appendChild(a);
+      } else {
+        li.textContent = `${c.refdes} pin${c.pins.length > 1 ? "s" : ""} ${c.pins.join(", ")}`;
+      }
+      ul.appendChild(li);
+    }
+    if ((l.parts || []).length) ul.appendChild(make("li", null, `Parts: ${l.parts.join(", ")}`));
+  }
+}
+
+// --- wiring ------------------------------------------------------------------
+
+function bind() {
+  el("view-tree").addEventListener("click", () => {
+    view.view = "tree";
+    if (doc) render();
+  });
+  el("view-rails").addEventListener("click", () => {
+    view.view = "rails";
+    if (doc) render();
+  });
+  el("search").addEventListener("input", (e) => {
+    view.query = e.target.value;
+    if (doc) render();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!doc || e.target.closest("input, select, textarea")) return;
+    if (e.key === "ArrowRight") stepBy(1);
+    else if (e.key === "ArrowLeft") stepBy(-1);
+    else if (e.key === "Escape" && view.rail) {
+      view.rail = null;
+      render();
+    }
+  });
+  let t = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(() => doc && view.view === "tree" && paintTree(), 120);
+  });
 }
 
 async function init() {
   mountShell();
-  if (location.protocol === "file:") {
-    setNotice(FILE_NOTICE);
-    return;
-  }
+  bind();
   try {
-    index = await fetch("data/boards.json").then((response) => {
-      if (!response.ok) throw new Error("boards");
-      return response.json();
-    });
-  } catch (_error) {
-    setNotice(FILE_NOTICE);
+    const r = await fetch("data/boards.json");
+    index = await r.json();
+  } catch (e) {
+    notice("Could not load the board index.");
     return;
   }
-  const params = new URLSearchParams(location.search);
-  showHidden = ["1", "true", "yes"].includes((params.get("hidden") || "").toLowerCase());
-  railQuery = params.get("rail") || "";
   buildSelect();
-  const wanted = params.get("board");
-  const opened = permalinkState({ wanted, rail: railQuery, showHidden, index, graph: null });
-  pinnedNotice = opened.pinnedNotice;
-  railQuery = opened.rail;
-  if (pinnedNotice) setNotice(pinnedNotice);
-  if (!opened.boardId) {
-    addNotice("No board is selected.");
-    return;
-  }
-  if (wanted && opened.pinnedNotice) writeUrl(opened.boardId, opened.rail);
-  const start = (index.boards || []).find((row) => row.id === opened.boardId);
-  try {
-    await loadBoard(start);
-  } catch (_error) {
-    setNotice(FILE_NOTICE);
-  }
-  document.getElementById("board-select").addEventListener("change", (event) => {
-    chooseBoard(event.target.value);
-  });
-  document.getElementById("view-tree").addEventListener("click", () => {
-    reading = "tree";
-    render();
-  });
-  document.getElementById("view-rails").addEventListener("click", () => {
-    reading = "rails";
-    render();
-  });
-  const search = document.getElementById("search");
-  search.placeholder = SEARCH_PLACEHOLDER;
-  search.addEventListener("input", (event) => {
-    paintSearch(event.target.value);
-  });
-}
-
-if (typeof window !== "undefined") {
-  window.PowerTree = {
-    defaultOpen,
-    draw,
-    seriesBadge,
-    badgeText,
-    railTable,
-    boardNotice,
-    permalinkState,
-    permalinkQuery,
-    unresolvedLine,
-    feedNotice,
-    domainOf,
-    searchReport,
-    stageForHit,
-    NO_FEED_NOTICE,
-    SEARCH_PLACEHOLDER,
-    collapsedParts,
-    countText,
-    FILE_NOTICE,
-    NO_ENABLE_DETAIL,
-    RAIL_COLUMNS,
-    VISIBLE_CAP,
-    PMIC_CAP,
-    DEFAULT_BOARD,
-  };
+  const q = parseQuery(location.search);
+  Object.assign(view, { walk: q.walk, step: q.step ?? 1, rail: q.rail, view: q.view });
+  await chooseBoard(q.board || DEFAULT_BOARD, false);
 }
 
 if (typeof document !== "undefined") init();

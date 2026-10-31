@@ -101,7 +101,16 @@ def generate(src: Path, out: Path, board: str) -> int:
     else:
         rows = [row for row in rows if row.get("status") == "production"]
     built = {}
+    modelled = set()
     for row in rows:
+        # A schema-2 file is a state model written by the private builder
+        # from the board's netlist. This generator does not overwrite it.
+        existing = out / f"{row['id']}.json"
+        if existing.is_file() and _load(existing).get("schema") == 2:
+            built[row["id"]] = {"coverage": "model", "shape": "model"}
+            modelled.add(row["id"])
+            print(f"{row['id']}: state model kept")
+            continue
         path = src / f"{row['id']}.json"
         if not path.is_file():
             raise SystemExit(f"missing layout file {path.name}")
@@ -116,16 +125,18 @@ def generate(src: Path, out: Path, board: str) -> int:
         print(graph.report(document))
     if board:
         return 0
-    opened = graph.gate_open(built)
+    opened = graph.gate_open({k: v for k, v in built.items() if k not in modelled})
     document = {
         "boards": [_index_row(row, built[row["id"]]) for row in rows],
-        "pinout_only": _pinout_rows(),
+        # a board the layout index now carries is listed once, there
+        "pinout_only": [r for r in _pinout_rows() if r["id"] not in {row["id"] for row in rows}],
     }
     _dump(out / "boards.json", document)
     keep = {"boards.json"}
     for row in rows:
         keep.add(f"{row['id']}.json")
-        keep.add(f"{row['id']}.nets.json")
+        if row["id"] not in modelled:
+            keep.add(f"{row['id']}.nets.json")
     for path in sorted(out.glob("*.json")):
         if path.name in keep:
             continue
