@@ -757,6 +757,37 @@
      "stage": "power-applied",
      "label": "Plugged in, SoC in reset",
      "state": "power-applied"
+    },
+    {
+     "stage": "u-boot",
+     "label": "U-Boot running",
+     "state": "u-boot"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "u-boot"
+    }
+   ]
+  },
+  {
+   "id": "suspend",
+   "label": "Suspend and resume",
+   "steps": [
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "u-boot"
+    },
+    {
+     "stage": "suspend",
+     "label": "Suspended",
+     "state": "u-boot"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "u-boot"
     }
    ]
   }
@@ -817,6 +848,34 @@
     "r-vddio-x": "on",
     "r-vdd-ee": "on"
    }
+  },
+  {
+   "id": "u-boot",
+   "label": "U-Boot running",
+   "rails": {
+    "r-ao-5v": "on",
+    "r-avdd09-hdmi": "on",
+    "r-avdd0v9-enet": "on",
+    "r-avdd18-enet": "on",
+    "r-dc-5v-in": "on",
+    "r-ddr4-1-2v": "on",
+    "r-ddr4-2-5v": "on",
+    "r-hub-avdd": "on",
+    "r-hub-3v3": "on",
+    "r-rct-1v8": "on",
+    "r-usbhost-a-5v": "x",
+    "r-usbotg-b-5v": "x",
+    "r-vcc1-8v": "on",
+    "r-vcc5v": "x",
+    "r-vcck": "on",
+    "r-vcc-card": "x",
+    "r-vddio-ao18": "on",
+    "r-vddio-ao3-3v": "on",
+    "r-vddio-boot": "on",
+    "r-vddio-card": "x",
+    "r-vddio-x": "on",
+    "r-vdd-ee": "on"
+   }
   }
  ],
  "transitions": [
@@ -825,6 +884,30 @@
    "from": "off",
    "to": "power-applied",
    "trigger": "power-applied"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "u-boot",
+   "trigger": "u-boot"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "u-boot",
+   "to": "u-boot",
+   "trigger": "linux"
+  },
+  {
+   "walk": "suspend",
+   "from": "u-boot",
+   "to": "u-boot",
+   "trigger": "suspend"
+  },
+  {
+   "walk": "suspend",
+   "from": "u-boot",
+   "to": "u-boot",
+   "trigger": "linux"
   }
  ]
 }

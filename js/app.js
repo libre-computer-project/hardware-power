@@ -7,7 +7,7 @@
 import { mountShell } from "./lc-kit.js";
 import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
-  loadLines, parseQuery, regulatorCount, related, search, status, steps, voltText, voltageClass,
+  loadLines, parseQuery, regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
 } from "./model.js";
 
 const GPIO_SITE = "https://gpio.hardware.libre.computer/";
@@ -236,7 +236,7 @@ function paintWalk() {
     ol.appendChild(li);
   });
   host.appendChild(ol);
-  host.appendChild(make("p", "pw-help", STEPS_HELP));
+  if (stopsAtReset(all)) host.appendChild(make("p", "pw-help", STEPS_HELP));
   const nav = make("div", "pw-step-nav");
   const prev = focusable(make("button", "pw-nav", "◀ Previous"), "prev");
   const next = focusable(make("button", "pw-nav", "Next ▶"), "next");

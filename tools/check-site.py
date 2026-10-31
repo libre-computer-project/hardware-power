@@ -51,7 +51,8 @@ DIRS = {"up", "down", "divider"}
 STATUS = {"on", "off", "x"}
 TIERS = {"netlist"}
 INPUTS = {"USB-C", "Micro-USB", "DC jack", "input"}
-LABELS = {"Power-on", "Unplugged", "Plugged in, SoC in reset"}
+LABELS = {"Power-on", "Unplugged", "Plugged in, SoC in reset", "U-Boot running", "Linux running",
+          "Suspend and resume", "Suspended"}
 TOP = {"schema", "id", "model", "name", "soc", "tier", "rails", "makers", "signals", "walks", "states",
        "transitions"}
 

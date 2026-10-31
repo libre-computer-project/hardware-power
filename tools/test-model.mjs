@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   buildQuery, children, columns, controlText, kindText, loadLines, parseQuery, railDepths,
-  regulatorCount, related, search, status, steps, voltText, voltageClass,
+  regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
 } from "../js/model.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -38,6 +38,10 @@ eq("x", status(st[1], "r-c"), "x");
 eq("listed off", status(st[1], "r-e"), "off");
 eq("absent is x", status({ rails: {} }, "r-e"), "x");
 eq("unknown walk falls back to the first", steps(fx, "nope").length, 2);
+eq("a walk ending in reset stops at reset", stopsAtReset(st), true);
+eq("a walk with a firmware step after reset does not",
+  stopsAtReset([...st, { stage: "linux", label: "Linux running", rails: {} }]), false);
+eq("no steps is not a stop", stopsAtReset([]), false);
 
 // words
 const m = Object.fromEntries(fx.makers.map((x) => [x.id, x]));

@@ -94,6 +94,12 @@ export function steps(doc, walkId) {
   return walk.steps.map((s) => ({ ...s, rails: (states.get(s.state) || {}).rails || {} }));
 }
 
+/** True when the walk ends with the SoC held in reset: no firmware stage
+ *  follows, so rails software turns on later read as they are before it runs. */
+export function stopsAtReset(all) {
+  return all.length > 0 && all[all.length - 1].stage === "power-applied";
+}
+
 /** 'on' | 'off' | 'x' for one rail in one step. A rail the state does not
  *  list is not determined, never assumed off. */
 export function status(step, railId) {
