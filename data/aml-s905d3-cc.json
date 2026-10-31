@@ -301,9 +301,11 @@
   {
    "id": "r-vddio-boot",
    "name": "VDDIO_BOOT",
-   "v": null,
+   "v": 1.8,
    "input": null,
-   "made_by": [],
+   "made_by": [
+    "m-4r34"
+   ],
    "loads": {
     "soc": [
      "VDDIO_BOOT"
@@ -476,6 +478,15 @@
    "kind": "link",
    "in": "r-vddcpu-b",
    "out": "r-vddcpu-a",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-4r34",
+   "refdes": "4R34",
+   "kind": "link",
+   "in": "r-flash-1-8v",
+   "out": "r-vddio-boot",
    "control": null,
    "link": "jumper"
   },
