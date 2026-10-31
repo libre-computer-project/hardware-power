@@ -655,12 +655,12 @@
     {
      "stage": "u-boot",
      "label": "U-Boot running",
-     "state": "power-applied"
+     "state": "u-boot"
     },
     {
      "stage": "linux",
      "label": "Linux running",
-     "state": "power-applied"
+     "state": "u-boot"
     }
    ]
   },
@@ -671,17 +671,17 @@
     {
      "stage": "linux",
      "label": "Linux running",
-     "state": "power-applied"
+     "state": "u-boot"
     },
     {
      "stage": "suspend",
      "label": "Suspended",
-     "state": "power-applied"
+     "state": "u-boot"
     },
     {
      "stage": "linux",
      "label": "Linux running",
-     "state": "power-applied"
+     "state": "u-boot"
     }
    ]
   }
@@ -729,6 +729,32 @@
     "r-vcc3-3v": "x",
     "r-vcc5v": "x",
     "r-vddao-3-3v": "on",
+    "r-vddcpu-a": "off",
+    "r-vddcpu-b": "on",
+    "r-vddio-ao18": "on",
+    "r-vddio-boot": "x",
+    "r-vddio-c": "x",
+    "r-vddio-x": "on",
+    "r-vddq-1v1": "on",
+    "r-vdd-ee": "on"
+   }
+  },
+  {
+   "id": "u-boot",
+   "label": "U-Boot running",
+   "rails": {
+    "r-5v-in": "on",
+    "r-avdd0v8-hdmi-pcie": "on",
+    "r-avdd18-v": "x",
+    "r-eth-avdd33": "x",
+    "r-eth-vcc33": "x",
+    "r-eth-vddio": "x",
+    "r-flash-1-8v": "x",
+    "r-hub-5v": "x",
+    "r-vcc1-8v": "x",
+    "r-vcc3-3v": "x",
+    "r-vcc5v": "x",
+    "r-vddao-3-3v": "on",
     "r-vddcpu-a": "x",
     "r-vddcpu-b": "x",
     "r-vddio-ao18": "on",
@@ -750,31 +776,31 @@
   {
    "walk": "cold-boot",
    "from": "power-applied",
-   "to": "power-applied",
+   "to": "u-boot",
    "trigger": "u-boot"
   },
   {
    "walk": "cold-boot",
-   "from": "power-applied",
-   "to": "power-applied",
+   "from": "u-boot",
+   "to": "u-boot",
    "trigger": "linux"
   },
   {
    "walk": "suspend",
-   "from": "power-applied",
-   "to": "power-applied",
+   "from": "u-boot",
+   "to": "u-boot",
    "trigger": "linux"
   },
   {
    "walk": "suspend",
-   "from": "power-applied",
-   "to": "power-applied",
+   "from": "u-boot",
+   "to": "u-boot",
    "trigger": "suspend"
   },
   {
    "walk": "suspend",
-   "from": "power-applied",
-   "to": "power-applied",
+   "from": "u-boot",
+   "to": "u-boot",
    "trigger": "linux"
   }
  ]
