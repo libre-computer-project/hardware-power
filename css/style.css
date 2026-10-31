@@ -359,8 +359,22 @@
   box-shadow: none;
 }
 
-.pw-rail.pw-dim {
-  opacity: 0.35;
+.pw-rail.pw-dim,
+.pw-rail.pw-faded {
+  opacity: 0.3;
+}
+
+.pw-rail.pw-faded:hover,
+.pw-rail.pw-faded:focus-visible {
+  opacity: 0.75;
+}
+
+.pw-wire.pw-wire-faded {
+  stroke-opacity: 0.12;
+}
+
+.pw-row-faded td {
+  opacity: 0.4;
 }
 
 .pw-rail-head {

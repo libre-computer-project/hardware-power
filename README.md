@@ -62,7 +62,10 @@ DOM, so `tools/test-model.mjs` runs it under node. `js/app.js` paints.
 | `?view=rails` | the rail table instead of the tree |
 
 The tree puts each rail in a column by how many stages it sits from the
-input. A rail's edge colour is its voltage class; its state is the fill, the
+input. Selecting a rail fades every rail it neither depends on nor feeds
+(`related()` in `js/model.js`): upstream through each maker's input and the
+rails its enable is tied or pulled to, downstream through every maker that
+takes it as input or control. A rail's edge colour is its voltage class; its state is the fill, the
 dot and the word together, never colour alone. The arrow keys step through
 the states.
 

@@ -7,7 +7,7 @@
 import { mountShell } from "./lc-kit.js";
 import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
-  loadLines, parseQuery, regulatorCount, search, status, steps, voltText, voltageClass,
+  loadLines, parseQuery, regulatorCount, related, search, status, steps, voltText, voltageClass,
 } from "./model.js";
 
 const GPIO_SITE = "https://gpio.hardware.libre.computer/";
@@ -165,6 +165,7 @@ function render() {
   for (const id of ["state-heading", "view-heading", "view-seg"]) el(id).hidden = false;
   el("search").disabled = false;
   document.body.classList.toggle("pw-sheet-open", Boolean(view.rail));
+  view.related = view.rail ? related(doc, view.rail) : null;
   paintMeta();
   paintWalk();
   paintLegend();
@@ -296,6 +297,8 @@ function railCard(rail, step, makers, rails) {
   card.dataset.rail = rail.id;
   card.setAttribute("aria-pressed", String(view.rail === rail.id));
   if (view.query && !search(doc, view.query).includes(rail.id)) card.classList.add("pw-dim");
+  // with a rail selected, rails it neither depends on nor feeds step back
+  if (view.related && !view.related.has(rail.id)) card.classList.add("pw-faded");
   for (const mid of rail.made_by || []) {
     const m = makers.get(mid);
     if (!m) continue;
@@ -396,8 +399,9 @@ function drawWires(tree, svg, step) {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       const mid = a.x1 + (b.x0 - a.x1) * (0.35 + 0.3 * (k / Math.max(1, ends.length - 1)));
       path.setAttribute("d", `M${a.x1},${ya} C${mid},${ya} ${mid},${b.y} ${b.x0},${b.y}`);
+      const near = view.related ? view.related.has(rail) && view.related.has(parent) : true;
       path.setAttribute("class", `pw-wire pw-s-${status(step, rail)}`
-        + (view.rail && (view.rail === rail || view.rail === parent) ? " pw-wire-hot" : ""));
+        + (view.rail && near ? " pw-wire-hot" : "") + (near ? "" : " pw-wire-faded"));
       svg.appendChild(path);
     });
   }
@@ -422,7 +426,8 @@ function paintRails() {
   for (const col of columns(doc)) {
     for (const r of [...col.rails, ...(col.more ? col.more.rails : [])]) {
       if (hits && !hits.has(r.id)) continue;
-      const tr = make("tr", view.rail === r.id ? "pw-row-hot" : null);
+      const tr = make("tr", view.rail === r.id ? "pw-row-hot"
+        : view.related && !view.related.has(r.id) ? "pw-row-faded" : null);
       const name = focusable(make("button", "pw-link", r.name), `row-${r.id}`);
       name.type = "button";
       name.addEventListener("click", () => {

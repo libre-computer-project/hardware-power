@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   buildQuery, children, columns, controlText, kindText, loadLines, parseQuery, railDepths,
-  regulatorCount, search, status, steps, voltText, voltageClass,
+  regulatorCount, related, search, status, steps, voltText, voltageClass,
 } from "../js/model.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -73,6 +73,14 @@ eq("pad with its pull", controlText({ ...fx, signals: [{ id: "s", role: "enable"
   driver: { kind: "pad", pads: ["GPIODV_25"], dir: "up" } }] }, { kind: "buck", control: "s" }),
   "Enable from SoC GPIODV_25, pulled up");
 eq("regulator count leaves out links and protection", regulatorCount(fx), 4);
+
+// a selected rail keeps what it depends on and what depends on it
+const sorted2 = (s) => [...s].sort();
+eq("related to a middle rail: its source, its control's rail, what it feeds",
+  sorted2(related(fx, "r-a")), ["r-a", "r-b", "r-in"]);
+eq("related to a leaf: the chain up to the input", sorted2(related(fx, "r-b")), ["r-a", "r-b", "r-in"]);
+eq("related to the input: everything it feeds", sorted2(related(fx, "r-in")), ["r-a", "r-b", "r-c", "r-e", "r-in"]);
+eq("an untraced rail relates only to itself", sorted2(related(fx, "r-d")), ["r-d"]);
 eq("default view", parseQuery("").view, "tree");
 
 // every committed schema-2 board: references resolve, states are complete

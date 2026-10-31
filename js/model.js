@@ -162,6 +162,53 @@ export function children(doc) {
   return out;
 }
 
+/** Rails a rail's control is tied or pulled to: its enable depends on them. */
+function controlRails(doc, maker) {
+  const sig = (doc.signals || []).find((s) => s.id === maker.control);
+  const d = (sig && sig.driver) || {};
+  return [d.rail, d.to].filter(Boolean);
+}
+
+/** The rails one rail depends on and the rails that depend on it: upstream
+ *  through each maker's input and the rails its control is tied or pulled
+ *  to, downstream through every maker that takes it as input or control.
+ *  The rail itself is in the set. */
+export function related(doc, railId) {
+  const rails = byId(doc.rails);
+  const makers = byId(doc.makers);
+  const up = new Set([railId]);
+  const todo = [railId];
+  while (todo.length) {
+    const r = rails.get(todo.pop());
+    for (const mid of (r && r.made_by) || []) {
+      const m = makers.get(mid);
+      if (!m) continue;
+      for (const next of [m.in, ...controlRails(doc, m)]) {
+        if (next && !up.has(next)) {
+          up.add(next);
+          todo.push(next);
+        }
+      }
+    }
+  }
+  // downstream: rails made by a maker whose input or control is in the set
+  const down = new Set([railId]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const r of doc.rails || []) {
+      if (down.has(r.id)) continue;
+      const fed = (r.made_by || []).map((mid) => makers.get(mid)).filter(Boolean)
+        .some((m) => down.has(m.in) || controlRails(doc, m).some((c) => down.has(c)));
+      if (fed) {
+        down.add(r.id);
+        grew = true;
+      }
+    }
+  }
+  return new Set([...up, ...down]);
+}
+
 /** Short load lines for a rail card. */
 export function loadLines(rail) {
   const l = rail.loads || {};
