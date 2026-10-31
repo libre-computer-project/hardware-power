@@ -301,10 +301,10 @@
   {
    "id": "r-vddio-boot",
    "name": "VDDIO_BOOT",
-   "v": 3.3,
+   "v": 1.8,
    "input": null,
    "made_by": [
-    "m-4r35"
+    "m-4r34"
    ],
    "loads": {
     "soc": [
@@ -482,10 +482,10 @@
    "control": "s-1u8"
   },
   {
-   "id": "m-4r35",
-   "refdes": "4R35",
+   "id": "m-4r34",
+   "refdes": "4R34",
    "kind": "link",
-   "in": "r-vcc3-3v",
+   "in": "r-flash-1-8v",
    "out": "r-vddio-boot",
    "control": null,
    "link": "jumper"
