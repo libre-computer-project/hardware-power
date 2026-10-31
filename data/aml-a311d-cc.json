@@ -705,12 +705,12 @@
     {
      "stage": "suspend",
      "label": "Suspended",
-     "state": "u-boot"
+     "state": "suspend"
     },
     {
      "stage": "linux",
      "label": "Linux running",
-     "state": "u-boot"
+     "state": "suspend"
     }
    ]
   }
@@ -784,6 +784,32 @@
     "r-vcc3-3v": "x",
     "r-vcc5v": "on",
     "r-vddao-3-3v": "on",
+    "r-vddcpu-a": "on",
+    "r-vddcpu-b": "on",
+    "r-vddio-ao18": "on",
+    "r-vddio-boot": "x",
+    "r-vddio-c": "x",
+    "r-vddio-x": "on",
+    "r-vddq-1v1": "on",
+    "r-vdd-ee": "on"
+   }
+  },
+  {
+   "id": "suspend",
+   "label": "Suspended",
+   "rails": {
+    "r-5v-in": "on",
+    "r-avdd0v8-hdmi-pcie": "on",
+    "r-avdd18-v": "x",
+    "r-eth-avdd33": "x",
+    "r-eth-vcc33": "x",
+    "r-eth-vddio": "x",
+    "r-flash-1-8v": "x",
+    "r-hub-5v": "on",
+    "r-vcc1-8v": "x",
+    "r-vcc3-3v": "x",
+    "r-vcc5v": "on",
+    "r-vddao-3-3v": "on",
     "r-vddcpu-a": "x",
     "r-vddcpu-b": "x",
     "r-vddio-ao18": "on",
@@ -823,13 +849,13 @@
   {
    "walk": "suspend",
    "from": "u-boot",
-   "to": "u-boot",
+   "to": "suspend",
    "trigger": "suspend"
   },
   {
    "walk": "suspend",
-   "from": "u-boot",
-   "to": "u-boot",
+   "from": "suspend",
+   "to": "suspend",
    "trigger": "linux"
   }
  ]
