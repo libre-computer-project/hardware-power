@@ -275,6 +275,7 @@ function paintLegend() {
     host.appendChild(row);
   }
   if (counts.x) host.appendChild(make("p", "pw-help", X_HELP));
+  if (view.view !== "tree") return;   // the key describes the tree's edges
   const key = make("div", "pw-vkey");
   key.setAttribute("role", "group");
   key.setAttribute("aria-label", "Edge colour: voltage");
@@ -285,7 +286,7 @@ function paintLegend() {
     key.appendChild(item);
   }
   host.appendChild(key);
-  if (view.view === "tree") host.appendChild(make("p", "pw-help", TREE_HELP));
+  host.appendChild(make("p", "pw-help", TREE_HELP));
 }
 
 function railCard(rail, step, makers, rails) {
@@ -449,6 +450,13 @@ function paintRails() {
       });
       body.appendChild(tr);
     }
+  }
+  if (!body.children.length) {
+    const tr = make("tr");
+    const td = make("td", "pw-sub", `No rail matches “${view.query.trim()}”.`);
+    td.colSpan = 7 + all.length;
+    tr.appendChild(td);
+    body.appendChild(tr);
   }
   table.appendChild(body);
   const wrap = make("div", "pw-table-wrap");
