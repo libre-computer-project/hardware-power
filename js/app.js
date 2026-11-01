@@ -444,7 +444,7 @@ function paintRails() {
   const { all, step } = current();
   const makers = byId(doc.makers);
   const rails = byId(doc.rails);
-  const table = make("table", "pw-table");
+  const table = make("table", "lc-table pw-table");
   const head = make("tr");
   for (const t of ["Rail", "Voltage", "Made by", "From", "Control", "Loads", ...all.map((s) => s.label)]) {
     head.appendChild(make("th", null, t));
