@@ -44,10 +44,15 @@ function focusable(node, key) {
 }
 
 function writeUrl() {
-  history.replaceState(null, "", buildQuery({
+  const q = new URLSearchParams(buildQuery({
     board: view.board, walk: view.walk, step: view.step, rail: view.rail, view: view.view,
     hidden: view.hidden, asked: view.asked,
-  }));
+  }).slice(1));
+  // inside a product page's frame (the kit's embed mode): keep it so, or a
+  // reload in the frame comes back as the whole tool
+  const here = new URLSearchParams(location.search);
+  for (const k of ["embed", "theme"]) if (here.get(k)) q.set(k, here.get(k));
+  history.replaceState(null, "", `?${q}`);
 }
 
 function notice(text) {
