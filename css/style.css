@@ -343,11 +343,6 @@
   border-left-color: var(--pw-vc);
 }
 
-.pw-rail[aria-pressed="true"] {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
 .pw-rail.pw-s-off {
   background: var(--bg);
   box-shadow: none;
@@ -364,6 +359,14 @@
   border-style: dashed;
   border-left-style: solid;
   box-shadow: none;
+}
+
+/* Pressed as the kit's .lc-chip is: an inset ring and an accent wash, not an
+   outline, which is the focus ring. After the off and unknown states, so a
+   pressed rail in either still shows it (the hatch stays, under the wash). */
+.pw-rail[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  background-color: color-mix(in srgb, var(--accent) 16%, var(--bg-raised));
 }
 
 .pw-rail.pw-dim,
