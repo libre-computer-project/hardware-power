@@ -40,15 +40,6 @@
     radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.18), transparent) right / 0.9rem 100% no-repeat scroll;
 }
 
-.pw-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .pw-vkey {
   display: flex;
   flex-wrap: wrap;
