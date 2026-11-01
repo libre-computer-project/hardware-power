@@ -16,6 +16,11 @@ and when.
 | `model` | `data/<id>.json`, schema 2 | the power tree and its power states |
 | `no-netlist` | `data/<id>.json` + `.nets.json`, schema 1, empty | a note that the tree needs the board's layout netlist |
 
+A board or pinout-only row marked `hidden` (the pinout tool's pre-production
+boards) is listed and opened only under `?hidden=1`, as in the GPIO and layout
+tools. That is a menu filter, not access control, by decision (operator,
+2026-11-01): `data/boards.json` names it and its files are published.
+
 `data/lc-products.json` is VENDORED: each board's product page and 3D model,
 shown beside the board picker, written by the shell kit's sync from
 libre.computer's catalogue and checked by `tools/check-kit.py`.
