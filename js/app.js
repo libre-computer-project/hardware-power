@@ -517,10 +517,10 @@ function paintDetail() {
   host.appendChild(close);
   host.appendChild(make("h3", "pw-detail-title", rail.name));
   if (rail.v != null) host.appendChild(make("p", "pw-detail-v", voltText(rail.v)));
-  const chips = make("div", "pw-chips");
+  const chips = make("div", "lc-chips");
   all.forEach((s, i) => {
     const st = status(s, rail.id);
-    const c = focusable(make("button", `pw-chip pw-s-${st}`, `${i + 1}. ${s.label}: ${STATUS_TEXT[st]}`),
+    const c = focusable(make("button", `lc-chip pw-chip pw-s-${st}`, `${i + 1}. ${s.label}: ${STATUS_TEXT[st]}`),
       `chip-${i}`);
     c.type = "button";
     c.setAttribute("aria-pressed", String(i === view.step));

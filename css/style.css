@@ -549,23 +549,8 @@
   margin: 0.8rem 0 0.25rem;
 }
 
-.pw-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.pw-chip {
-  font: inherit;
-  font-size: 0.78rem;
-  border-radius: 1rem;
-  padding: 0.15rem 0.55rem;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  cursor: pointer;
-}
-
+/* The kit's .lc-chip; this page's own: the border shows the rail's state
+   at that step (on, or absent with the hatch) */
 .pw-chip.pw-s-on {
   border-color: var(--pw-on);
 }
@@ -573,10 +558,6 @@
 .pw-chip.pw-s-x {
   border-style: dashed;
   background-image: var(--pw-hatch);
-}
-
-.pw-chip[aria-pressed="true"] {
-  outline: 2px solid var(--accent);
 }
 
 .pw-list {
