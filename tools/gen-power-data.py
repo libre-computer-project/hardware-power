@@ -60,12 +60,19 @@ def _dump(path: Path, obj) -> None:
 
 def _pinout_rows() -> list[dict]:
     names = {board_id: name for board_id, name in PINOUT_ONLY}
+    # The pinout tool's own `hidden` (a pre-production board): listed and
+    # opened here only under ?hidden=1, as there. Without its catalogue every
+    # row is hidden -- a board is not announced because a file was missing.
+    hidden = {board_id: True for board_id, _name in PINOUT_ONLY}
     if GPIO_BOARDS.is_file():
         for row in _load(GPIO_BOARDS).get("boards") or []:
-            if row.get("id") in names and row.get("name"):
-                names[row["id"]] = row["name"]
+            if row.get("id") in names:
+                hidden[row["id"]] = bool(row.get("hidden"))
+                if row.get("name"):
+                    names[row["id"]] = row["name"]
     return [
-        {"id": board_id, "name": names[board_id], "reason": PINOUT_REASON}
+        {"id": board_id, "name": names[board_id], "reason": PINOUT_REASON,
+         "hidden": hidden[board_id]}
         for board_id, _name in PINOUT_ONLY
     ]
 
@@ -132,7 +139,8 @@ def generate(src: Path, out: Path, board: str) -> int:
         "pinout_only": [r for r in _pinout_rows() if r["id"] not in {row["id"] for row in rows}],
     }
     _dump(out / "boards.json", document)
-    keep = {"boards.json"}
+    # (lc-products.json is the shell kit's, written by its sync: not ours)
+    keep = {"boards.json", "lc-products.json"}
     for row in rows:
         keep.add(f"{row['id']}.json")
         if row["id"] not in modelled:

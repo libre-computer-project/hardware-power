@@ -84,18 +84,24 @@ function buildSelect() {
     sel.appendChild(g);
   };
   group("Power tree and states", modelled);
-  group("Power tree not available yet", [...other, ...(index.pinout_only || [])]);
+  group("Power tree not available yet", [...other, ...shown(index.pinout_only || [])]);
   sel.addEventListener("change", () => chooseBoard(sel.value, true));
 }
 
+/** The rows a visitor may see: a hidden board (pre-production, unreleased)
+ *  only under ?hidden=1, as in the GPIO and layout tools. */
+function shown(rows) {
+  return rows.filter((b) => view.hidden || !b.hidden);
+}
+
 async function chooseBoard(id, fresh, said = "") {
-  // (a hidden board opens only under ?hidden=1, as in the GPIO and layout tools)
-  const row = index.boards.find((b) => b.id === id && (view.hidden || !b.hidden))
-    || index.pinout_only.find((b) => b.id === id);
+  const row = shown(index.boards).find((b) => b.id === id)
+    || shown(index.pinout_only || []).find((b) => b.id === id);
   if (!row) {
-    const fallback = index.boards.find((b) => b.id === DEFAULT_BOARD);
-    return chooseBoard(DEFAULT_BOARD, true,
-      `No board "${id}" here; showing ${fallback ? fallback.name : DEFAULT_BOARD} instead.`);
+    // the default board, else the first one shown; once, never a loop
+    const fallback = shown(index.boards).find((b) => b.id === DEFAULT_BOARD) || shown(index.boards)[0];
+    if (!fallback || fallback.id === id) return notice("The board index has no board to show.");
+    return chooseBoard(fallback.id, true, `No board "${id}" here; showing ${fallback.name} instead.`);
   }
   view.board = id;
   el("board-select").value = id;
