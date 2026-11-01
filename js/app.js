@@ -4,7 +4,7 @@
  * from the board's netlist; js/model.js holds every decision this page
  * makes about it, and this file only paints. */
 
-import { mountShell, setBoardLinks } from "./lc-kit.js";
+import { mountShell, setBoardLinks, showHiddenFlag } from "./lc-kit.js";
 import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
   loadLines, parseQuery, regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
@@ -661,6 +661,10 @@ async function init() {
   }
   const q = parseQuery(location.search);
   view.hidden = q.hidden; // (before the picker is built: it lists hidden boards under it)
+  if (view.hidden) {
+    const n = [...index.boards, ...(index.pinout_only || [])].filter((b) => b.hidden).length;
+    showHiddenFlag(n, "?hidden=1 — pre-production boards are listed");
+  }
   buildSelect();
   Object.assign(view, { walk: q.walk, step: q.step, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
   await chooseBoard(q.board || DEFAULT_BOARD, false);
