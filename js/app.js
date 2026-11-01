@@ -338,10 +338,13 @@ function railCard(rail, step, makers, rails) {
     rail.input ? `${rail.input} input` : "", ...makerText, loads.join(", "),
   ].filter(Boolean).join(". "));
   card.addEventListener("click", () => {
-    view.rail = view.rail === rail.id ? null : rail.id;
-    if (!view.rail) view.lastRail = `rail-${rail.id}`;
-    render();
-    if (view.rail) announce(`${rail.name} details open`);
+    if (view.rail === rail.id) {
+      view.rail = null;
+      view.lastRail = `rail-${rail.id}`;
+      render();
+    } else {
+      openRail(rail.id);
+    }
   });
   return card;
 }
@@ -461,10 +464,7 @@ function paintRails() {
         : view.related && !view.related.has(r.id) ? "pw-row-faded" : null);
       const name = focusable(make("button", "pw-link", r.name), `row-${r.id}`);
       name.type = "button";
-      name.addEventListener("click", () => {
-        view.rail = r.id;
-        render();
-      });
+      name.addEventListener("click", () => openRail(r.id));
       const td0 = make("td");
       td0.appendChild(name);
       tr.appendChild(td0);
@@ -490,7 +490,7 @@ function paintRails() {
   if (!body.children.length) {
     const tr = make("tr");
     const td = make("td", "pw-sub", `No rail matches “${view.query.trim()}”.`);
-    td.colSpan = 7 + all.length;
+    td.colSpan = 6 + all.length;   // the six named columns, then one per step
     tr.appendChild(td);
     body.appendChild(tr);
   }
@@ -533,9 +533,8 @@ function paintDetail() {
     const b = focusable(make("button", "pw-link", r ? r.name : id), `link-${id}`);
     b.type = "button";
     b.addEventListener("click", () => {
-      view.rail = id;
       view.reveal = true;
-      render();
+      openRail(id);
     });
     return b;
   };
@@ -605,6 +604,19 @@ function paintDetail() {
   host.appendChild(p);
 }
 
+/** Open a rail's detail and take focus into it, at its Close button: the
+ *  detail follows the whole tree in the page, and below 1100px it is a sheet
+ *  over the tree, so from the card the next Tab stops were the cards hidden
+ *  under it. Close and Escape hand focus back to the card. */
+function openRail(id) {
+  view.rail = id;
+  view.lastRail = `rail-${id}`;
+  render();
+  const r = doc.rails.find((x) => x.id === id);
+  el("detail").querySelector(".pw-close")?.focus({ preventScroll: true });
+  if (r) announce(`${r.name} details open`);
+}
+
 /** Close the detail and hand focus back to the card it was opened from. */
 function closeDetail() {
   if (view.rail) view.lastRail = `rail-${view.rail}`;
@@ -638,9 +650,19 @@ function bind() {
   });
   document.addEventListener("keydown", (e) => {
     if (!doc || e.target.closest("input, select, textarea")) return;
-    if (e.key === "ArrowRight") stepBy(1);
-    else if (e.key === "ArrowLeft") stepBy(-1);
-    else if (e.key === "Escape" && view.rail) closeDetail();
+    if (e.key === "Escape" && view.rail) {
+      closeDetail();
+      return;
+    }
+    /* Left/Right step the sequence -- bare keys only (Alt+Left is the
+       browser's Back, Shift+arrow selects text), and not inside the rails
+       table, whose wrapper the arrows scroll sideways */
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.target.closest(".pw-table-wrap")) return;
+    const by = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (by) {
+      e.preventDefault();
+      stepBy(by);
+    }
   });
   let t = null;
   window.addEventListener("resize", () => {

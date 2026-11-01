@@ -437,6 +437,12 @@
   color: var(--pw-on);
 }
 
+/* On the pressed rail's accent wash the green falls under 4.5:1 at this
+   size; the word says "on", the card's border says green */
+.pw-rail[aria-pressed="true"] .pw-state {
+  color: var(--text);
+}
+
 .pw-s-x .pw-state {
   color: var(--text);
 }
@@ -587,6 +593,18 @@
   .pw-sheet-open #stage,
   .pw-sheet-open #sidebar {
     padding-bottom: 57vh;
+  }
+  /* and a card focused from the keyboard is scrolled clear of the sheet,
+     whichever box is the one scrolling at this width */
+  .pw-sheet-open #stage,
+  .pw-sheet-open #sidebar,
+  .pw-sheet-open .lc-main {
+    scroll-padding-bottom: 57vh;
+  }
+  /* The footer sits under the sheet: hidden, so Tab does not reach links
+     nobody can see */
+  .pw-sheet-open .lc-footer {
+    visibility: hidden;
   }
   .pw-detail {
     position: fixed;
