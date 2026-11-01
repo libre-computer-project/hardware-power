@@ -355,10 +355,10 @@ function paintTree() {
   const grid = make("div", "pw-cols");
   for (const col of columns(doc)) {
     const c = make("section", "pw-col");
-    c.appendChild(make("h4", "pw-col-title", col.title));
+    c.appendChild(make("h4", "lc-label pw-col-title", col.title));
     for (const r of col.rails) c.appendChild(railCard(r, step, makers, rails));
     if (col.stack) {
-      c.appendChild(make("h4", "pw-col-title pw-col-stacked", col.stack.title));
+      c.appendChild(make("h4", "lc-label pw-col-title pw-col-stacked", col.stack.title));
       for (const r of col.stack.rails) {
         const card = railCard(r, step, makers, rails);
         card.classList.add("pw-rail-stacked");
@@ -366,7 +366,7 @@ function paintTree() {
       }
     }
     if (col.more) {
-      c.appendChild(make("h4", "pw-col-title pw-col-more", col.more.title));
+      c.appendChild(make("h4", "lc-label pw-col-title pw-col-more", col.more.title));
       for (const r of col.more.rails) c.appendChild(railCard(r, step, makers, rails));
     }
     grid.appendChild(c);
@@ -540,7 +540,7 @@ function paintDetail() {
     return b;
   };
   const section = (title) => {
-    host.appendChild(make("h4", null, title));
+    host.appendChild(make("h4", "lc-label", title));
     const ul = make("ul", "pw-list");
     host.appendChild(ul);
     return ul;

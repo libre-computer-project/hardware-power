@@ -295,12 +295,9 @@
   gap: 0.55rem;
 }
 
+/* (the kit's .lc-label; this page's own: its spacing) */
 .pw-col-title {
   margin: 0 0 0.1rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-dim);
 }
 
 .pw-col-more {
@@ -481,7 +478,9 @@
    row sticks to the top of #stage, which scrolls both ways */
 .pw-table th {
   position: sticky;
-  top: 0;
+  /* (#stage's own 0.75rem top padding: at top 0 the rows scrolled through
+     that band above the header) */
+  top: -0.75rem;
   background: var(--bg);
 }
 
@@ -545,12 +544,9 @@
   color: var(--text-dim);
 }
 
+/* (the kit's .lc-label; this page's own: its spacing) */
 .pw-detail h4 {
   margin: 0.8rem 0 0.25rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-dim);
 }
 
 .pw-chips {
