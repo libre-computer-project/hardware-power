@@ -650,4 +650,14 @@
   .pw-from {
     display: inline;
   }
+  /* In a product page's frame (the kit's embed mode) the tree is what the
+     visitor came for: it comes first, and the state and step controls
+     follow it instead of filling the frame's first screen. */
+  html.lc-embed #stage {
+    order: -1;
+  }
+  html.lc-embed #sidebar {
+    border-bottom: none;
+    border-top: 1px solid var(--border);
+  }
 }
