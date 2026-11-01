@@ -16,6 +16,10 @@ and when.
 | `model` | `data/<id>.json`, schema 2 | the power tree and its power states |
 | `no-netlist` | `data/<id>.json` + `.nets.json`, schema 1, empty | a note that the tree needs the board's layout netlist |
 
+`data/lc-products.json` is VENDORED: each board's product page and 3D model,
+shown beside the board picker, written by the shell kit's sync from
+libre.computer's catalogue and checked by `tools/check-kit.py`.
+
 ### Schema 2
 
 A state model of one board, built from the board's netlist and written here

@@ -221,7 +221,9 @@ def check(root: Path) -> list[str]:
     ids = [row.get("id") for row in boards]
     if len(ids) != len(set(ids)):
         bad.append("boards.json: duplicate board id")
-    expected = {"boards.json"}
+    # (lc-products.json: the board links beside the picker, written by the
+    # kit's sync and checked by tools/check-kit.py)
+    expected = {"boards.json", "lc-products.json"}
     for row in boards:
         board_id = row.get("id")
         missing = INDEX_KEYS - set(row)

@@ -4,7 +4,7 @@
  * from the board's netlist; js/model.js holds every decision this page
  * makes about it, and this file only paints. */
 
-import { mountShell } from "./lc-kit.js";
+import { mountShell, setBoardLinks } from "./lc-kit.js";
 import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
   loadLines, parseQuery, regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
@@ -96,6 +96,7 @@ async function chooseBoard(id, fresh, said = "") {
   }
   view.board = id;
   el("board-select").value = id;
+  setBoardLinks(id);
   if (fresh) Object.assign(view, { walk: null, step: null, rail: null });
   doc = null;
   if (row.coverage === "model") {
