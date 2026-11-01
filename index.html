@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Scripts from this site only, plus the inline theme snippet by its sha256
+     (tools/check-kit.py recomputes it); data, styles and images same-origin,
+     data: for the kit's logo. GitHub Pages sets no headers, so it is a meta. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ACy4pj93O7g7s8NBZ36xdNPdeBUZ5qKl4pgUR78Pd7E='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Libre Computer Board Power</title>
 <meta name="description" content="Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist.">
@@ -37,16 +42,7 @@
 <h1 class="pw-sr">Libre Computer board power</h1>
 <p class="pw-sr" id="announce" role="status" aria-live="polite"></p>
 <div class="lc-notices" id="notices"></div>
-<script>
-if (location.protocol === "file:") {
-  var host = document.getElementById("notices");
-  var note = document.createElement("p");
-  note.className = "lc-notice";
-  note.setAttribute("role", "status");
-  note.textContent = "Could not load the board index. If you are opening this from a file:// path, serve the directory over HTTP instead — python3 -m http.server.";
-  host.appendChild(note);
-}
-</script>
+<script src="js/file-notice.js"></script>
 
 <div class="lc-main">
   <aside class="lc-panel" id="sidebar">
