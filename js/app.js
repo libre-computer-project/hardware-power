@@ -4,7 +4,7 @@
  * from the board's netlist; js/model.js holds every decision this page
  * makes about it, and this file only paints. */
 
-import { mountShell, setBoardLinks, showHiddenFlag } from "./lc-kit.js";
+import { boardNotice, mountShell, resolveBoard, setBoardLinks, showHiddenFlag } from "./lc-kit.js";
 import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
   loadLines, parseQuery, regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
@@ -34,7 +34,7 @@ const make = (tag, cls, text) => {
 
 let index = { boards: [], pinout_only: [] };
 let doc = null;
-const view = { board: null, walk: null, step: 1, rail: null, view: "tree", query: "", reveal: false, hidden: false };
+const view = { board: null, walk: null, step: 1, rail: null, view: "tree", query: "", reveal: false, hidden: false, asked: null };
 
 /** Every interactive element carries data-focus; a re-render puts keyboard
  *  focus back on the element with the same key. */
@@ -46,7 +46,7 @@ function focusable(node, key) {
 function writeUrl() {
   history.replaceState(null, "", buildQuery({
     board: view.board, walk: view.walk, step: view.step, rail: view.rail, view: view.view,
-    hidden: view.hidden,
+    hidden: view.hidden, asked: view.asked,
   }));
 }
 
@@ -85,7 +85,10 @@ function buildSelect() {
   };
   group("Power tree and states", modelled);
   group("Power tree not available yet", [...other, ...shown(index.pinout_only || [])]);
-  sel.addEventListener("change", () => chooseBoard(sel.value, true));
+  sel.addEventListener("change", () => {
+    view.asked = null;  // a board picked here is the one asked for now
+    chooseBoard(sel.value, true);
+  });
 }
 
 /** The rows a visitor may see: a hidden board (pre-production, unreleased)
@@ -101,7 +104,9 @@ async function chooseBoard(id, fresh, said = "") {
     // the default board, else the first one shown; once, never a loop
     const fallback = shown(index.boards).find((b) => b.id === DEFAULT_BOARD) || shown(index.boards)[0];
     if (!fallback || fallback.id === id) return notice("The board index has no board to show.");
-    return chooseBoard(fallback.id, true, `No board "${id}" here; showing ${fallback.name} instead.`);
+    const unlisted = [...index.boards, ...(index.pinout_only || [])].some((b) => b.id === id);
+    view.asked = id;
+    return chooseBoard(fallback.id, true, boardNotice(id, fallback.name, null, unlisted));
   }
   view.board = id;
   el("board-select").value = id;
@@ -689,7 +694,17 @@ async function init() {
   }
   buildSelect();
   Object.assign(view, { walk: q.walk, step: q.step, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
-  await chooseBoard(q.board || DEFAULT_BOARD, false);
+  // the board asked for here, else the one the previous tool was asked for
+  const wanted = q.asked || q.board;
+  const ids = shown([...index.boards, ...(index.pinout_only || [])]).map((b) => b.id);
+  const { id: found, how } = resolveBoard(wanted, ids);
+  if (found && found !== wanted) {
+    view.asked = wanted;
+    const row = shown([...index.boards, ...(index.pinout_only || [])]).find((b) => b.id === found);
+    await chooseBoard(found, false, boardNotice(wanted, row.name, how));
+  } else {
+    await chooseBoard(found || wanted || DEFAULT_BOARD, false);
+  }
 }
 
 if (typeof document !== "undefined") init();

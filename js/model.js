@@ -271,12 +271,16 @@ export function parseQuery(search) {
     // the GPIO and layout tools' switch: hidden boards are listed and opened
     // only under it, and it rides along to them in the site links
     hidden: ["1", "true", "yes"].includes((q.get("hidden") || "").toLowerCase()),
+    // the board the visitor asked for, while another is shown (the kit's
+    // noteAsked); the site switcher carries it on instead of `board`
+    asked: q.get("asked"),
   };
 }
 
-export function buildQuery({ board, walk, step, rail, view, hidden }) {
+export function buildQuery({ board, walk, step, rail, view, hidden, asked }) {
   const q = new URLSearchParams();
   if (board) q.set("board", board);
+  if (asked) q.set("asked", asked);
   if (hidden) q.set("hidden", "1");
   if (walk) q.set("walk", walk);
   if (step != null) q.set("step", String(step + 1));
