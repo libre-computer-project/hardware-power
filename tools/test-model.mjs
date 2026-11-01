@@ -75,9 +75,12 @@ eq("search ball", search(fx, "vddee"), ["r-c"]);
 eq("search empty", search(fx, "  "), []);
 
 // query round trip
-const q = { board: "aml-s905x-cc-v2", walk: "cold-boot", step: 1, rail: "r-a", view: "rails" };
+const q = { board: "aml-s905x-cc-v2", walk: "cold-boot", step: 1, rail: "r-a", view: "rails", hidden: true };
 const sorted = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)));
 eq("query round trip", sorted(parseQuery(buildQuery(q))), sorted(q));
+eq("no ?hidden, no hidden", parseQuery("?board=x").hidden, false);
+eq("?hidden=yes is the switch", parseQuery("?hidden=yes").hidden, true);
+eq("and is written only when on", new URLSearchParams(buildQuery({ board: "x", hidden: false })).has("hidden"), false);
 eq("bad step", parseQuery("?step=-3").step, null);
 eq("step 0 is not a step", parseQuery("?step=0").step, null);
 eq("the URL counts from 1", parseQuery("?step=2").step, 1);

@@ -268,12 +268,16 @@ export function parseQuery(search) {
     walk: q.get("walk"),
     step: Number.isFinite(step) && step >= 1 ? step - 1 : null,
     view: view === "rails" ? "rails" : "tree",
+    // the GPIO and layout tools' switch: hidden boards are listed and opened
+    // only under it, and it rides along to them in the site links
+    hidden: ["1", "true", "yes"].includes((q.get("hidden") || "").toLowerCase()),
   };
 }
 
-export function buildQuery({ board, walk, step, rail, view }) {
+export function buildQuery({ board, walk, step, rail, view, hidden }) {
   const q = new URLSearchParams();
   if (board) q.set("board", board);
+  if (hidden) q.set("hidden", "1");
   if (walk) q.set("walk", walk);
   if (step != null) q.set("step", String(step + 1));
   if (rail) q.set("rail", rail);

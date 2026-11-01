@@ -34,7 +34,7 @@ const make = (tag, cls, text) => {
 
 let index = { boards: [], pinout_only: [] };
 let doc = null;
-const view = { board: null, walk: null, step: 1, rail: null, view: "tree", query: "", reveal: false };
+const view = { board: null, walk: null, step: 1, rail: null, view: "tree", query: "", reveal: false, hidden: false };
 
 /** Every interactive element carries data-focus; a re-render puts keyboard
  *  focus back on the element with the same key. */
@@ -46,6 +46,7 @@ function focusable(node, key) {
 function writeUrl() {
   history.replaceState(null, "", buildQuery({
     board: view.board, walk: view.walk, step: view.step, rail: view.rail, view: view.view,
+    hidden: view.hidden,
   }));
 }
 
@@ -68,7 +69,7 @@ function announce(text) {
 function buildSelect() {
   const sel = el("board-select");
   sel.textContent = "";
-  const listed = index.boards.filter((b) => !b.hidden);
+  const listed = index.boards.filter((b) => view.hidden || !b.hidden);
   const modelled = listed.filter((b) => b.coverage === "model");
   const other = listed.filter((b) => b.coverage !== "model");
   const group = (label, rows) => {
@@ -88,7 +89,9 @@ function buildSelect() {
 }
 
 async function chooseBoard(id, fresh, said = "") {
-  const row = index.boards.find((b) => b.id === id) || index.pinout_only.find((b) => b.id === id);
+  // (a hidden board opens only under ?hidden=1, as in the GPIO and layout tools)
+  const row = index.boards.find((b) => b.id === id && (view.hidden || !b.hidden))
+    || index.pinout_only.find((b) => b.id === id);
   if (!row) {
     const fallback = index.boards.find((b) => b.id === DEFAULT_BOARD);
     return chooseBoard(DEFAULT_BOARD, true,
@@ -650,8 +653,9 @@ async function init() {
     notice("Could not load the board index.");
     return;
   }
-  buildSelect();
   const q = parseQuery(location.search);
+  view.hidden = q.hidden; // (before the picker is built: it lists hidden boards under it)
+  buildSelect();
   Object.assign(view, { walk: q.walk, step: q.step, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
   await chooseBoard(q.board || DEFAULT_BOARD, false);
 }
