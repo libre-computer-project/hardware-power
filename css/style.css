@@ -636,6 +636,10 @@
   #stage {
     overflow: visible;
   }
+  /* .lc-main scrolls here, with no top padding: the header sits flush */
+  .pw-table th {
+    top: 0;
+  }
   .pw-tree {
     width: 100%;
   }
