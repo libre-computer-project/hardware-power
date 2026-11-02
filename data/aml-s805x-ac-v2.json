@@ -30,6 +30,22 @@
    }
   },
   {
+   "id": "r-ddr4-2-5v",
+   "name": "DDR4_2_5V",
+   "v": 2.5,
+   "input": null,
+   "made_by": [
+    "m-3u2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "3U4"
+    ]
+   }
+  },
+  {
    "id": "r-rct-1v8",
    "name": "RCT_1V8",
    "v": 1.8,
@@ -207,8 +223,7 @@
      }
     ],
     "parts": [
-     "2U2",
-     "3U2"
+     "2U2"
     ]
    }
   },
@@ -362,6 +377,14 @@
    "control": "s-1u7"
   },
   {
+   "id": "m-3u2",
+   "refdes": "3U2",
+   "kind": "ldo",
+   "in": "r-vddio-ao3-3v",
+   "out": "r-ddr4-2-5v",
+   "control": "s-3u2"
+  },
+  {
    "id": "m-4r22",
    "refdes": "4R22",
    "kind": "link",
@@ -451,6 +474,14 @@
     "kind": "tie",
     "rail": "r-vddio-ao3-3v"
    }
+  },
+  {
+   "id": "s-3u2",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vddio-ao3-3v"
+   }
   }
  ],
  "walks": [
@@ -508,6 +539,7 @@
    "label": "Unplugged",
    "rails": {
     "r-dc-5v": "off",
+    "r-ddr4-2-5v": "off",
     "r-rct-1v8": "off",
     "r-usbhost-a-5v": "off",
     "r-vbus-5v": "off",
@@ -527,6 +559,7 @@
    "label": "Plugged in, SoC in reset",
    "rails": {
     "r-dc-5v": "on",
+    "r-ddr4-2-5v": "on",
     "r-rct-1v8": "on",
     "r-usbhost-a-5v": "on",
     "r-vbus-5v": "on",
