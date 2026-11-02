@@ -395,7 +395,7 @@
   {
    "id": "r-vcc-ddr",
    "name": "VCC_DDR",
-   "v": 1.25,
+   "v": 1.135,
    "input": null,
    "made_by": [
     "m-u7buck3"
@@ -611,7 +611,7 @@
   {
    "id": "r-vdd-ddr0-clk",
    "name": "VDD_DDR0_CLK",
-   "v": 1.25,
+   "v": 1.135,
    "input": null,
    "made_by": [
     "m-r1204"
@@ -627,7 +627,7 @@
   {
    "id": "r-vdd-ddr1-clk",
    "name": "VDD_DDR1_CLK",
-   "v": 1.25,
+   "v": 1.135,
    "input": null,
    "made_by": [
     "m-r1205"
