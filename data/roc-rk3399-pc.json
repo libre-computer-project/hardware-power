@@ -1097,16 +1097,22 @@
    "id": "s-u14",
    "role": "gate",
    "driver": {
-    "kind": "circuit",
-    "pads": []
+    "kind": "pad",
+    "pads": [
+     "GPIO1_B5"
+    ],
+    "dir": "down"
    }
   },
   {
    "id": "s-u15",
    "role": "gate",
    "driver": {
-    "kind": "circuit",
-    "pads": []
+    "kind": "pad",
+    "pads": [
+     "GPIO1_A0"
+    ],
+    "dir": "down"
    }
   },
   {
@@ -1172,16 +1178,22 @@
    "id": "s-u49",
    "role": "gate",
    "driver": {
-    "kind": "circuit",
-    "pads": []
+    "kind": "pad",
+    "pads": [
+     "GPIO1_A0"
+    ],
+    "dir": "down"
    }
   },
   {
    "id": "s-u50",
    "role": "gate",
    "driver": {
-    "kind": "circuit",
-    "pads": []
+    "kind": "pad",
+    "pads": [
+     "GPIO1_A0"
+    ],
+    "dir": "down"
    }
   },
   {
@@ -1267,7 +1279,7 @@
     "r-ir-vcc": "x",
     "r-sys-12v": "x",
     "r-vbus-typec0": "on",
-    "r-vbus-typec1": "x",
+    "r-vbus-typec1": "off",
     "r-vcc1-8v": "x",
     "r-vcc3v0-sd": "x",
     "r-vcc3v3-s0": "off",
@@ -1275,9 +1287,9 @@
     "r-vcc3v3-s5": "x",
     "r-vcc3v3-sys": "x",
     "r-vcc3-3v": "x",
-    "r-vcc5v0-host0": "x",
-    "r-vcc5v0-host1": "x",
-    "r-vcc5v0-host2": "x",
+    "r-vcc5v0-host0": "off",
+    "r-vcc5v0-host1": "off",
+    "r-vcc5v0-host2": "off",
     "r-vcca0v9-hdmi": "off",
     "r-vcca1v8-codec": "off",
     "r-vcca1v8-hdmi": "off",
