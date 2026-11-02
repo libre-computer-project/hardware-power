@@ -11,7 +11,8 @@ const KIND_TEXT = {
   protection: "Input protection",
 };
 
-const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω resistor" };
+const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω resistor",
+  resistor: "Series resistor" };
 
 /** What a maker is, in words: a link says which kind of link. */
 export function kindText(kind, link) {
@@ -135,6 +136,8 @@ export function voltText(v) {
 export function controlText(doc, maker) {
   if (maker.kind === "link") return "Always connected";
   if (maker.kind === "protection") return "Passes the input";
+  // a PMIC output: switched inside the PMIC, by its own power-on sequence
+  if (maker.pmic) return "PMIC output";
   if (!maker.control) return "No enable pin";
   const sig = (doc.signals || []).find((s) => s.id === maker.control);
   if (!sig) return "";

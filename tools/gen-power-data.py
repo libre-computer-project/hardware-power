@@ -29,19 +29,18 @@ LAYOUT_DATA = Path.home() / "git/libre-computer/hardware-layout/data"
 GPIO_BOARDS = Path.home() / "git/libre-computer/hardware-gpio/data/boards.json"
 OUT_DATA = TOOLS.parent / "data"
 
+# Boards the pinout tool lists that have no power tree here. Tritium (its H3 /
+# H5 pinout ids resolve to the one all-h3-cc board), Renegade and Le Potato
+# are modelled from their published schematics, so they are not listed.
 PINOUT_ONLY = (
-    ("all-h3-cc-h3", "Tritium H3"),
-    ("all-h3-cc-h5", "Tritium H5"),
-    ("roc-rk3328-cc", "Renegade"),
     ("roc-rk3328-cc-v2", "Das Renegade"),
     ("roc-rk3399-pc", "Renegade Elite"),
-    ("aml-s905x-cc", "Le Potato"),
     ("aml-a311d-cc-v01", "Alta (pre-prod)"),
     ("aml-s905d3-cc-v01", "Solitude (pre-prod)"),
 )
 PINOUT_REASON = (
-    "No layout netlist in this catalogue. The pinout electrical table is "
-    "the SoC pad spec, not a board power tree."
+    "No layout netlist or published schematic modelled in this catalogue. "
+    "The pinout electrical table is the SoC pad spec, not a board power tree."
 )
 DROPPED_STATUS = frozenset({"unreleased", "preprod", "reference"})
 

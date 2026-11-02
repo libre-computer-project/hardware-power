@@ -9,8 +9,8 @@
    "status": "production",
    "hidden": false,
    "rev": "V1.0-A",
-   "coverage": "no-netlist",
-   "shape": "empty",
+   "coverage": "model",
+   "shape": "model",
    "shares_layout_with": null
   },
   {
@@ -87,8 +87,8 @@
    "status": "production",
    "hidden": false,
    "rev": "V1.3-B",
-   "coverage": "no-netlist",
-   "shape": "empty",
+   "coverage": "model",
+   "shape": "model",
    "shares_layout_with": null
   },
   {
@@ -100,46 +100,34 @@
    "status": "production",
    "hidden": false,
    "rev": "V1.1",
-   "coverage": "no-netlist",
-   "shape": "empty",
+   "coverage": "model",
+   "shape": "model",
    "shares_layout_with": null
   }
  ],
  "pinout_only": [
   {
-   "id": "all-h3-cc-h3",
-   "name": "Tritium H3",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
-   "hidden": false
-  },
-  {
-   "id": "all-h3-cc-h5",
-   "name": "Tritium H5",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
-   "hidden": false
-  },
-  {
    "id": "roc-rk3328-cc-v2",
    "name": "Das Renegade",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
+   "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
    "hidden": true
   },
   {
    "id": "roc-rk3399-pc",
    "name": "Renegade Elite",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
+   "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
    "hidden": false
   },
   {
    "id": "aml-a311d-cc-v01",
    "name": "Alta (pre-prod)",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
+   "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
    "hidden": true
   },
   {
    "id": "aml-s905d3-cc-v01",
    "name": "Solitude (pre-prod)",
-   "reason": "No layout netlist in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
+   "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
    "hidden": true
   }
  ]

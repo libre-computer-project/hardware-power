@@ -36,15 +36,17 @@ STATUSES = {"production", "unreleased", "preprod", "reference"}
 DROPPED = {"unreleased", "preprod", "reference"}
 
 # schema 2 -- the closed schema
-NET = re.compile(r"^[A-Z0-9][A-Z0-9_.\-]{0,31}$")
+# a drawing may name a rail for two loads (VCC18_HDMI/VADC): one slash between
+# two name parts, never a path (no leading, trailing or doubled slash)
+NET = re.compile(r"^[A-Z0-9][A-Z0-9_.\-]{0,31}(?:/[A-Z0-9][A-Z0-9_.\-]{0,31})?$")
 REFDES = re.compile(r"^[0-9]{0,2}[A-Z]{1,3}[0-9]{1,4}$")
 PIN = re.compile(r"^[A-Z]?[0-9]{1,3}$")
-PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_]{1,31}$")   # the book's own case (AVDD18_Audio_CVBS)
+PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{1,31}$")   # the book's own case (AVDD18_Audio_CVBS); Allwinner's dash (VCC-PD)
 # shapes that are never a rail, part or pad name even when they fit the
 # grammar: a register (..._REG1, ..._CNTL), a hex word, an address
 FORBIDDEN = re.compile(r"(_REG\d|CNTL|^0X[0-9A-F]+$|^[0-9A-F]{16,}$)", re.I)
 KINDS = {"buck", "ldo", "switch", "link", "protection"}
-LINKS = {"fuse", "bead", "inductor", "jumper"}
+LINKS = {"fuse", "bead", "inductor", "jumper", "resistor"}   # resistor: a series resistor, not 0 ohm
 ROLES = {"enable", "gate"}
 DRIVERS = {"tie", "pad", "circuit", "pull"}
 DIRS = {"up", "down", "divider"}
@@ -117,8 +119,10 @@ def check_model(doc: dict, row: dict) -> list[str]:
                     if not isinstance(c.get("header40"), bool):
                         bad.append(f"{tag}: connector header40 is not a boolean")
     for m in makers:
-        if not keys(m, {"id", "refdes", "kind", "in", "out", "control", "link"}, "maker"):
+        if not keys(m, {"id", "refdes", "kind", "in", "out", "control", "link", "pmic"}, "maker"):
             continue
+        if "pmic" in m and m["pmic"] is not True:
+            bad.append(f"{tag}: maker pmic is not true")
         if m.get("kind") == "link" and m.get("link") not in LINKS:
             bad.append(f"{tag}: link kind {m.get('link')!r}")
         if not ID.match(str(m.get("id"))):
@@ -277,8 +281,14 @@ def self_test(root: Path) -> int:
     fails = []
     if check_model(fx, row):
         fails.append(f"fixture refused: {check_model(fx, row)}")
+    # must-accept: a drawing's rail named for two loads
+    two = copy.deepcopy(fx)
+    two["rails"][0]["name"] = "VCC18_HDMI/VADC"
+    if check_model(two, row):
+        fails.append(f"two-load rail name refused: {check_model(two, row)}")
     arms = [
         ("repo-relative path in a rail name", lambda d: d["rails"][0].__setitem__("name", "amlogic/gxl/x.pdf")),
+        ("an upper-case path in a rail name", lambda d: d["rails"][0].__setitem__("name", "AMLOGIC/GXL/X.PDF")),
         ("hex digest as a rail name", lambda d: d["rails"][0].__setitem__("name", "ECF2AACBF65F1BCCAF51")),
         ("register name as a rail name", lambda d: d["rails"][0].__setitem__("name", "AO_RTI_PWR_CNTL_REG1")),
         ("a part number on a maker", lambda d: d["makers"][0].__setitem__("part", "SY8120B1ABC")),

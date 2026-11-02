@@ -1,19 +1,826 @@
 {
- "schema": 1,
+ "schema": 2,
  "id": "roc-rk3328-cc",
  "model": "ROC-RK3328-CC",
  "name": "Renegade",
  "soc": "RK3328",
- "coverage": "no-netlist",
- "shape": "empty",
- "source": {
-  "layout_id": "roc-rk3328-cc",
-  "net_count": 0,
-  "nets_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
- },
- "nodes": [],
- "edges": [],
- "unresolved": [],
- "unresolved_nets": [],
- "reason": "Mechanical model: placement and values, zero nets."
+ "tier": "transcribed",
+ "rails": [
+  {
+   "id": "r-u2210-out",
+   "name": "U2210.OUT",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2210"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-usb20-fephy-1v0",
+   "name": "USB20/FEPHY_1V0",
+   "v": 1.0,
+   "input": null,
+   "made_by": [
+    "m-l1203"
+   ],
+   "loads": {
+    "soc": [
+     "FEPHY_AVDD_1V0",
+     "USB20_DVDD_1V0"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-usb20-fephy-1v8",
+   "name": "USB20/FEPHY_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-l1201"
+   ],
+   "loads": {
+    "soc": [
+     "FEPHY_AVDD_1V8",
+     "USB20_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc18-codec",
+   "name": "VCC18_CODEC",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-l1501"
+   ],
+   "loads": {
+    "soc": [
+     "CODEC_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc18-emmc",
+   "name": "VCC18_EMMC",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u701ldo2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc18-hdmi-vadc",
+   "name": "VCC18_HDMI/VADC",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-l1401"
+   ],
+   "loads": {
+    "soc": [
+     "HDMI_AVDD_1V8",
+     "VDAC_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc25-ddr",
+   "name": "VCC25_DDR",
+   "v": 2.5,
+   "input": null,
+   "made_by": [
+    "m-u4004"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc33-amp",
+   "name": "VCC33_AMP",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-l2909"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v0-host1",
+   "name": "VCC5V0_HOST1",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u34"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v-hdmi",
+   "name": "VCC5V_HDMI",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-d2600"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vccio4",
+   "name": "VCCIO4",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r3717"
+   ],
+   "loads": {
+    "soc": [
+     "VCCIO4"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vccio-flash",
+   "name": "VCCIO_FLASH",
+   "v": null,
+   "input": null,
+   "made_by": [],
+   "loads": {
+    "soc": [
+     "VCCIO2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vccio-sd",
+   "name": "VCCIO_SD",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r1807"
+   ],
+   "loads": {
+    "soc": [
+     "VCCIO3"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-18",
+   "name": "VCC_18",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701ldo1"
+   ],
+   "loads": {
+    "soc": [
+     "OTP_VCC18",
+     "SARADC_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-ddr",
+   "name": "VCC_DDR",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701buck3"
+   ],
+   "loads": {
+    "soc": [
+     "VDD_DDRIO"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-io",
+   "name": "VCC_IO",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701buck4"
+   ],
+   "loads": {
+    "soc": [
+     "USB20_AVDD_3V3",
+     "USB30_AVDD_3V3",
+     "USB30_VBUS",
+     "VCCIO1",
+     "VCCIO5",
+     "VCCIO6",
+     "VCCIO_PMU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-lan",
+   "name": "VCC_LAN",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-l33"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-otg-5v",
+   "name": "VCC_OTG_5V",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u2500"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-rtc",
+   "name": "VCC_RTC",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-d5"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-sd",
+   "name": "VCC_SD",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-q2100"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-sys",
+   "name": "VCC_SYS",
+   "v": 5.0,
+   "input": "Micro-USB",
+   "made_by": [],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd10-ephy",
+   "name": "VDD10_EPHY",
+   "v": 1.0,
+   "input": null,
+   "made_by": [
+    "m-u17"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd10-hdmi-pmu",
+   "name": "VDD10_HDMI/PMU",
+   "v": 1.0,
+   "input": null,
+   "made_by": [
+    "m-r1402"
+   ],
+   "loads": {
+    "soc": [
+     "HDMI_AVDD_1V0",
+     "VDD_PMU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddpll-usb30-1v0",
+   "name": "VDDPLL/USB30_1V0",
+   "v": 1.0,
+   "input": null,
+   "made_by": [
+    "m-l900"
+   ],
+   "loads": {
+    "soc": [
+     "PLL_DVDD_1V0",
+     "USB30_DVDD_1V0"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddpll-usb30-1v8",
+   "name": "VDDPLL/USB30_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-l901"
+   ],
+   "loads": {
+    "soc": [
+     "PLL_AVDD_1V8",
+     "USB30_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-10",
+   "name": "VDD_10",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701ldo3"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-arm",
+   "name": "VDD_ARM",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701buck2"
+   ],
+   "loads": {
+    "soc": [
+     "VDD_CORE"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-log",
+   "name": "VDD_LOG",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u701buck1"
+   ],
+   "loads": {
+    "soc": [
+     "VDD_LOGIC"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  }
+ ],
+ "makers": [
+  {
+   "id": "m-d2600",
+   "refdes": "D2600",
+   "kind": "protection",
+   "in": "r-vcc-sys",
+   "out": "r-vcc5v-hdmi",
+   "control": null
+  },
+  {
+   "id": "m-d5",
+   "refdes": "D5",
+   "kind": "protection",
+   "in": "r-vcc-sys",
+   "out": "r-vcc-rtc",
+   "control": null
+  },
+  {
+   "id": "m-l1201",
+   "refdes": "L1201",
+   "kind": "link",
+   "in": "r-vcc-18",
+   "out": "r-usb20-fephy-1v8",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l1203",
+   "refdes": "L1203",
+   "kind": "link",
+   "in": "r-vdd-log",
+   "out": "r-usb20-fephy-1v0",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l1401",
+   "refdes": "L1401",
+   "kind": "link",
+   "in": "r-vcc-18",
+   "out": "r-vcc18-hdmi-vadc",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l1501",
+   "refdes": "L1501",
+   "kind": "link",
+   "in": "r-vcc-18",
+   "out": "r-vcc18-codec",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l2909",
+   "refdes": "L2909",
+   "kind": "link",
+   "in": "r-vcc-io",
+   "out": "r-vcc33-amp",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l33",
+   "refdes": "L33",
+   "kind": "link",
+   "in": "r-vcc-io",
+   "out": "r-vcc-lan",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l900",
+   "refdes": "L900",
+   "kind": "link",
+   "in": "r-vdd-10",
+   "out": "r-vddpll-usb30-1v0",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-l901",
+   "refdes": "L901",
+   "kind": "link",
+   "in": "r-vcc-18",
+   "out": "r-vddpll-usb30-1v8",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-q2100",
+   "refdes": "Q2100",
+   "kind": "switch",
+   "in": "r-vcc-io",
+   "out": "r-vcc-sd",
+   "control": "s-q2100"
+  },
+  {
+   "id": "m-r1402",
+   "refdes": "R1402",
+   "kind": "link",
+   "in": "r-vdd-10",
+   "out": "r-vdd10-hdmi-pmu",
+   "control": null,
+   "link": "resistor"
+  },
+  {
+   "id": "m-r1807",
+   "refdes": "R1807",
+   "kind": "link",
+   "in": "r-u2210-out",
+   "out": "r-vccio-sd",
+   "control": null,
+   "link": "resistor"
+  },
+  {
+   "id": "m-r3717",
+   "refdes": "R3717",
+   "kind": "link",
+   "in": "r-vcc-io",
+   "out": "r-vccio4",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-u17",
+   "refdes": "U17",
+   "kind": "buck",
+   "in": "r-vcc-lan",
+   "out": "r-vdd10-ephy",
+   "control": "s-u17"
+  },
+  {
+   "id": "m-u2210",
+   "refdes": "U2210",
+   "kind": "ldo",
+   "in": "r-vcc-sys",
+   "out": "r-u2210-out",
+   "control": "s-u2210"
+  },
+  {
+   "id": "m-u2500",
+   "refdes": "U2500",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vcc-otg-5v",
+   "control": "s-u2500"
+  },
+  {
+   "id": "m-u34",
+   "refdes": "U34",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vcc5v0-host1",
+   "control": "s-u34"
+  },
+  {
+   "id": "m-u4004",
+   "refdes": "U4004",
+   "kind": "ldo",
+   "in": "r-vcc-sys",
+   "out": "r-vcc25-ddr",
+   "control": "s-u4004"
+  },
+  {
+   "id": "m-u701buck1",
+   "refdes": "U701",
+   "kind": "buck",
+   "in": "r-vcc-sys",
+   "out": "r-vdd-log",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701buck2",
+   "refdes": "U701",
+   "kind": "buck",
+   "in": "r-vcc-sys",
+   "out": "r-vdd-arm",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701buck3",
+   "refdes": "U701",
+   "kind": "buck",
+   "in": "r-vcc-sys",
+   "out": "r-vcc-ddr",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701buck4",
+   "refdes": "U701",
+   "kind": "buck",
+   "in": "r-vcc-sys",
+   "out": "r-vcc-io",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701ldo1",
+   "refdes": "U701",
+   "kind": "ldo",
+   "in": "r-vcc-io",
+   "out": "r-vcc-18",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701ldo2",
+   "refdes": "U701",
+   "kind": "ldo",
+   "in": "r-vcc-io",
+   "out": "r-vcc18-emmc",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u701ldo3",
+   "refdes": "U701",
+   "kind": "ldo",
+   "in": "r-vcc-io",
+   "out": "r-vdd-10",
+   "control": null,
+   "pmic": true
+  }
+ ],
+ "signals": [
+  {
+   "id": "s-q2100",
+   "role": "gate",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO0_D6"
+    ],
+    "dir": "down"
+   }
+  },
+  {
+   "id": "s-u17",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vcc-lan"
+   }
+  },
+  {
+   "id": "s-u2210",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-io",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u2500",
+   "role": "gate",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO1_D2"
+    ],
+    "dir": null
+   }
+  },
+  {
+   "id": "s-u34",
+   "role": "gate",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO1_D2"
+    ],
+    "dir": null
+   }
+  },
+  {
+   "id": "s-u4004",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-sys",
+    "dir": "up"
+   }
+  }
+ ],
+ "walks": [
+  {
+   "id": "cold-boot",
+   "label": "Power-on",
+   "steps": [
+    {
+     "stage": "off",
+     "label": "Unplugged",
+     "state": "off"
+    },
+    {
+     "stage": "power-applied",
+     "label": "Plugged in, SoC in reset",
+     "state": "power-applied"
+    }
+   ]
+  }
+ ],
+ "states": [
+  {
+   "id": "off",
+   "label": "Unplugged",
+   "rails": {
+    "r-u2210-out": "off",
+    "r-usb20-fephy-1v0": "off",
+    "r-usb20-fephy-1v8": "off",
+    "r-vcc18-codec": "off",
+    "r-vcc18-emmc": "off",
+    "r-vcc18-hdmi-vadc": "off",
+    "r-vcc25-ddr": "off",
+    "r-vcc33-amp": "off",
+    "r-vcc5v0-host1": "off",
+    "r-vcc5v-hdmi": "off",
+    "r-vccio4": "off",
+    "r-vccio-flash": "off",
+    "r-vccio-sd": "off",
+    "r-vcc-18": "off",
+    "r-vcc-ddr": "off",
+    "r-vcc-io": "off",
+    "r-vcc-lan": "off",
+    "r-vcc-otg-5v": "off",
+    "r-vcc-rtc": "off",
+    "r-vcc-sd": "off",
+    "r-vcc-sys": "off",
+    "r-vdd10-ephy": "off",
+    "r-vdd10-hdmi-pmu": "off",
+    "r-vddpll-usb30-1v0": "off",
+    "r-vddpll-usb30-1v8": "off",
+    "r-vdd-10": "off",
+    "r-vdd-arm": "off",
+    "r-vdd-log": "off"
+   }
+  },
+  {
+   "id": "power-applied",
+   "label": "Plugged in, SoC in reset",
+   "rails": {
+    "r-u2210-out": "x",
+    "r-usb20-fephy-1v0": "x",
+    "r-usb20-fephy-1v8": "x",
+    "r-vcc18-codec": "x",
+    "r-vcc18-emmc": "x",
+    "r-vcc18-hdmi-vadc": "x",
+    "r-vcc25-ddr": "x",
+    "r-vcc33-amp": "x",
+    "r-vcc5v0-host1": "x",
+    "r-vcc5v-hdmi": "on",
+    "r-vccio4": "x",
+    "r-vccio-flash": "x",
+    "r-vccio-sd": "x",
+    "r-vcc-18": "x",
+    "r-vcc-ddr": "x",
+    "r-vcc-io": "x",
+    "r-vcc-lan": "x",
+    "r-vcc-otg-5v": "x",
+    "r-vcc-rtc": "on",
+    "r-vcc-sd": "x",
+    "r-vcc-sys": "on",
+    "r-vdd10-ephy": "x",
+    "r-vdd10-hdmi-pmu": "x",
+    "r-vddpll-usb30-1v0": "x",
+    "r-vddpll-usb30-1v8": "x",
+    "r-vdd-10": "x",
+    "r-vdd-arm": "x",
+    "r-vdd-log": "x"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "walk": "cold-boot",
+   "from": "off",
+   "to": "power-applied",
+   "trigger": "power-applied"
+  }
+ ]
 }
