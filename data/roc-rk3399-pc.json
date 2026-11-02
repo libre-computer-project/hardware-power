@@ -1,0 +1,1317 @@
+{
+ "schema": 2,
+ "id": "roc-rk3399-pc",
+ "model": "ROC-RK3399-PC",
+ "name": "Renegade Elite",
+ "soc": "RK3399",
+ "tier": "transcribed",
+ "rails": [
+  {
+   "id": "r-dc-12v",
+   "name": "DC_12V",
+   "v": 12.0,
+   "input": null,
+   "made_by": [
+    "m-u2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-ir-vcc",
+   "name": "IR_VCC",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-r84"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-sys-12v",
+   "name": "SYS_12V",
+   "v": 12.0,
+   "input": null,
+   "made_by": [
+    "m-d17"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vbus-typec0",
+   "name": "VBUS_TYPEC0",
+   "v": null,
+   "input": "USB-C",
+   "made_by": [],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vbus-typec1",
+   "name": "VBUS_TYPEC1",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u14"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc1-8v",
+   "name": "VCC1_8V",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u13vreg18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3v0-sd",
+   "name": "VCC3V0_SD",
+   "v": 3.0,
+   "input": null,
+   "made_by": [
+    "m-u20"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3v3-s0",
+   "name": "VCC3V3_S0",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u7switch-reg2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3v3-s3",
+   "name": "VCC3V3_S3",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u7switch-reg1"
+   ],
+   "loads": {
+    "soc": [
+     "APIO1_VDD",
+     "TYPEC0_AVDD_3V3",
+     "TYPEC1_AVDD_3V3",
+     "USB_AVDD_3V3"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3v3-s5",
+   "name": "VCC3V3_S5",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u4ldo"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3v3-sys",
+   "name": "VCC3V3_SYS",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u4"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc3-3v",
+   "name": "VCC3_3V",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u13vd33-out"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v0-host0",
+   "name": "VCC5V0_HOST0",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u50"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v0-host1",
+   "name": "VCC5V0_HOST1",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u49"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v0-host2",
+   "name": "VCC5V0_HOST2",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u15"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca0v9-hdmi",
+   "name": "VCCA0V9_HDMI",
+   "v": 0.9,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg7"
+   ],
+   "loads": {
+    "soc": [
+     "HDMI_AVDD_0V9_1",
+     "HDMI_AVDD_0V9_2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca1v8-codec",
+   "name": "VCCA1V8_CODEC",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg1"
+   ],
+   "loads": {
+    "soc": [
+     "APIO5_VDD",
+     "APIO5_VDDPST"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca1v8-hdmi",
+   "name": "VCCA1V8_HDMI",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg2"
+   ],
+   "loads": {
+    "soc": [
+     "HDMI_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca3v0-codec",
+   "name": "VCCA3V0_CODEC",
+   "v": 3.0,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg5"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca-0v9",
+   "name": "VCCA_0V9",
+   "v": 0.9,
+   "input": null,
+   "made_by": [
+    "m-u12"
+   ],
+   "loads": {
+    "soc": [
+     "DDR0PLL_AVDD_0V9",
+     "DDR1PLL_AVDD_0V9",
+     "EDP_AVDD_0V9",
+     "EMMC_COREDLL_0V9",
+     "PCIE_AVDD_0V9",
+     "PLL_AVDD_0V9",
+     "PMU_VDD_0V9",
+     "TYPEC0_AVDD_0V9_1",
+     "TYPEC0_AVDD_0V9_2",
+     "TYPEC1_AVDD_0V9_1",
+     "TYPEC1_AVDD_0V9_2",
+     "USB_AVDD_0V9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcca-1v8",
+   "name": "VCCA_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg3"
+   ],
+   "loads": {
+    "soc": [
+     "ADC_AVDD",
+     "PCIE_AVDD_1V8",
+     "PLL_AVDD_1V8",
+     "PMUIO1_VDD_1V8",
+     "PMU_VDD_1V8",
+     "TYPEC0_AVDD_1V8",
+     "TYPEC1_AVDD_1V8",
+     "USB_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-1v5",
+   "name": "VCC_1V5",
+   "v": 1.5,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg6"
+   ],
+   "loads": {
+    "soc": [
+     "APIO2_VDDPST",
+     "APIO4_VDDPST",
+     "PMUIO2_VDDPST"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-1v8",
+   "name": "VCC_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u7buck4"
+   ],
+   "loads": {
+    "soc": [
+     "APIO1_VDDPST",
+     "APIO3_VDD_1V8",
+     "EDP_AVDD_1V8_1",
+     "EDP_AVDD_1V8_2",
+     "EMMC_VDD_1V8",
+     "MIPI_RX0_AVDD_1V8",
+     "MIPI_TX0_AVDD_1V8",
+     "MIPI_TX1/RX1_AVDD_1V8"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-3v0",
+   "name": "VCC_3V0",
+   "v": 3.0,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg8"
+   ],
+   "loads": {
+    "soc": [
+     "APIO2_VDD",
+     "APIO4_VDD",
+     "PMUIO2_VDD"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-ddr",
+   "name": "VCC_DDR",
+   "v": 1.25,
+   "input": null,
+   "made_by": [
+    "m-u7buck3"
+   ],
+   "loads": {
+    "soc": [
+     "DDR0_VDD_1",
+     "DDR0_VDD_10",
+     "DDR0_VDD_11",
+     "DDR0_VDD_12",
+     "DDR0_VDD_2",
+     "DDR0_VDD_3",
+     "DDR0_VDD_4",
+     "DDR0_VDD_5",
+     "DDR0_VDD_6",
+     "DDR0_VDD_7",
+     "DDR0_VDD_8",
+     "DDR0_VDD_9",
+     "DDR1_VDD_1",
+     "DDR1_VDD_10",
+     "DDR1_VDD_11",
+     "DDR1_VDD_12",
+     "DDR1_VDD_2",
+     "DDR1_VDD_3",
+     "DDR1_VDD_4",
+     "DDR1_VDD_5",
+     "DDR1_VDD_6",
+     "DDR1_VDD_7",
+     "DDR1_VDD_8",
+     "DDR1_VDD_9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-efuse",
+   "name": "VCC_EFUSE",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u21"
+   ],
+   "loads": {
+    "soc": [
+     "EFUSE_VQPS"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-lan",
+   "name": "VCC_LAN",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-l33"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-lcd",
+   "name": "VCC_LCD",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-q15"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-rtc",
+   "name": "VCC_RTC",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-d14"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-sdio",
+   "name": "VCC_SDIO",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u7ldo-reg4"
+   ],
+   "loads": {
+    "soc": [
+     "SDMMC0_VDD"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-sys",
+   "name": "VCC_SYS",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u3"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd10-ephy",
+   "name": "VDD10_EPHY",
+   "v": 1.0,
+   "input": null,
+   "made_by": [
+    "m-u17"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-center",
+   "name": "VDD_CENTER",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u7buck1"
+   ],
+   "loads": {
+    "soc": [
+     "CENTERLOGIC_VDD_1",
+     "CENTERLOGIC_VDD_10",
+     "CENTERLOGIC_VDD_2",
+     "CENTERLOGIC_VDD_3",
+     "CENTERLOGIC_VDD_4",
+     "CENTERLOGIC_VDD_5",
+     "CENTERLOGIC_VDD_6",
+     "CENTERLOGIC_VDD_7",
+     "CENTERLOGIC_VDD_8",
+     "CENTERLOGIC_VDD_9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-cpu-b",
+   "name": "VDD_CPU_B",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u11"
+   ],
+   "loads": {
+    "soc": [
+     "BIGCPU_VDD_1",
+     "BIGCPU_VDD_10",
+     "BIGCPU_VDD_11",
+     "BIGCPU_VDD_12",
+     "BIGCPU_VDD_13",
+     "BIGCPU_VDD_2",
+     "BIGCPU_VDD_3",
+     "BIGCPU_VDD_4",
+     "BIGCPU_VDD_5",
+     "BIGCPU_VDD_6",
+     "BIGCPU_VDD_7",
+     "BIGCPU_VDD_8",
+     "BIGCPU_VDD_9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-cpu-l",
+   "name": "VDD_CPU_L",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u7buck2"
+   ],
+   "loads": {
+    "soc": [
+     "LITCPU_VDD_1",
+     "LITCPU_VDD_2",
+     "LITCPU_VDD_3",
+     "LITCPU_VDD_4",
+     "LITCPU_VDD_5",
+     "LITCPU_VDD_6",
+     "LITCPU_VDD_7"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-ddr0-clk",
+   "name": "VDD_DDR0_CLK",
+   "v": 1.25,
+   "input": null,
+   "made_by": [
+    "m-r1204"
+   ],
+   "loads": {
+    "soc": [
+     "DDR0_CLK_VDD"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-ddr1-clk",
+   "name": "VDD_DDR1_CLK",
+   "v": 1.25,
+   "input": null,
+   "made_by": [
+    "m-r1205"
+   ],
+   "loads": {
+    "soc": [
+     "DDR1_CLK_VDD"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-gpu",
+   "name": "VDD_GPU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u8"
+   ],
+   "loads": {
+    "soc": [
+     "GPU_VDD_1",
+     "GPU_VDD_10",
+     "GPU_VDD_11",
+     "GPU_VDD_12",
+     "GPU_VDD_13",
+     "GPU_VDD_14",
+     "GPU_VDD_15",
+     "GPU_VDD_16",
+     "GPU_VDD_17",
+     "GPU_VDD_18",
+     "GPU_VDD_19",
+     "GPU_VDD_2",
+     "GPU_VDD_20",
+     "GPU_VDD_3",
+     "GPU_VDD_4",
+     "GPU_VDD_5",
+     "GPU_VDD_6",
+     "GPU_VDD_7",
+     "GPU_VDD_8",
+     "GPU_VDD_9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-log",
+   "name": "VDD_LOG",
+   "v": 0.9,
+   "input": null,
+   "made_by": [
+    "m-u10"
+   ],
+   "loads": {
+    "soc": [
+     "LOGIC_VDD_1",
+     "LOGIC_VDD_10",
+     "LOGIC_VDD_11",
+     "LOGIC_VDD_12",
+     "LOGIC_VDD_2",
+     "LOGIC_VDD_3",
+     "LOGIC_VDD_4",
+     "LOGIC_VDD_5",
+     "LOGIC_VDD_6",
+     "LOGIC_VDD_7",
+     "LOGIC_VDD_8",
+     "LOGIC_VDD_9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vpp-otp",
+   "name": "VPP_OTP",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-q3"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  }
+ ],
+ "makers": [
+  {
+   "id": "m-d14",
+   "refdes": "D14",
+   "kind": "protection",
+   "in": "r-vcc3v3-s5",
+   "out": "r-vcc-rtc",
+   "control": null
+  },
+  {
+   "id": "m-d17",
+   "refdes": "D17",
+   "kind": "protection",
+   "in": "r-dc-12v",
+   "out": "r-sys-12v",
+   "control": null
+  },
+  {
+   "id": "m-l33",
+   "refdes": "L33",
+   "kind": "link",
+   "in": "r-vcc3v3-s3",
+   "out": "r-vcc-lan",
+   "control": null,
+   "link": "inductor"
+  },
+  {
+   "id": "m-q15",
+   "refdes": "Q15",
+   "kind": "switch",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-lcd",
+   "control": "s-q15"
+  },
+  {
+   "id": "m-q3",
+   "refdes": "Q3",
+   "kind": "switch",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vpp-otp",
+   "control": "s-q3"
+  },
+  {
+   "id": "m-r1204",
+   "refdes": "R1204",
+   "kind": "link",
+   "in": "r-vcc-ddr",
+   "out": "r-vdd-ddr0-clk",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r1205",
+   "refdes": "R1205",
+   "kind": "link",
+   "in": "r-vcc-ddr",
+   "out": "r-vdd-ddr1-clk",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r84",
+   "refdes": "R84",
+   "kind": "link",
+   "in": "r-vcc3v3-sys",
+   "out": "r-ir-vcc",
+   "control": null,
+   "link": "resistor"
+  },
+  {
+   "id": "m-u10",
+   "refdes": "U10",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vdd-log",
+   "control": "s-u10"
+  },
+  {
+   "id": "m-u11",
+   "refdes": "U11",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vdd-cpu-b",
+   "control": "s-u11"
+  },
+  {
+   "id": "m-u12",
+   "refdes": "U12",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca-0v9",
+   "control": "s-u12"
+  },
+  {
+   "id": "m-u13vd33-out",
+   "refdes": "U13",
+   "kind": "ldo",
+   "in": "r-vcc-sys",
+   "out": "r-vcc3-3v",
+   "control": null
+  },
+  {
+   "id": "m-u13vreg18",
+   "refdes": "U13",
+   "kind": "ldo",
+   "in": "r-vcc3-3v",
+   "out": "r-vcc1-8v",
+   "control": null
+  },
+  {
+   "id": "m-u14",
+   "refdes": "U14",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vbus-typec1",
+   "control": "s-u14"
+  },
+  {
+   "id": "m-u15",
+   "refdes": "U15",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vcc5v0-host2",
+   "control": "s-u15"
+  },
+  {
+   "id": "m-u17",
+   "refdes": "U17",
+   "kind": "buck",
+   "in": "r-vcc-lan",
+   "out": "r-vdd10-ephy",
+   "control": "s-u17"
+  },
+  {
+   "id": "m-u2",
+   "refdes": "U2",
+   "kind": "buck",
+   "in": "r-vbus-typec0",
+   "out": "r-dc-12v",
+   "control": "s-u2"
+  },
+  {
+   "id": "m-u20",
+   "refdes": "U20",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc3v0-sd",
+   "control": "s-u20"
+  },
+  {
+   "id": "m-u21",
+   "refdes": "U21",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-efuse",
+   "control": "s-u21"
+  },
+  {
+   "id": "m-u3",
+   "refdes": "U3",
+   "kind": "buck",
+   "in": "r-sys-12v",
+   "out": "r-vcc-sys",
+   "control": "s-u3"
+  },
+  {
+   "id": "m-u4",
+   "refdes": "U4",
+   "kind": "buck",
+   "in": "r-sys-12v",
+   "out": "r-vcc3v3-sys",
+   "control": "s-u4"
+  },
+  {
+   "id": "m-u49",
+   "refdes": "U49",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vcc5v0-host1",
+   "control": "s-u49"
+  },
+  {
+   "id": "m-u4ldo",
+   "refdes": "U4",
+   "kind": "ldo",
+   "in": "r-sys-12v",
+   "out": "r-vcc3v3-s5",
+   "control": null
+  },
+  {
+   "id": "m-u50",
+   "refdes": "U50",
+   "kind": "switch",
+   "in": "r-vcc-sys",
+   "out": "r-vcc5v0-host0",
+   "control": "s-u50"
+  },
+  {
+   "id": "m-u7buck1",
+   "refdes": "U7",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vdd-center",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7buck2",
+   "refdes": "U7",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vdd-cpu-l",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7buck3",
+   "refdes": "U7",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-ddr",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7buck4",
+   "refdes": "U7",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-1v8",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg1",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca1v8-codec",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg2",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca1v8-hdmi",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg3",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca-1v8",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg4",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-sdio",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg5",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca3v0-codec",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg6",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-1v5",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg7",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcca0v9-hdmi",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7ldo-reg8",
+   "refdes": "U7",
+   "kind": "ldo",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc-3v0",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7switch-reg1",
+   "refdes": "U7",
+   "kind": "switch",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc3v3-s3",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u7switch-reg2",
+   "refdes": "U7",
+   "kind": "switch",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vcc3v3-s0",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u8",
+   "refdes": "U8",
+   "kind": "buck",
+   "in": "r-vcc3v3-sys",
+   "out": "r-vdd-gpu",
+   "control": "s-u8"
+  }
+ ],
+ "signals": [
+  {
+   "id": "s-q15",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-q3",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u10",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-1v8",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u11",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-1v8",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u12",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc3v3-sys",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u14",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u15",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u17",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-lan",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u2",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vbus-typec0",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u20",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO4_D6"
+    ],
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-u21",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO0_B3"
+    ],
+    "dir": null
+   }
+  },
+  {
+   "id": "s-u3",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIO2_A6"
+    ],
+    "dir": "down"
+   }
+  },
+  {
+   "id": "s-u4",
+   "role": "enable",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u49",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u50",
+   "role": "gate",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u8",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-vcc-1v8",
+    "dir": "up"
+   }
+  }
+ ],
+ "walks": [
+  {
+   "id": "cold-boot",
+   "label": "Power-on",
+   "steps": [
+    {
+     "stage": "off",
+     "label": "Unplugged",
+     "state": "off"
+    },
+    {
+     "stage": "power-applied",
+     "label": "Plugged in, SoC in reset",
+     "state": "power-applied"
+    }
+   ]
+  }
+ ],
+ "states": [
+  {
+   "id": "off",
+   "label": "Unplugged",
+   "rails": {
+    "r-dc-12v": "off",
+    "r-ir-vcc": "off",
+    "r-sys-12v": "off",
+    "r-vbus-typec0": "off",
+    "r-vbus-typec1": "off",
+    "r-vcc1-8v": "off",
+    "r-vcc3v0-sd": "off",
+    "r-vcc3v3-s0": "off",
+    "r-vcc3v3-s3": "off",
+    "r-vcc3v3-s5": "off",
+    "r-vcc3v3-sys": "off",
+    "r-vcc3-3v": "off",
+    "r-vcc5v0-host0": "off",
+    "r-vcc5v0-host1": "off",
+    "r-vcc5v0-host2": "off",
+    "r-vcca0v9-hdmi": "off",
+    "r-vcca1v8-codec": "off",
+    "r-vcca1v8-hdmi": "off",
+    "r-vcca3v0-codec": "off",
+    "r-vcca-0v9": "off",
+    "r-vcca-1v8": "off",
+    "r-vcc-1v5": "off",
+    "r-vcc-1v8": "off",
+    "r-vcc-3v0": "off",
+    "r-vcc-ddr": "off",
+    "r-vcc-efuse": "off",
+    "r-vcc-lan": "off",
+    "r-vcc-lcd": "off",
+    "r-vcc-rtc": "off",
+    "r-vcc-sdio": "off",
+    "r-vcc-sys": "off",
+    "r-vdd10-ephy": "off",
+    "r-vdd-center": "off",
+    "r-vdd-cpu-b": "off",
+    "r-vdd-cpu-l": "off",
+    "r-vdd-ddr0-clk": "off",
+    "r-vdd-ddr1-clk": "off",
+    "r-vdd-gpu": "off",
+    "r-vdd-log": "off",
+    "r-vpp-otp": "off"
+   }
+  },
+  {
+   "id": "power-applied",
+   "label": "Plugged in, SoC in reset",
+   "rails": {
+    "r-dc-12v": "x",
+    "r-ir-vcc": "x",
+    "r-sys-12v": "x",
+    "r-vbus-typec0": "on",
+    "r-vbus-typec1": "x",
+    "r-vcc1-8v": "x",
+    "r-vcc3v0-sd": "x",
+    "r-vcc3v3-s0": "off",
+    "r-vcc3v3-s3": "x",
+    "r-vcc3v3-s5": "x",
+    "r-vcc3v3-sys": "x",
+    "r-vcc3-3v": "x",
+    "r-vcc5v0-host0": "x",
+    "r-vcc5v0-host1": "x",
+    "r-vcc5v0-host2": "x",
+    "r-vcca0v9-hdmi": "off",
+    "r-vcca1v8-codec": "off",
+    "r-vcca1v8-hdmi": "off",
+    "r-vcca3v0-codec": "off",
+    "r-vcca-0v9": "x",
+    "r-vcca-1v8": "x",
+    "r-vcc-1v5": "x",
+    "r-vcc-1v8": "x",
+    "r-vcc-3v0": "x",
+    "r-vcc-ddr": "x",
+    "r-vcc-efuse": "x",
+    "r-vcc-lan": "x",
+    "r-vcc-lcd": "x",
+    "r-vcc-rtc": "x",
+    "r-vcc-sdio": "x",
+    "r-vcc-sys": "x",
+    "r-vdd10-ephy": "x",
+    "r-vdd-center": "x",
+    "r-vdd-cpu-b": "x",
+    "r-vdd-cpu-l": "x",
+    "r-vdd-ddr0-clk": "x",
+    "r-vdd-ddr1-clk": "x",
+    "r-vdd-gpu": "x",
+    "r-vdd-log": "x",
+    "r-vpp-otp": "x"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "walk": "cold-boot",
+   "from": "off",
+   "to": "power-applied",
+   "trigger": "power-applied"
+  }
+ ]
+}

@@ -103,6 +103,19 @@
    "coverage": "model",
    "shape": "model",
    "shares_layout_with": null
+  },
+  {
+   "id": "roc-rk3399-pc",
+   "model": "ROC-RK3399-PC",
+   "name": "Renegade Elite",
+   "soc": "RK3399",
+   "vendor": "Rockchip",
+   "status": "production",
+   "hidden": false,
+   "rev": "V1.1-A",
+   "coverage": "model",
+   "shape": "model",
+   "shares_layout_with": null
   }
  ],
  "pinout_only": [
@@ -111,12 +124,6 @@
    "name": "Das Renegade",
    "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
    "hidden": true
-  },
-  {
-   "id": "roc-rk3399-pc",
-   "name": "Renegade Elite",
-   "reason": "No layout netlist or published schematic modelled in this catalogue. The pinout electrical table is the SoC pad spec, not a board power tree.",
-   "hidden": false
   },
   {
    "id": "aml-a311d-cc-v01",

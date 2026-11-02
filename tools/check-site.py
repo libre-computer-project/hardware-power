@@ -41,7 +41,9 @@ DROPPED = {"unreleased", "preprod", "reference"}
 NET = re.compile(r"^[A-Z0-9][A-Z0-9_.\-]{0,31}(?:/[A-Z0-9][A-Z0-9_.\-]{0,31})?$")
 REFDES = re.compile(r"^[0-9]{0,2}[A-Z]{1,3}[0-9]{1,4}$")
 PIN = re.compile(r"^[A-Z]?[0-9]{1,3}$")
-PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{1,31}$")   # the book's own case (AVDD18_Audio_CVBS); Allwinner's dash (VCC-PD)
+# the book's own case (AVDD18_Audio_CVBS); Allwinner's dash (VCC-PD); one
+# slash where a book names a ball for two blocks (MIPI_TX1/RX1_AVDD_1V8)
+PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{1,31}(?:/[A-Za-z0-9][A-Za-z0-9_-]{0,31})?$")
 # shapes that are never a rail, part or pad name even when they fit the
 # grammar: a register (..._REG1, ..._CNTL), a hex word, an address
 FORBIDDEN = re.compile(r"(_REG\d|CNTL|^0X[0-9A-F]+$|^[0-9A-F]{16,}$)", re.I)
@@ -286,7 +288,13 @@ def self_test(root: Path) -> int:
     two["rails"][0]["name"] = "VCC18_HDMI/VADC"
     if check_model(two, row):
         fails.append(f"two-load rail name refused: {check_model(two, row)}")
+    # must-accept: a SoC ball the book names for two blocks
+    ball = copy.deepcopy(fx)
+    ball["rails"][0]["loads"]["soc"] = ["MIPI_TX1/RX1_AVDD_1V8"]
+    if check_model(ball, row):
+        fails.append(f"two-block SoC ball refused: {check_model(ball, row)}")
     arms = [
+        ("a path as a SoC ball", lambda d: d["rails"][0]["loads"].__setitem__("soc", ["rockchip/rk3399/x.pdf"])),
         ("repo-relative path in a rail name", lambda d: d["rails"][0].__setitem__("name", "amlogic/gxl/x.pdf")),
         ("an upper-case path in a rail name", lambda d: d["rails"][0].__setitem__("name", "AMLOGIC/GXL/X.PDF")),
         ("hex digest as a rail name", lambda d: d["rails"][0].__setitem__("name", "ECF2AACBF65F1BCCAF51")),

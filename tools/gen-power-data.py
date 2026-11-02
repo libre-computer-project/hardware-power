@@ -30,14 +30,19 @@ GPIO_BOARDS = Path.home() / "git/libre-computer/hardware-gpio/data/boards.json"
 OUT_DATA = TOOLS.parent / "data"
 
 # Boards the pinout tool lists that have no power tree here. Tritium (its H3 /
-# H5 pinout ids resolve to the one all-h3-cc board), Renegade and Le Potato
-# are modelled from their published schematics, so they are not listed.
+# H5 pinout ids resolve to the one all-h3-cc board), Renegade, Renegade Elite
+# and Le Potato are modelled from their published schematics, so they are not
+# listed.
 PINOUT_ONLY = (
     ("roc-rk3328-cc-v2", "Das Renegade"),
-    ("roc-rk3399-pc", "Renegade Elite"),
     ("aml-a311d-cc-v01", "Alta (pre-prod)"),
     ("aml-s905d3-cc-v01", "Solitude (pre-prod)"),
 )
+# Boards with a state model and no layout-site entry (Renegade Elite: its DXF
+# carries no part designators), by id -> the drawing revision modelled. The
+# other index fields come from the pinout catalogue, which must list the
+# board as production.
+MODEL_ONLY = {"roc-rk3399-pc": "V1.1-A"}
 PINOUT_REASON = (
     "No layout netlist or published schematic modelled in this catalogue. "
     "The pinout electrical table is the SoC pad spec, not a board power tree."
@@ -76,6 +81,25 @@ def _pinout_rows() -> list[dict]:
     ]
 
 
+def _model_only_rows(out: Path, layout_ids: set[str]) -> list[dict]:
+    """Index rows for MODEL_ONLY boards, from the pinout catalogue."""
+    catalogue = {row.get("id"): row for row in _load(GPIO_BOARDS).get("boards") or []} \
+        if GPIO_BOARDS.is_file() else {}
+    rows = []
+    for board_id, rev in MODEL_ONLY.items():
+        if board_id in layout_ids:
+            continue
+        row = catalogue.get(board_id)
+        if row is None or row.get("status") != "production":
+            raise SystemExit(f"{board_id}: not a production board in the pinout catalogue")
+        model = out / f"{board_id}.json"
+        if not model.is_file() or _load(model).get("schema") != 2:
+            raise SystemExit(f"{board_id}: no state model in {out.name}/ (export it first)")
+        rows.append({key: row.get(key) for key in ("id", "model", "name", "soc", "vendor", "status", "hidden")}
+                    | {"rev": rev})
+    return rows
+
+
 def _index_row(layout_row: dict, built: dict) -> dict:
     hidden = bool(layout_row.get("hidden"))
     share = layout_row.get("shares_layout_with")
@@ -106,6 +130,7 @@ def generate(src: Path, out: Path, board: str) -> int:
             raise SystemExit(f"{board} is not a production board")
     else:
         rows = [row for row in rows if row.get("status") == "production"]
+        rows += _model_only_rows(out, {row["id"] for row in rows})
     built = {}
     modelled = set()
     for row in rows:
