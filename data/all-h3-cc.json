@@ -178,7 +178,7 @@
   {
    "id": "r-vcc-io",
    "name": "VCC-IO",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-q6"
@@ -207,7 +207,9 @@
    "name": "VDD-CPUS",
    "v": null,
    "input": null,
-   "made_by": [],
+   "made_by": [
+    "m-u1rtc-ldo"
+   ],
    "loads": {
     "soc": [
      "RTC_VIO",
@@ -333,6 +335,14 @@
    "out": "r-vdd1v1-ephy",
    "control": null,
    "link": "resistor"
+  },
+  {
+   "id": "m-u1rtc-ldo",
+   "refdes": "U1",
+   "kind": "ldo",
+   "in": "r-vcc-3v3",
+   "out": "r-vdd-cpus",
+   "control": null
   },
   {
    "id": "m-u56dcdc1",

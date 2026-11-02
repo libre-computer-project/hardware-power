@@ -289,7 +289,7 @@
   {
    "id": "r-vcc-rtc",
    "name": "VCC_RTC",
-   "v": null,
+   "v": 5.0,
    "input": null,
    "made_by": [
     "m-d5"

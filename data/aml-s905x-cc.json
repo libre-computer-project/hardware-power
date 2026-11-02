@@ -93,7 +93,7 @@
   {
    "id": "r-q6-d",
    "name": "Q6.D",
-   "v": null,
+   "v": 3.3,
    "input": null,
    "made_by": [
     "m-q6"
@@ -542,7 +542,7 @@
     "r-q6-d": "on",
     "r-usbhost-a-5v": "off",
     "r-usbotg-b-5v": "off",
-    "r-vcc-card": "x",
+    "r-vcc-card": "on",
     "r-vcc5v": "off",
     "r-vcck": "on",
     "r-vddio-ao18": "on",
