@@ -39,6 +39,11 @@
    "name": "Renegade",
    "page": "https://libre.computer/products/roc-rk3328-cc/",
    "model": "https://cad.place/?list=https%3A%2F%2Flibre.computer%2Fapi%2Fproducts%2Fmodels.json&model=roc-rk3328-cc"
+  },
+  "roc-rk3399-pc": {
+   "name": "Renegade Elite",
+   "page": "https://libre.computer/products/roc-rk3399-pc/",
+   "model": "https://cad.place/?list=https%3A%2F%2Flibre.computer%2Fapi%2Fproducts%2Fmodels.json&model=roc-rk3399-pc"
   }
  }
 }
