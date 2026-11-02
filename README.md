@@ -27,8 +27,11 @@ libre.computer's catalogue and checked by `tools/check-kit.py`.
 
 ### Schema 2
 
-A state model of one board, built from the board's netlist and written here
-by its generator. `tools/gen-power-data.py` keeps a schema-2 file as it is.
+A state model of one board, written here by its generator.
+`tools/gen-power-data.py` keeps a schema-2 file as it is. `tier` says where
+the topology came from: `netlist`, the board's layout netlist; or
+`transcribed`, read off the board's published schematic because it has no
+layout netlist (the page says so beside the board's name).
 
 | Key | Holds |
 |---|---|

@@ -34,9 +34,9 @@
    "vendor": "Amlogic",
    "status": "production",
    "hidden": false,
-   "rev": "V1.0",
-   "coverage": "no-netlist",
-   "shape": "empty",
+   "rev": "V1.0C",
+   "coverage": "model",
+   "shape": "model",
    "shares_layout_with": null
   },
   {

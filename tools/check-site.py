@@ -49,7 +49,7 @@ ROLES = {"enable", "gate"}
 DRIVERS = {"tie", "pad", "circuit", "pull"}
 DIRS = {"up", "down", "divider"}
 STATUS = {"on", "off", "x"}
-TIERS = {"netlist"}
+TIERS = {"netlist", "transcribed"}   # transcribed: read off the board's published schematic
 INPUTS = {"USB-C", "Micro-USB", "DC jack", "input"}
 LABELS = {"Power-on", "Unplugged", "Plugged in, SoC in reset", "U-Boot running", "Linux running",
           "Suspend and resume", "Suspended"}

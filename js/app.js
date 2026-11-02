@@ -20,7 +20,7 @@ const STEPS_HELP =
   "they have before it runs.";
 const TREE_HELP =
   "Level n: n parts between the rail and the board's input. Source not traced: nothing on the " +
-  "board's netlist that this page can follow makes the rail.";
+  "board's netlist or schematic that this page can follow makes the rail.";
 const VOLT_KEY = [["power5v", "5 V"], ["power3v3", "3.3 V"], ["powerlv", "Below 3 V"], ["unknown", "Not stated"]];
 const DEFAULT_BOARD = "aml-s905x-cc-v2";
 
@@ -218,6 +218,11 @@ function paintMeta() {
   box.appendChild(make("p", "pw-meta-sub", [doc.model, doc.soc].filter(Boolean).join(" · ")));
   box.appendChild(make("p", "pw-meta-sub",
     `${doc.rails.length} rails · ${regulatorCount(doc)} regulators and switches`));
+  /* A board with no layout netlist is read off its published schematic: a
+     weaker source than the layout, so the page says which it is. */
+  box.appendChild(make("p", "pw-meta-sub", doc.tier === "transcribed"
+    ? "Read from the board's published schematic (no layout netlist)."
+    : "Traced from the board's layout netlist."));
 }
 
 function paintWalk() {
@@ -573,7 +578,9 @@ function paintDetail() {
       ul.appendChild(li);
     }
   } else if (!rail.input) {
-    section("Made by").appendChild(make("li", "pw-sub", "Nothing on the netlist that this page can trace makes this rail."));
+    section("Made by").appendChild(make("li", "pw-sub", doc.tier === "transcribed"
+      ? "Nothing on the schematic that this page can trace makes this rail."
+      : "Nothing on the netlist that this page can trace makes this rail."));
   }
   const kids = children(doc).get(rail.id) || [];
   if (kids.length) {

@@ -1,19 +1,518 @@
 {
- "schema": 1,
+ "schema": 2,
  "id": "aml-s805x-ac",
  "model": "AML-S805X-AC",
  "name": "La Frite",
  "soc": "S805X",
- "coverage": "no-netlist",
- "shape": "empty",
- "source": {
-  "layout_id": "aml-s805x-ac",
-  "net_count": 0,
-  "nets_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
- },
- "nodes": [],
- "edges": [],
- "unresolved": [],
- "unresolved_nets": [],
- "reason": "Mechanical model: placement and values, zero nets."
+ "tier": "transcribed",
+ "rails": [
+  {
+   "id": "r-dc-5v",
+   "name": "DC_5V",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-1u2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-ddr4-2-5v",
+   "name": "DDR4_2_5V",
+   "v": 2.5,
+   "input": null,
+   "made_by": [
+    "m-3u2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-hdmi-pw",
+   "name": "HDMI_PW",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-9r8"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-rct-1v8",
+   "name": "RCT_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-5r12"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-usbhost-a-5v",
+   "name": "USBHOST_A_5V",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-6f1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-usbotg-b-5v",
+   "name": "USBOTG_B_5V",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-6f2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vbus-5v",
+   "name": "VBUS_5V",
+   "v": 5.0,
+   "input": "Micro-USB",
+   "made_by": [],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc1-8v",
+   "name": "VCC1_8V",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-1u5"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD18_AUDIO_CVBS",
+     "AVDD18_ENET_EFUSE",
+     "AVDD18_HDMITX",
+     "AVDD18_PLL_ADC",
+     "AVDD18_USB",
+     "AVDD18_XTAL_IOVREF"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc5v",
+   "name": "VCC5V",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-1r4"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcck",
+   "name": "VCCK",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-1u6"
+   ],
+   "loads": {
+    "soc": [
+     "VDDCPU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vccq-emmc",
+   "name": "VCCQ_EMMC",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-1u7"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddio-ao3-3v",
+   "name": "VDDIO_AO3_3V",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-1u4"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD33_USB",
+     "VDDIO_AO",
+     "VDDIO_DV_HZ"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddio-boot",
+   "name": "VDDIO_BOOT",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-4r22"
+   ],
+   "loads": {
+    "soc": [
+     "VDDIO_BOOT"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddio-x",
+   "name": "VDDIO_X",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-7r1"
+   ],
+   "loads": {
+    "soc": [
+     "VDDIO_X"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vddq1-2v",
+   "name": "VDDQ1_2V",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-1u3"
+   ],
+   "loads": {
+    "soc": [
+     "VDDQ"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vdd-ee",
+   "name": "VDD_EE",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-1u1"
+   ],
+   "loads": {
+    "soc": [
+     "VDDAO_0V9",
+     "VDDEE_0V9"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  }
+ ],
+ "makers": [
+  {
+   "id": "m-1r4",
+   "refdes": "1R4",
+   "kind": "link",
+   "in": "r-dc-5v",
+   "out": "r-vcc5v",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-1u1",
+   "refdes": "1U1",
+   "kind": "buck",
+   "in": "r-dc-5v",
+   "out": "r-vdd-ee",
+   "control": "s-1u1"
+  },
+  {
+   "id": "m-1u2",
+   "refdes": "1U2",
+   "kind": "protection",
+   "in": "r-vbus-5v",
+   "out": "r-dc-5v",
+   "control": null
+  },
+  {
+   "id": "m-1u3",
+   "refdes": "1U3",
+   "kind": "buck",
+   "in": "r-dc-5v",
+   "out": "r-vddq1-2v",
+   "control": "s-1u3"
+  },
+  {
+   "id": "m-1u4",
+   "refdes": "1U4",
+   "kind": "buck",
+   "in": "r-dc-5v",
+   "out": "r-vddio-ao3-3v",
+   "control": "s-1u4"
+  },
+  {
+   "id": "m-1u5",
+   "refdes": "1U5",
+   "kind": "ldo",
+   "in": "r-vddio-ao3-3v",
+   "out": "r-vcc1-8v",
+   "control": "s-1u5"
+  },
+  {
+   "id": "m-1u6",
+   "refdes": "1U6",
+   "kind": "buck",
+   "in": "r-dc-5v",
+   "out": "r-vcck",
+   "control": "s-1u6"
+  },
+  {
+   "id": "m-1u7",
+   "refdes": "1U7",
+   "kind": "ldo",
+   "in": "r-vddio-ao3-3v",
+   "out": "r-vccq-emmc",
+   "control": "s-1u7"
+  },
+  {
+   "id": "m-3u2",
+   "refdes": "3U2",
+   "kind": "ldo",
+   "in": "r-vddio-ao3-3v",
+   "out": "r-ddr4-2-5v",
+   "control": "s-3u2"
+  },
+  {
+   "id": "m-4r22",
+   "refdes": "4R22",
+   "kind": "link",
+   "in": "r-vccq-emmc",
+   "out": "r-vddio-boot",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-5r12",
+   "refdes": "5R12",
+   "kind": "link",
+   "in": "r-vcc1-8v",
+   "out": "r-rct-1v8",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-6f1",
+   "refdes": "6F1",
+   "kind": "link",
+   "in": "r-vcc5v",
+   "out": "r-usbhost-a-5v",
+   "control": null,
+   "link": "fuse"
+  },
+  {
+   "id": "m-6f2",
+   "refdes": "6F2",
+   "kind": "link",
+   "in": "r-vcc5v",
+   "out": "r-usbotg-b-5v",
+   "control": null,
+   "link": "fuse"
+  },
+  {
+   "id": "m-7r1",
+   "refdes": "7R1",
+   "kind": "link",
+   "in": "r-vddio-ao3-3v",
+   "out": "r-vddio-x",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-9r8",
+   "refdes": "9R8",
+   "kind": "link",
+   "in": "r-vcc5v",
+   "out": "r-hdmi-pw",
+   "control": null,
+   "link": "jumper"
+  }
+ ],
+ "signals": [
+  {
+   "id": "s-1u1",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-dc-5v",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-1u3",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vddio-ao3-3v"
+   }
+  },
+  {
+   "id": "s-1u4",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-dc-5v",
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-1u5",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vddio-ao3-3v"
+   }
+  },
+  {
+   "id": "s-1u6",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "GPIOAO_9"
+    ],
+    "dir": "up"
+   }
+  },
+  {
+   "id": "s-1u7",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vddio-ao3-3v"
+   }
+  },
+  {
+   "id": "s-3u2",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vddio-ao3-3v"
+   }
+  }
+ ],
+ "walks": [
+  {
+   "id": "cold-boot",
+   "label": "Power-on",
+   "steps": [
+    {
+     "stage": "off",
+     "label": "Unplugged",
+     "state": "off"
+    },
+    {
+     "stage": "power-applied",
+     "label": "Plugged in, SoC in reset",
+     "state": "power-applied"
+    }
+   ]
+  }
+ ],
+ "states": [
+  {
+   "id": "off",
+   "label": "Unplugged",
+   "rails": {
+    "r-dc-5v": "off",
+    "r-ddr4-2-5v": "off",
+    "r-hdmi-pw": "off",
+    "r-rct-1v8": "off",
+    "r-usbhost-a-5v": "off",
+    "r-usbotg-b-5v": "off",
+    "r-vbus-5v": "off",
+    "r-vcc1-8v": "off",
+    "r-vcc5v": "off",
+    "r-vcck": "off",
+    "r-vccq-emmc": "off",
+    "r-vddio-ao3-3v": "off",
+    "r-vddio-boot": "off",
+    "r-vddio-x": "off",
+    "r-vddq1-2v": "off",
+    "r-vdd-ee": "off"
+   }
+  },
+  {
+   "id": "power-applied",
+   "label": "Plugged in, SoC in reset",
+   "rails": {
+    "r-dc-5v": "on",
+    "r-ddr4-2-5v": "on",
+    "r-hdmi-pw": "on",
+    "r-rct-1v8": "on",
+    "r-usbhost-a-5v": "on",
+    "r-usbotg-b-5v": "on",
+    "r-vbus-5v": "on",
+    "r-vcc1-8v": "on",
+    "r-vcc5v": "on",
+    "r-vcck": "on",
+    "r-vccq-emmc": "on",
+    "r-vddio-ao3-3v": "on",
+    "r-vddio-boot": "on",
+    "r-vddio-x": "on",
+    "r-vddq1-2v": "on",
+    "r-vdd-ee": "on"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "walk": "cold-boot",
+   "from": "off",
+   "to": "power-applied",
+   "trigger": "power-applied"
+  }
+ ]
 }
