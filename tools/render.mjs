@@ -39,10 +39,18 @@ function canonical(html, url) {
 
 const index = await json("data/boards.json");
 const boards = pagedBoards(index);
-let home = canonical(await read("index.html"), `${ORIGIN}/`);
-await writeFile(path.join(ROOT, "index.html"), home);
+// the template: index.html without the front page's board index (below)
+const INDEX_RE = /\n<section class="lc-tool-index"[\s\S]*?<\/section><!-- \/tool-index -->/;
+let home = canonical((await read("index.html")).replace(INDEX_RE, ""), `${ORIGIN}/`);
 const desc = meta(home, /<meta name="description" content="([^"]*)"/);
 const siteTitle = meta(home, /<title>([^<]*)<\/title>/);
+// The front page: what the tool shows, and every board's page, in the HTML
+const toolIndex = `\n<section class="lc-tool-index" aria-labelledby="tool-index-h">
+  <h2 id="tool-index-h">Power trees by board</h2>
+  <p>${esc(desc)}</p>
+  <ul>${boards.map((b) => `<li><a href="/${esc(b.id)}/">${esc(b.model ? `${b.name} (${b.model})` : b.name)}</a></li>`).join("")}</ul>
+</section><!-- /tool-index -->`;
+await writeFile(path.join(ROOT, "index.html"), home.replace(/(\n\s*<\/main>)/, `${toolIndex}$1`));
 
 for (const b of boards) {
   const doc = await json(`data/${b.id}.json`);
