@@ -30,7 +30,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import graph as power_graph
 
 ID = re.compile(r"^[a-z0-9-]+$")
-LINK_OK = ("libre.computer", "hardware.libre.computer", "github.com/libre-computer-project")
+LINK_OK = ("libre.computer", "hardware.libre.computer", "github.com/libre-computer-project",
+           # the shared footer (tools/lc-ui-kit sync.py SOCIAL, and the company)
+           "facebook.com/librecomputer", "x.com/LibreComputer", "t.me/libre_computer",
+           "instagram.com/librecomputer/", "youtube.com/c/LibreComputer", "imprecisionsystems.com")
 INDEX_KEYS = {"id", "model", "name", "soc", "vendor", "status", "hidden", "rev", "coverage", "shape"}
 STATUSES = {"production", "unreleased", "preprod", "reference"}
 DROPPED = {"unreleased", "preprod", "reference"}

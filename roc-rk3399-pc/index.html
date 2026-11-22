@@ -26,11 +26,14 @@
   <div class="lc-brand">
     <a class="lc-brand-name" href="https://libre.computer">Libre Computer</a>
     <nav class="lc-sites" aria-label="Libre Computer sites">
+      <a class="lc-site" href="https://libre.computer/products/">Products</a>
+      <a class="lc-site" href="https://libre.computer/downloads/">Downloads</a>
+      <a class="lc-site" href="https://hardware.libre.computer/" aria-current="true">Hardware</a>
+      <a class="lc-site" href="https://software.libre.computer/">Software</a>
       <a class="lc-site" href="https://education.libre.computer/">Education</a>
-      <a class="lc-site" data-lc-site href="https://layout.hardware.libre.computer/">Layout</a>
-      <a class="lc-site" data-lc-site href="https://gpio.hardware.libre.computer/">GPIO Pinout</a>
-      <a class="lc-site" href="/" aria-current="true">Power</a>
-      <a class="lc-site" href="https://u-boot.software.libre.computer/">Software</a>
+      <a class="lc-site" href="https://hub.libre.computer/">Support</a>
+      <a class="lc-site" href="https://libre.computer/news/">News</a>
+      <a class="lc-site" href="https://libre.computer/#contact">Contact</a>
     </nav>
   </div>
   <div class="lc-controls">
@@ -39,6 +42,15 @@
     <input id="search" type="search" placeholder="Find a rail or part" autocomplete="off" spellcheck="false" aria-label="Find a rail, part or SoC pad">
   </div>
 </header>
+<nav class="lc-subnav" aria-label="Hardware">
+    <div class="lc-subnav-sites">
+      <span class="lc-subnav-label">Hardware</span>
+      <a href="https://hardware.libre.computer/">Overview</a>
+      <a data-lc-site href="https://gpio.hardware.libre.computer/">GPIO</a>
+      <a data-lc-site href="https://layout.hardware.libre.computer/">Layout</a>
+      <a href="https://power.hardware.libre.computer/" aria-current="true">Power</a>
+    </div>
+</nav>
 
 <h1 class="lc-vh">Libre Computer board power</h1>
 <p class="lc-vh" id="announce" role="status" aria-live="polite"></p>
@@ -200,10 +212,24 @@
   <aside class="lc-panel pw-detail" id="detail" aria-label="Rail details" hidden></aside>
 </div>
 
+<p class="lc-page-note">What feeds what, and what is on when, from each board's own netlist or published schematic ·
+  Learn how it works: <a href="https://education.libre.computer/modules/power/">first power-on and voltage rails</a></p>
 <footer class="lc-footer">
-  What feeds what, and what is on when, from each board's own netlist or published schematic ·
-  Learn how it works: <a href="https://education.libre.computer/modules/power/">first power-on and voltage rails</a> ·
-  <a href="https://libre.computer">libre.computer</a>
+  <nav class="lc-footer-links" aria-label="Libre Computer">
+    <a href="https://libre.computer/products/">Products</a> &middot;
+    <a href="https://libre.computer/downloads/">Downloads</a> &middot;
+    <a href="https://hardware.libre.computer/">Hardware</a> &middot;
+    <a href="https://software.libre.computer/">Software</a> &middot;
+    <a href="https://education.libre.computer/">Education</a> &middot;
+    <a href="https://libre.computer/security/">Security</a> &middot;
+    <a href="https://libre.computer/news/">News</a> &middot;
+    <a href="https://libre.computer/press/">Press</a> &middot;
+    <a href="https://hub.libre.computer/">Support</a> &middot;
+    <a href="https://libre.computer/privacy/">Privacy</a> &middot;
+    <a href="https://libre.computer/terms/">Terms</a>
+  </nav>
+  <p class="lc-footer-social"><a href="https://facebook.com/librecomputer" rel="noopener">Facebook</a> &middot; <a href="https://x.com/LibreComputer" rel="noopener">X</a> &middot; <a href="https://t.me/libre_computer" rel="noopener">Telegram</a> &middot; <a href="https://www.instagram.com/librecomputer/" rel="noopener">Instagram</a> &middot; <a href="https://www.youtube.com/c/LibreComputer" rel="noopener">YouTube</a></p>
+  <p class="lc-footer-company">Libre Computer is an <a href="https://imprecisionsystems.com/" rel="noopener">Imprecision Systems LLC</a> company.</p>
 </footer>
 
 <script type="module" src="/js/app.js"></script>
