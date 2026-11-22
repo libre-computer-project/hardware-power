@@ -264,15 +264,26 @@ def check(root: Path) -> list[str]:
     for path in sorted(data.glob("*.json")):
         if path.name not in expected:
             bad.append(f"data/{path.name}: not referenced by boards.json")
-    for page in sorted(root.glob("*.html")):
+    # Board pages (<id>/index.html, tools/render.mjs): one for each board
+    # listed without ?hidden=1 that has a model, and no other -- a hidden
+    # board's page would publish what the menu keeps back.
+    paged = {row["id"] for row in boards if not row.get("hidden") and row.get("coverage") == "model"}
+    pages = {p.parent.name for p in root.glob("*/index.html") if 'data-board="' in p.read_text()}
+    for board_id in sorted(pages - paged):
+        bad.append(f"{board_id}/index.html: no page for a hidden or unmodelled board")
+    for board_id in sorted(paged - pages):
+        bad.append(f"{board_id}/index.html is missing: run node tools/render.mjs")
+    for page in sorted([*root.glob("*.html"), *(root / i / "index.html" for i in sorted(pages))]):
         html = page.read_text()
+        where = page.relative_to(root)
         for ref in re.findall(r'(?:src|href)="([^"#?]+)"', html):
             if ref.startswith(("http://", "https://", "data:", "mailto:", "//")):
                 if ref.startswith(("http://", "https://")) and not any(host in ref for host in LINK_OK):
-                    bad.append(f"{page.name}: links off-site to {ref}")
+                    bad.append(f"{where}: links off-site to {ref}")
                 continue
-            if not (root / ref).exists():
-                bad.append(f"{page.name}: references missing {ref}")
+            target = root / ref.lstrip("/") if ref.startswith("/") else page.parent / ref
+            if not target.exists():
+                bad.append(f"{where}: references missing {ref}")
     return bad
 
 

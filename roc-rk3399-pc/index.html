@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Scripts from this site only, plus the inline theme snippet by its sha256
+     (tools/check-kit.py recomputes it); data, styles and images same-origin,
+     data: for the kit's logo. GitHub Pages sets no headers, so it is a meta. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-oHIc59mqgn9ICn5smlJlKAoSorMm9lRvLXPlZJXSqW8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Renegade Elite (ROC-RK3399-PC): power tree — Libre Computer</title>
+<meta name="description" content="Renegade Elite (ROC-RK3399-PC): Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist or published schematic.">
+<link rel="canonical" href="https://power.hardware.libre.computer/roc-rk3399-pc/">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/css/lc-kit.css">
+<link rel="stylesheet" href="/css/style.css">
+<!-- Sets the theme before first paint, so a dark visitor never sees a white
+     flash. Must stay inline and must stay ahead of the stylesheets; the copy
+     is checked by tools/lc-ui-kit/sync.py against HEAD_SNIPPET in lc-kit.js. -->
+<script>try{var q=new URLSearchParams(location.search),e=q.get("embed")==="1",t=e&&q.get("theme");if(e)document.documentElement.classList.add("lc-embed");var p=t==="light"||t==="dark"?t:localStorage.getItem("theme")||"auto";if(p==="dark"||(p==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(x){}</script>
+</head>
+<body data-board="roc-rk3399-pc">
+<a class="lc-skip" href="#stage">Skip to content</a>
+
+<header class="lc-topbar">
+  <div class="lc-brand">
+    <a class="lc-brand-name" href="https://libre.computer">Libre Computer</a>
+    <nav class="lc-sites" aria-label="Libre Computer sites">
+      <a class="lc-site" href="https://education.libre.computer/">Education</a>
+      <a class="lc-site" data-lc-site href="https://layout.hardware.libre.computer/">Layout</a>
+      <a class="lc-site" data-lc-site href="https://gpio.hardware.libre.computer/">GPIO Pinout</a>
+      <a class="lc-site" href="/" aria-current="true">Power</a>
+      <a class="lc-site" href="https://u-boot.software.libre.computer/">Software</a>
+    </nav>
+  </div>
+  <div class="lc-controls">
+    <label for="board-select">Board</label>
+    <select id="board-select" aria-label="Select board"></select>
+    <input id="search" type="search" placeholder="Find a rail or part" autocomplete="off" spellcheck="false" aria-label="Find a rail, part or SoC pad">
+  </div>
+</header>
+
+<h1 class="lc-vh">Libre Computer board power</h1>
+<p class="lc-vh" id="announce" role="status" aria-live="polite"></p>
+<div class="lc-notices" id="notices"></div>
+<script src="/js/file-notice.js"></script>
+
+<div class="lc-main">
+  <aside class="lc-panel" id="sidebar">
+    <h3>Board</h3>
+    <div id="board-meta"></div>
+
+    <h3 id="state-heading">Power state</h3>
+    <div id="walk"></div>
+    <div id="legend" class="pw-legend" role="group" aria-label="Legend"></div>
+
+    <h3 id="view-heading">View</h3>
+    <div class="lc-seg" id="view-seg" role="group" aria-label="View">
+      <button type="button" id="view-tree" aria-pressed="true">Tree</button>
+      <button type="button" id="view-rails" aria-pressed="false">Rails</button>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <div id="tree" class="pw-tree"></div>
+    <div id="rails" hidden></div>
+
+    <section class="pw-text" aria-labelledby="pw-text-h">
+      <h2 id="pw-text-h">Renegade Elite (ROC-RK3399-PC): power rails</h2>
+      <p>40 rails and 39 parts that make or pass them,
+        read off the board's published schematic. Each rail's voltage is the nominal its name states.</p>
+      <div class="lc-table-scroll"><table class="lc-table">
+        <thead><tr><th scope="col">Rail</th><th scope="col">Voltage</th>
+          <th scope="col">Fed by</th><th scope="col">Feeds</th></tr></thead>
+        <tbody><tr><th scope="row"><code>DC_12V</code></th>
+      <td>12 V</td>
+      <td>U2 (Buck regulator from VBUS_TYPEC0); Enable pulled up to VBUS_TYPEC0</td>
+      <td>—</td></tr><tr><th scope="row"><code>SYS_12V</code></th>
+      <td>12 V</td>
+      <td>D17 (Input protection from DC_12V); Passes the input</td>
+      <td>—</td></tr><tr><th scope="row"><code>VBUS_TYPEC1</code></th>
+      <td>5 V</td>
+      <td>U14 (Load switch from VCC_SYS); Gate from SoC GPIO1_B5, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_SYS</code></th>
+      <td>5 V</td>
+      <td>U3 (Buck regulator from SYS_12V); Enable from SoC GPIO2_A6, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC5V0_HOST0</code></th>
+      <td>5 V</td>
+      <td>U50 (Load switch from VCC_SYS); Gate from SoC GPIO1_A0, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC5V0_HOST1</code></th>
+      <td>5 V</td>
+      <td>U49 (Load switch from VCC_SYS); Gate from SoC GPIO1_A0, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC5V0_HOST2</code></th>
+      <td>5 V</td>
+      <td>U15 (Load switch from VCC_SYS); Gate from SoC GPIO1_A0, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>IR_VCC</code></th>
+      <td>3.3 V</td>
+      <td>R84 (Series resistor from VCC3V3_SYS); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_LAN</code></th>
+      <td>3.3 V</td>
+      <td>L33 (Inductor from VCC3V3_S3); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_LCD</code></th>
+      <td>3.3 V</td>
+      <td>Q15 (Load switch from VCC3V3_SYS); Gate through a transistor stage</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_RTC</code></th>
+      <td>3.3 V</td>
+      <td>D14 (Input protection from VCC3V3_S5); Passes the input</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC3_3V</code></th>
+      <td>3.3 V</td>
+      <td>U13 (LDO regulator from VCC_SYS); No enable pin</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC3V3_S0</code></th>
+      <td>3.3 V</td>
+      <td>U7 (Load switch from VCC3V3_SYS); PMIC output</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC3V3_S3</code></th>
+      <td>3.3 V</td>
+      <td>U7 (Load switch from VCC3V3_SYS); PMIC output</td>
+      <td>SoC APIO1_VDD, TYPEC0_AVDD_3V3, TYPEC1_AVDD_3V3, USB_AVDD_3V3</td></tr><tr><th scope="row"><code>VCC3V3_S5</code></th>
+      <td>3.3 V</td>
+      <td>U4 (LDO regulator from SYS_12V); No enable pin</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC3V3_SYS</code></th>
+      <td>3.3 V</td>
+      <td>U4 (Buck regulator from SYS_12V); Enable through a transistor stage</td>
+      <td>—</td></tr><tr><th scope="row"><code>VPP_OTP</code></th>
+      <td>3.3 V</td>
+      <td>Q3 (Load switch from VCC3V3_SYS); Gate through a transistor stage</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_3V0</code></th>
+      <td>3 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC APIO2_VDD, APIO4_VDD, PMUIO2_VDD</td></tr><tr><th scope="row"><code>VCC3V0_SD</code></th>
+      <td>3 V</td>
+      <td>U20 (LDO regulator from VCC3V3_SYS); Enable from SoC GPIO4_D6, pulled up</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCCA3V0_CODEC</code></th>
+      <td>3 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_1V8</code></th>
+      <td>1.8 V</td>
+      <td>U7 (Buck regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC APIO1_VDDPST, APIO3_VDD_1V8, EDP_AVDD_1V8_1, EDP_AVDD_1V8_2, EMMC_VDD_1V8, MIPI_RX0_AVDD_1V8, MIPI_TX0_AVDD_1V8, MIPI_TX1/RX1_AVDD_1V8</td></tr><tr><th scope="row"><code>VCC_EFUSE</code></th>
+      <td>1.8 V</td>
+      <td>U21 (LDO regulator from VCC3V3_SYS); Enable from SoC GPIO0_B3</td>
+      <td>SoC EFUSE_VQPS</td></tr><tr><th scope="row"><code>VCC1_8V</code></th>
+      <td>1.8 V</td>
+      <td>U13 (LDO regulator from VCC3_3V); No enable pin</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCCA_1V8</code></th>
+      <td>1.8 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC ADC_AVDD, PCIE_AVDD_1V8, PLL_AVDD_1V8, PMUIO1_VDD_1V8, PMU_VDD_1V8, TYPEC0_AVDD_1V8, TYPEC1_AVDD_1V8, USB_AVDD_1V8</td></tr><tr><th scope="row"><code>VCCA1V8_CODEC</code></th>
+      <td>1.8 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC APIO5_VDD, APIO5_VDDPST</td></tr><tr><th scope="row"><code>VCCA1V8_HDMI</code></th>
+      <td>1.8 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC HDMI_AVDD_1V8</td></tr><tr><th scope="row"><code>VCC_1V5</code></th>
+      <td>1.5 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC APIO2_VDDPST, APIO4_VDDPST, PMUIO2_VDDPST</td></tr><tr><th scope="row"><code>VCC_DDR</code></th>
+      <td>1.135 V</td>
+      <td>U7 (Buck regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC DDR0_VDD_1, DDR0_VDD_10, DDR0_VDD_11, DDR0_VDD_12, DDR0_VDD_2, DDR0_VDD_3, DDR0_VDD_4, DDR0_VDD_5, DDR0_VDD_6, DDR0_VDD_7, DDR0_VDD_8, DDR0_VDD_9, DDR1_VDD_1, DDR1_VDD_10, DDR1_VDD_11, DDR1_VDD_12, DDR1_VDD_2, DDR1_VDD_3, DDR1_VDD_4, DDR1_VDD_5, DDR1_VDD_6, DDR1_VDD_7, DDR1_VDD_8, DDR1_VDD_9</td></tr><tr><th scope="row"><code>VDD_DDR0_CLK</code></th>
+      <td>1.135 V</td>
+      <td>R1204 (0 Ω resistor from VCC_DDR); Always connected</td>
+      <td>SoC DDR0_CLK_VDD</td></tr><tr><th scope="row"><code>VDD_DDR1_CLK</code></th>
+      <td>1.135 V</td>
+      <td>R1205 (0 Ω resistor from VCC_DDR); Always connected</td>
+      <td>SoC DDR1_CLK_VDD</td></tr><tr><th scope="row"><code>VDD10_EPHY</code></th>
+      <td>1 V</td>
+      <td>U17 (Buck regulator from VCC_LAN); Enable pulled up to VCC_LAN</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCCA_0V9</code></th>
+      <td>0.9 V</td>
+      <td>U12 (Buck regulator from VCC3V3_SYS); Enable pulled up to VCC3V3_SYS</td>
+      <td>SoC DDR0PLL_AVDD_0V9, DDR1PLL_AVDD_0V9, EDP_AVDD_0V9, EMMC_COREDLL_0V9, PCIE_AVDD_0V9, PLL_AVDD_0V9, PMU_VDD_0V9, TYPEC0_AVDD_0V9_1, TYPEC0_AVDD_0V9_2, TYPEC1_AVDD_0V9_1, TYPEC1_AVDD_0V9_2, USB_AVDD_0V9</td></tr><tr><th scope="row"><code>VCCA0V9_HDMI</code></th>
+      <td>0.9 V</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC HDMI_AVDD_0V9_1, HDMI_AVDD_0V9_2</td></tr><tr><th scope="row"><code>VDD_LOG</code></th>
+      <td>0.9 V</td>
+      <td>U10 (Buck regulator from VCC3V3_SYS); Enable pulled up to VCC_1V8</td>
+      <td>SoC LOGIC_VDD_1, LOGIC_VDD_10, LOGIC_VDD_11, LOGIC_VDD_12, LOGIC_VDD_2, LOGIC_VDD_3, LOGIC_VDD_4, LOGIC_VDD_5, LOGIC_VDD_6, LOGIC_VDD_7, LOGIC_VDD_8, LOGIC_VDD_9</td></tr><tr><th scope="row"><code>VBUS_TYPEC0</code></th>
+      <td>Not stated</td>
+      <td>Board input (USB-C)</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC_SDIO</code></th>
+      <td>Not stated</td>
+      <td>U7 (LDO regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC SDMMC0_VDD</td></tr><tr><th scope="row"><code>VDD_CENTER</code></th>
+      <td>Not stated</td>
+      <td>U7 (Buck regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC CENTERLOGIC_VDD_1, CENTERLOGIC_VDD_10, CENTERLOGIC_VDD_2, CENTERLOGIC_VDD_3, CENTERLOGIC_VDD_4, CENTERLOGIC_VDD_5, CENTERLOGIC_VDD_6, CENTERLOGIC_VDD_7, CENTERLOGIC_VDD_8, CENTERLOGIC_VDD_9</td></tr><tr><th scope="row"><code>VDD_CPU_B</code></th>
+      <td>Not stated</td>
+      <td>U11 (Buck regulator from VCC3V3_SYS); Enable pulled up to VCC_1V8</td>
+      <td>SoC BIGCPU_VDD_1, BIGCPU_VDD_10, BIGCPU_VDD_11, BIGCPU_VDD_12, BIGCPU_VDD_13, BIGCPU_VDD_2, BIGCPU_VDD_3, BIGCPU_VDD_4, BIGCPU_VDD_5, BIGCPU_VDD_6, BIGCPU_VDD_7, BIGCPU_VDD_8, BIGCPU_VDD_9</td></tr><tr><th scope="row"><code>VDD_CPU_L</code></th>
+      <td>Not stated</td>
+      <td>U7 (Buck regulator from VCC3V3_SYS); PMIC output</td>
+      <td>SoC LITCPU_VDD_1, LITCPU_VDD_2, LITCPU_VDD_3, LITCPU_VDD_4, LITCPU_VDD_5, LITCPU_VDD_6, LITCPU_VDD_7</td></tr><tr><th scope="row"><code>VDD_GPU</code></th>
+      <td>Not stated</td>
+      <td>U8 (Buck regulator from VCC3V3_SYS); Enable pulled up to VCC_1V8</td>
+      <td>SoC GPU_VDD_1, GPU_VDD_10, GPU_VDD_11, GPU_VDD_12, GPU_VDD_13, GPU_VDD_14, GPU_VDD_15, GPU_VDD_16, GPU_VDD_17, GPU_VDD_18, GPU_VDD_19, GPU_VDD_2, GPU_VDD_20, GPU_VDD_3, GPU_VDD_4, GPU_VDD_5, GPU_VDD_6, GPU_VDD_7, GPU_VDD_8, GPU_VDD_9</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <aside class="lc-panel pw-detail" id="detail" aria-label="Rail details" hidden></aside>
+</div>
+
+<footer class="lc-footer">
+  What feeds what, and what is on when, from each board's own netlist or published schematic ·
+  Learn how it works: <a href="https://education.libre.computer/modules/power/">first power-on and voltage rails</a> ·
+  <a href="https://libre.computer">libre.computer</a>
+</footer>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

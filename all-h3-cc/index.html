@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Scripts from this site only, plus the inline theme snippet by its sha256
+     (tools/check-kit.py recomputes it); data, styles and images same-origin,
+     data: for the kit's logo. GitHub Pages sets no headers, so it is a meta. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-oHIc59mqgn9ICn5smlJlKAoSorMm9lRvLXPlZJXSqW8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tritium (ALL-H3-CC): power tree — Libre Computer</title>
+<meta name="description" content="Tritium (ALL-H3-CC): Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist or published schematic.">
+<link rel="canonical" href="https://power.hardware.libre.computer/all-h3-cc/">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/css/lc-kit.css">
+<link rel="stylesheet" href="/css/style.css">
+<!-- Sets the theme before first paint, so a dark visitor never sees a white
+     flash. Must stay inline and must stay ahead of the stylesheets; the copy
+     is checked by tools/lc-ui-kit/sync.py against HEAD_SNIPPET in lc-kit.js. -->
+<script>try{var q=new URLSearchParams(location.search),e=q.get("embed")==="1",t=e&&q.get("theme");if(e)document.documentElement.classList.add("lc-embed");var p=t==="light"||t==="dark"?t:localStorage.getItem("theme")||"auto";if(p==="dark"||(p==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(x){}</script>
+</head>
+<body data-board="all-h3-cc">
+<a class="lc-skip" href="#stage">Skip to content</a>
+
+<header class="lc-topbar">
+  <div class="lc-brand">
+    <a class="lc-brand-name" href="https://libre.computer">Libre Computer</a>
+    <nav class="lc-sites" aria-label="Libre Computer sites">
+      <a class="lc-site" href="https://education.libre.computer/">Education</a>
+      <a class="lc-site" data-lc-site href="https://layout.hardware.libre.computer/">Layout</a>
+      <a class="lc-site" data-lc-site href="https://gpio.hardware.libre.computer/">GPIO Pinout</a>
+      <a class="lc-site" href="/" aria-current="true">Power</a>
+      <a class="lc-site" href="https://u-boot.software.libre.computer/">Software</a>
+    </nav>
+  </div>
+  <div class="lc-controls">
+    <label for="board-select">Board</label>
+    <select id="board-select" aria-label="Select board"></select>
+    <input id="search" type="search" placeholder="Find a rail or part" autocomplete="off" spellcheck="false" aria-label="Find a rail, part or SoC pad">
+  </div>
+</header>
+
+<h1 class="lc-vh">Libre Computer board power</h1>
+<p class="lc-vh" id="announce" role="status" aria-live="polite"></p>
+<div class="lc-notices" id="notices"></div>
+<script src="/js/file-notice.js"></script>
+
+<div class="lc-main">
+  <aside class="lc-panel" id="sidebar">
+    <h3>Board</h3>
+    <div id="board-meta"></div>
+
+    <h3 id="state-heading">Power state</h3>
+    <div id="walk"></div>
+    <div id="legend" class="pw-legend" role="group" aria-label="Legend"></div>
+
+    <h3 id="view-heading">View</h3>
+    <div class="lc-seg" id="view-seg" role="group" aria-label="View">
+      <button type="button" id="view-tree" aria-pressed="true">Tree</button>
+      <button type="button" id="view-rails" aria-pressed="false">Rails</button>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <div id="tree" class="pw-tree"></div>
+    <div id="rails" hidden></div>
+
+    <section class="pw-text" aria-labelledby="pw-text-h">
+      <h2 id="pw-text-h">Tritium (ALL-H3-CC): power rails</h2>
+      <p>14 rails and 13 parts that make or pass them,
+        read off the board's published schematic. Each rail's voltage is the nominal its name states.</p>
+      <div class="lc-table-scroll"><table class="lc-table">
+        <thead><tr><th scope="col">Rail</th><th scope="col">Voltage</th>
+          <th scope="col">Fed by</th><th scope="col">Feeds</th></tr></thead>
+        <tbody><tr><th scope="row"><code>1U5.VIN</code></th>
+      <td>5 V</td>
+      <td>1R28 (Series resistor from VCC-5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>DC_5V_IN</code></th>
+      <td>5 V</td>
+      <td>Board input (Micro-USB)</td>
+      <td>—</td></tr><tr><th scope="row"><code>HDMI-5V</code></th>
+      <td>5 V</td>
+      <td>D35 (Input protection from VCC-5V); Passes the input</td>
+      <td>—</td></tr><tr><th scope="row"><code>USBHOST_A_5V</code></th>
+      <td>5 V</td>
+      <td>6F1 (Fuse from VCC-5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>USBOTG_B_5V</code></th>
+      <td>5 V</td>
+      <td>6F2 (Fuse from VCC-5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC-5V</code></th>
+      <td>5 V</td>
+      <td>1R27 (0 Ω resistor from DC_5V_IN); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC-3V3</code></th>
+      <td>3.3 V</td>
+      <td>U56 (Buck regulator from VCC-5V); Enable pulled up to VCC-5V</td>
+      <td>SoC VCC_RTC</td></tr><tr><th scope="row"><code>VCC-IO</code></th>
+      <td>3.3 V</td>
+      <td>Q6 (Load switch from VCC-3V3); Gate from SoC PL5, pulled down</td>
+      <td>SoC EPHY_VCC, HVCC, VCC-PD, VCC-USB, VCC_IO0, VCC_IO1, VCC_IO2, VCC_IO3, VCC_IO4, VCC_IO5, VCC_PG, VDD_EFUSE</td></tr><tr><th scope="row"><code>VCC-1V2</code></th>
+      <td>1.2 V</td>
+      <td>U56 (Buck regulator from VCC-5V); Enable from SoC PL8, pulled up</td>
+      <td>SoC VDD_SYS0, VDD_SYS1, VDD_SYS10, VDD_SYS11, VDD_SYS2, VDD_SYS3, VDD_SYS4, VDD_SYS5, VDD_SYS6, VDD_SYS7, VDD_SYS8, VDD_SYS9</td></tr><tr><th scope="row"><code>VDD1V1-EPHY</code></th>
+      <td>1.1 V</td>
+      <td>R24 (Series resistor from VCC-1V2); Always connected</td>
+      <td>SoC EPHY_VDD</td></tr><tr><th scope="row"><code>AVCC</code></th>
+      <td>Not stated</td>
+      <td>1U5 (LDO regulator from 1U5.VIN); Enable tied to its input</td>
+      <td>SoC AVCC, V33_TV, VCC_PLL</td></tr><tr><th scope="row"><code>VCC-DRAM</code></th>
+      <td>Not stated</td>
+      <td>U56 (Buck regulator from VCC-5V); Enable from SoC PL9, pulled up</td>
+      <td>SoC VCC_DRAM0, VCC_DRAM1, VCC_DRAM10, VCC_DRAM2, VCC_DRAM3, VCC_DRAM4, VCC_DRAM5, VCC_DRAM6, VCC_DRAM7, VCC_DRAM8, VCC_DRAM9</td></tr><tr><th scope="row"><code>VDD-CPUS</code></th>
+      <td>Not stated</td>
+      <td>U1 (LDO regulator from VCC-3V3); No enable pin</td>
+      <td>SoC RTC_VIO, VDD_CPUS0, VDD_CPUS1</td></tr><tr><th scope="row"><code>VDD-CPUX</code></th>
+      <td>Not stated</td>
+      <td>U56 (Buck regulator from VCC-5V); Enable from SoC PL8, pulled up</td>
+      <td>SoC VDD_CPUX0, VDD_CPUX1, VDD_CPUX10, VDD_CPUX11, VDD_CPUX12, VDD_CPUX2, VDD_CPUX3, VDD_CPUX4, VDD_CPUX5, VDD_CPUX6, VDD_CPUX7, VDD_CPUX8, VDD_CPUX9, VDD_CPUXFB</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <aside class="lc-panel pw-detail" id="detail" aria-label="Rail details" hidden></aside>
+</div>
+
+<footer class="lc-footer">
+  What feeds what, and what is on when, from each board's own netlist or published schematic ·
+  Learn how it works: <a href="https://education.libre.computer/modules/power/">first power-on and voltage rails</a> ·
+  <a href="https://libre.computer">libre.computer</a>
+</footer>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

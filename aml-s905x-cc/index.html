@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Scripts from this site only, plus the inline theme snippet by its sha256
+     (tools/check-kit.py recomputes it); data, styles and images same-origin,
+     data: for the kit's logo. GitHub Pages sets no headers, so it is a meta. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-oHIc59mqgn9ICn5smlJlKAoSorMm9lRvLXPlZJXSqW8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Potato (AML-S905X-CC): power tree — Libre Computer</title>
+<meta name="description" content="Le Potato (AML-S905X-CC): Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist or published schematic.">
+<link rel="canonical" href="https://power.hardware.libre.computer/aml-s905x-cc/">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/css/lc-kit.css">
+<link rel="stylesheet" href="/css/style.css">
+<!-- Sets the theme before first paint, so a dark visitor never sees a white
+     flash. Must stay inline and must stay ahead of the stylesheets; the copy
+     is checked by tools/lc-ui-kit/sync.py against HEAD_SNIPPET in lc-kit.js. -->
+<script>try{var q=new URLSearchParams(location.search),e=q.get("embed")==="1",t=e&&q.get("theme");if(e)document.documentElement.classList.add("lc-embed");var p=t==="light"||t==="dark"?t:localStorage.getItem("theme")||"auto";if(p==="dark"||(p==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(x){}</script>
+</head>
+<body data-board="aml-s905x-cc">
+<a class="lc-skip" href="#stage">Skip to content</a>
+
+<header class="lc-topbar">
+  <div class="lc-brand">
+    <a class="lc-brand-name" href="https://libre.computer">Libre Computer</a>
+    <nav class="lc-sites" aria-label="Libre Computer sites">
+      <a class="lc-site" href="https://education.libre.computer/">Education</a>
+      <a class="lc-site" data-lc-site href="https://layout.hardware.libre.computer/">Layout</a>
+      <a class="lc-site" data-lc-site href="https://gpio.hardware.libre.computer/">GPIO Pinout</a>
+      <a class="lc-site" href="/" aria-current="true">Power</a>
+      <a class="lc-site" href="https://u-boot.software.libre.computer/">Software</a>
+    </nav>
+  </div>
+  <div class="lc-controls">
+    <label for="board-select">Board</label>
+    <select id="board-select" aria-label="Select board"></select>
+    <input id="search" type="search" placeholder="Find a rail or part" autocomplete="off" spellcheck="false" aria-label="Find a rail, part or SoC pad">
+  </div>
+</header>
+
+<h1 class="lc-vh">Libre Computer board power</h1>
+<p class="lc-vh" id="announce" role="status" aria-live="polite"></p>
+<div class="lc-notices" id="notices"></div>
+<script src="/js/file-notice.js"></script>
+
+<div class="lc-main">
+  <aside class="lc-panel" id="sidebar">
+    <h3>Board</h3>
+    <div id="board-meta"></div>
+
+    <h3 id="state-heading">Power state</h3>
+    <div id="walk"></div>
+    <div id="legend" class="pw-legend" role="group" aria-label="Legend"></div>
+
+    <h3 id="view-heading">View</h3>
+    <div class="lc-seg" id="view-seg" role="group" aria-label="View">
+      <button type="button" id="view-tree" aria-pressed="true">Tree</button>
+      <button type="button" id="view-rails" aria-pressed="false">Rails</button>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <div id="tree" class="pw-tree"></div>
+    <div id="rails" hidden></div>
+
+    <section class="pw-text" aria-labelledby="pw-text-h">
+      <h2 id="pw-text-h">Le Potato (AML-S905X-CC): power rails</h2>
+      <p>17 rails and 15 parts that make or pass them,
+        read off the board's published schematic. Each rail's voltage is the nominal its name states.</p>
+      <div class="lc-table-scroll"><table class="lc-table">
+        <thead><tr><th scope="col">Rail</th><th scope="col">Voltage</th>
+          <th scope="col">Fed by</th><th scope="col">Feeds</th></tr></thead>
+        <tbody><tr><th scope="row"><code>AO_5V</code></th>
+      <td>5 V</td>
+      <td>1Q8 (Load switch from DC_5V_IN); Gate through a transistor stage</td>
+      <td>—</td></tr><tr><th scope="row"><code>DC_5V_IN</code></th>
+      <td>5 V</td>
+      <td>Board input (Micro-USB)</td>
+      <td>—</td></tr><tr><th scope="row"><code>HDMI_PW</code></th>
+      <td>5 V</td>
+      <td>9R8 (0 Ω resistor from VCC5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>USBHOST_A_5V</code></th>
+      <td>5 V</td>
+      <td>6F1 (Fuse from VCC5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>USBOTG_B_5V</code></th>
+      <td>5 V</td>
+      <td>6F2 (Fuse from VCC5V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>VCC5V</code></th>
+      <td>5 V</td>
+      <td>1Q4 (Load switch from AO_5V); Gate from SoC GPIOH_3, pulled up</td>
+      <td>—</td></tr><tr><th scope="row"><code>AVDD33_HDMI</code></th>
+      <td>3.3 V</td>
+      <td>Source not traced</td>
+      <td>SoC AVDD33_HDMITX</td></tr><tr><th scope="row"><code>HUB-AVDD</code></th>
+      <td>3.3 V</td>
+      <td>FB1 (Ferrite bead from VDDIO_AO3.3V); Always connected</td>
+      <td>—</td></tr><tr><th scope="row"><code>Q6.D</code></th>
+      <td>3.3 V</td>
+      <td>Q6 (Load switch from VDDIO_AO3.3V); Gate from SoC GPIOAO_3, pulled down</td>
+      <td>—</td></tr><tr><th scope="row"><code>VDDIO_AO3.3V</code></th>
+      <td>3.3 V</td>
+      <td>1U4 (Buck regulator from AO_5V); Enable pulled up to AO_5V</td>
+      <td>SoC AVDD33_USB, VDDIO_AO, VDDIO_DV_CLK, VDDIO_HZ</td></tr><tr><th scope="row"><code>VDDIO_X</code></th>
+      <td>3.3 V</td>
+      <td>7R1 (0 Ω resistor from VDDIO_AO3.3V); Always connected</td>
+      <td>SoC VDDIO_X</td></tr><tr><th scope="row"><code>VDDIO_AO18</code></th>
+      <td>1.8 V</td>
+      <td>1U2 (LDO regulator from VDDIO_AO3.3V); Enable tied to its input</td>
+      <td>SoC AVDD18_Audio, AVDD18_CVBS, AVDD18_ENET_EFUSE, AVDD18_HDMITX, AVDD18_HPLL, AVDD18_PLL_ADC, AVDD18_USB, AVDD18_XTAL, IOVREF_18</td></tr><tr><th scope="row"><code>DDR3_1.5V</code></th>
+      <td>1.5 V</td>
+      <td>1U3 (Buck regulator from AO_5V); Enable tied to VDDIO_AO3.3V</td>
+      <td>SoC VDDQ</td></tr><tr><th scope="row"><code>VCC-CARD</code></th>
+      <td>Not stated</td>
+      <td>D46 (Input protection from Q6.D); Passes the input<br>1U5 (LDO regulator from VDDIO_AO3.3V); Enable from SoC GPIOAO_3, pulled down</td>
+      <td>SoC VDDIO_CARD</td></tr><tr><th scope="row"><code>VCCK</code></th>
+      <td>Not stated</td>
+      <td>1U6 (Buck regulator from AO_5V); Enable from SoC GPIODV_25, pulled up</td>
+      <td>SoC VDDCPU</td></tr><tr><th scope="row"><code>VDD_EE</code></th>
+      <td>Not stated</td>
+      <td>1U1 (Buck regulator from AO_5V); Enable pulled up to AO_5V</td>
+      <td>SoC AVDD0V9_ENET, AVDD0V9_HDMITX, VDDAO_0V9, VDDEE_0V9</td></tr><tr><th scope="row"><code>VDDIO_BOOT</code></th>
+      <td>Not stated</td>
+      <td>Source not traced</td>
+      <td>SoC VDDIO_BOOT</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <aside class="lc-panel pw-detail" id="detail" aria-label="Rail details" hidden></aside>
+</div>
+
+<footer class="lc-footer">
+  What feeds what, and what is on when, from each board's own netlist or published schematic ·
+  Learn how it works: <a href="https://education.libre.computer/modules/power/">first power-on and voltage rails</a> ·
+  <a href="https://libre.computer">libre.computer</a>
+</footer>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

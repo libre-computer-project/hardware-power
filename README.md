@@ -83,3 +83,20 @@ the states.
 
 Serve the directory over HTTP. Opening `index.html` as `file://` tells the
 visitor to run `python3 -m http.server` instead of failing silently.
+
+## Board pages
+
+Each board listed without `?hidden=1` that has a model has its own page,
+`/<id>/` (canonical; `?board=<id>` still works, and is what libre.computer
+frames). It is `index.html` with the board's rails written into it as a
+table (`js/text.js`, from `js/model.js`'s wording), so a reader or crawler
+that runs no JavaScript gets the tree in words; the tool opens on that board
+on top of it, and picking another board goes to that board's page.
+
+```
+node tools/render.mjs   # <id>/index.html, index.html's canonical, robots.txt, sitemap.xml, llms.txt
+```
+
+Run it after the data changes and commit what it writes: `check-site.py`
+fails a missing page, a page for a hidden or unmodelled board, and a page
+referencing a file that is not there.

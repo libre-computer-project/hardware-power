@@ -9,6 +9,7 @@ import {
   STATUS_TEXT, buildQuery, byId, children, columns, controlText, kindText,
   loadLines, parseQuery, regulatorCount, related, search, status, steps, stopsAtReset, voltText, voltageClass,
 } from "./model.js";
+import { pagedBoards } from "./text.js";
 
 const GPIO_SITE = "https://gpio.hardware.libre.computer/";
 const LAYOUT_SITE = "https://layout.hardware.libre.computer/";
@@ -92,8 +93,25 @@ function buildSelect() {
   group("Power tree not available yet", [...other, ...shown(index.pinout_only || [])]);
   sel.addEventListener("change", () => {
     view.asked = null;  // a board picked here is the one asked for now
+    if (leavePage(sel.value)) return;
     chooseBoard(sel.value, true);
   });
+}
+
+/** On a board's own page (/<id>/, written by tools/render.mjs: body
+ *  data-board), another board is its own page, or the tool's for a board
+ *  with none; the other query parameters (?embed=, ?theme=, ?hidden=) go
+ *  along. True when it is navigating. */
+function leavePage(id) {
+  const here = document.body.dataset.board;
+  if (!here || id === here) return false;
+  const url = new URL(pagedBoards(index).some((b) => b.id === id) ? `/${id}/` : "/", location.href);
+  const q = new URLSearchParams(location.search);
+  for (const k of ["board", "asked", "walk", "step", "rail", "view"]) q.delete(k);
+  if (!pagedBoards(index).some((b) => b.id === id)) q.set("board", id);
+  url.search = q.toString();
+  location.assign(url);
+  return true;
 }
 
 /** The rows a visitor may see: a hidden board (pre-production, unreleased)
@@ -120,7 +138,7 @@ async function chooseBoard(id, fresh, said = "") {
   doc = null;
   if (row.coverage === "model") {
     try {
-      const r = await fetch(`data/${id}.json`);
+      const r = await fetch(`/data/${id}.json`);
       if (!r.ok) throw new Error(String(r.status));
       doc = await r.json();
     } catch (e) {
@@ -692,7 +710,8 @@ async function init() {
   mountShell();
   bind();
   try {
-    const r = await fetch("data/boards.json");
+    // (from the site root: a board's own page is a directory down)
+    const r = await fetch("/data/boards.json");
     index = await r.json();
   } catch (e) {
     notice("Could not load the board index.");
@@ -706,8 +725,9 @@ async function init() {
   }
   buildSelect();
   Object.assign(view, { walk: q.walk, step: q.step, rail: q.rail, view: q.view, reveal: Boolean(q.rail) });
-  // the board asked for here, else the one the previous tool was asked for
-  const wanted = q.asked || q.board;
+  // the board asked for here, else the one the previous tool was asked for,
+  // else the one this page is for
+  const wanted = q.asked || q.board || document.body.dataset.board;
   const ids = shown([...index.boards, ...(index.pinout_only || [])]).map((b) => b.id);
   const { id: found, how } = resolveBoard(wanted, ids);
   if (found && found !== wanted) {

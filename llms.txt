@@ -1,0 +1,17 @@
+# Libre Computer Board Power
+
+> Power tree for Libre Computer boards: which regulator feeds which rail, what switches it, and which rails are on in each power state, from each board's own netlist or published schematic.
+
+Part of Libre Computer (https://libre.computer/llms.txt). Each board's page lists its power rails as HTML: voltage, what makes each rail and how it is switched, and what it feeds.
+
+## Boards
+
+- [Le Potato AML-S905X-CC](https://power.hardware.libre.computer/aml-s905x-cc/)
+- [Sweet Potato AML-S905X-CC-V2](https://power.hardware.libre.computer/aml-s905x-cc-v2/)
+- [La Frite AML-S805X-AC](https://power.hardware.libre.computer/aml-s805x-ac/)
+- [Das Frite AML-S805X-AC-V2](https://power.hardware.libre.computer/aml-s805x-ac-v2/)
+- [Alta AML-A311D-CC](https://power.hardware.libre.computer/aml-a311d-cc/)
+- [Solitude AML-S905D3-CC](https://power.hardware.libre.computer/aml-s905d3-cc/)
+- [Renegade ROC-RK3328-CC](https://power.hardware.libre.computer/roc-rk3328-cc/)
+- [Tritium ALL-H3-CC](https://power.hardware.libre.computer/all-h3-cc/)
+- [Renegade Elite ROC-RK3399-PC](https://power.hardware.libre.computer/roc-rk3399-pc/)
