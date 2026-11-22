@@ -20,6 +20,15 @@ import { readFile, writeFile, mkdir, readdir, rm } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 
+/** The kit's second row as tools/lc-ui-kit/sync.py last wrote it into this
+ *  board page (the other tools' pages for this board): kept, so a render
+ *  alone changes nothing; sync.py rewrites it when the kit moves. */
+const KIT_ROW = /[ \t]*<div class="lc-subnav-sites">[\s\S]*?<\/div>/;
+async function keepKitRow(file, html) {
+  const old = (await readFile(file, "utf8").catch(() => "")).match(KIT_ROW);
+  return old && KIT_ROW.test(html) ? html.replace(KIT_ROW, () => old[0]) : html;
+}
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ORIGIN = "https://power.hardware.libre.computer";
 const { pagedBoards, railsHtml } = await import(pathToFileURL(path.join(ROOT, "js/text.js")).href);
@@ -63,7 +72,7 @@ for (const b of boards) {
     .replace(/<body([^>]*)>/, `<body$1 data-board="${esc(b.id)}">`)
     .replace(/(<div id="rails" hidden><\/div>)/, `$1\n${railsHtml(doc, b)}`);
   await mkdir(path.join(ROOT, b.id), { recursive: true });
-  await writeFile(path.join(ROOT, b.id, "index.html"), html);
+  await writeFile(path.join(ROOT, b.id, "index.html"), await keepKitRow(path.join(ROOT, b.id, "index.html"), html));
 }
 // a board that lost its page: its directory goes (only pages this wrote)
 for (const d of await readdir(ROOT, { withFileTypes: true })) {
