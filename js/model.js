@@ -6,13 +6,14 @@ export const STATUS_TEXT = { on: "On", off: "Off", x: "Not determined" };
 const KIND_TEXT = {
   buck: "Buck regulator",
   ldo: "LDO regulator",
+  boost: "Boost regulator",
   switch: "Load switch",
   link: "Link",
   protection: "Input protection",
 };
 
 const LINK_TEXT = { fuse: "Fuse", bead: "Ferrite bead", inductor: "Inductor", jumper: "0 Ω resistor",
-  resistor: "Series resistor" };
+  resistor: "Series resistor", short: "Net tie" };
 
 /** What a maker is, in words: a link says which kind of link. */
 export function kindText(kind, link) {
@@ -22,7 +23,7 @@ export function kindText(kind, link) {
 
 /** Makers that convert or switch power (not links, not input protection). */
 export function regulatorCount(doc) {
-  return (doc.makers || []).filter((m) => ["buck", "ldo", "switch"].includes(m.kind)).length;
+  return (doc.makers || []).filter((m) => ["buck", "ldo", "boost", "switch"].includes(m.kind)).length;
 }
 
 export function byId(list) {

@@ -3,10 +3,11 @@
 
 Reads the layout index and each production ``data/<id>.json``. Writes
 ``data/<id>.json``, ``data/<id>.nets.json``, and, on a full run,
-``data/boards.json``. A full run keeps only ``status == production`` and
-deletes graph files for every other layout id. ``--board`` updates one
-production board and leaves the index alone. An unreleased, preprod, or
-reference id is refused.
+``data/boards.json``. A full run keeps ``status == production``, plus a
+preprod or unreleased board that already has an exported state model (kept
+hidden, as the layout index has it), and deletes graph files for every other
+layout id. ``--board`` updates one production board and leaves the index
+alone. An unreleased, preprod, or reference id is refused there.
 
 ``hidden`` is copied from the layout index. A pin name that is not a
 regulator output does not become an edge. When no regulator pin joins a
@@ -100,6 +101,11 @@ def _model_only_rows(out: Path, layout_ids: set[str]) -> list[dict]:
     return rows
 
 
+def _has_model(out: Path, board_id: str) -> bool:
+    model = out / f"{board_id}.json"
+    return model.is_file() and _load(model).get("schema") == 2
+
+
 def _index_row(layout_row: dict, built: dict) -> dict:
     hidden = bool(layout_row.get("hidden"))
     share = layout_row.get("shares_layout_with")
@@ -129,7 +135,12 @@ def generate(src: Path, out: Path, board: str) -> int:
         if status in DROPPED_STATUS or status != "production":
             raise SystemExit(f"{board} is not a production board")
     else:
-        rows = [row for row in rows if row.get("status") == "production"]
+        # A pre-production or unreleased layout board is kept only when a
+        # state model has been exported for it (operator, 2026-11-25: the
+        # MediaTek prototypes); it keeps the layout index's `hidden`, so it is
+        # listed only under ?hidden=1. Without a model it is dropped as before.
+        rows = [row for row in rows if row.get("status") == "production"
+                or (row.get("status") in ("preprod", "unreleased") and _has_model(out, row["id"]))]
         rows += _model_only_rows(out, {row["id"] for row in rows})
     built = {}
     modelled = set()

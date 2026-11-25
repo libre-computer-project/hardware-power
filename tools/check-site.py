@@ -41,8 +41,11 @@ DROPPED = {"unreleased", "preprod", "reference"}
 # schema 2 -- the closed schema
 # a drawing may name a rail for two loads (VCC18_HDMI/VADC): one slash between
 # two name parts, never a path (no leading, trailing or doubled slash)
-NET = re.compile(r"^[A-Z0-9][A-Z0-9_.\-]{0,31}(?:/[A-Z0-9][A-Z0-9_.\-]{0,31})?$")
-REFDES = re.compile(r"^[0-9]{0,2}[A-Z]{1,3}[0-9]{1,4}$")
+NET = re.compile(r"^(?:[A-Z0-9][A-Z0-9_.\-]{0,31}(?:/[A-Z0-9][A-Z0-9_.\-]{0,31})?"
+                 # a layout export that names no nets: the layout site
+                 # publishes them as net<N> (MED-MT88-MX), so the tree does too
+                 r"|net[0-9]{1,5})$")
+REFDES = re.compile(r"^[0-9]{0,2}[A-Z]{1,3}[0-9]{1,5}$")
 PIN = re.compile(r"^[A-Z]?[0-9]{1,3}$")
 # the book's own case (AVDD18_Audio_CVBS); Allwinner's dash (VCC-PD); one
 # slash where a book names a ball for two blocks (MIPI_TX1/RX1_AVDD_1V8)
@@ -50,8 +53,9 @@ PAD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{1,31}(?:/[A-Za-z0-9][A-Za-z0-9_-]{0,31
 # shapes that are never a rail, part or pad name even when they fit the
 # grammar: a register (..._REG1, ..._CNTL), a hex word, an address
 FORBIDDEN = re.compile(r"(_REG\d|CNTL|^0X[0-9A-F]+$|^[0-9A-F]{16,}$)", re.I)
-KINDS = {"buck", "ldo", "switch", "link", "protection"}
-LINKS = {"fuse", "bead", "inductor", "jumper", "resistor"}   # resistor: a series resistor, not 0 ohm
+KINDS = {"buck", "ldo", "boost", "switch", "link", "protection"}
+# resistor: a series resistor, not 0 ohm; short: a net tie (an SH part)
+LINKS = {"fuse", "bead", "inductor", "jumper", "resistor", "short"}
 ROLES = {"enable", "gate"}
 DRIVERS = {"tie", "pad", "circuit", "pull"}
 DIRS = {"up", "down", "divider"}
@@ -241,7 +245,7 @@ def check(root: Path) -> list[str]:
         if not board_id or not ID.match(str(board_id)):
             bad.append(f"boards.json: illegal id {board_id!r}")
             continue
-        if row.get("status") not in STATUSES or row.get("status") in DROPPED:
+        if not status_ok(row):
             bad.append(f"boards.json[{board_id}]: status {row.get('status')!r} is not production")
         if row.get("coverage") == "model":
             expected.add(f"{board_id}.json")
@@ -290,11 +294,33 @@ def check(root: Path) -> list[str]:
     return bad
 
 
+def status_ok(row: dict) -> bool:
+    """A production board; or a pre-production / unreleased one indexed
+    hidden and with a state model (gen-power-data.py; operator, 2026-11-25).
+    A reference design never."""
+    status = row.get("status")
+    if status not in STATUSES:
+        return False
+    if status not in DROPPED:
+        return True
+    return status in ("preprod", "unreleased") and bool(row.get("hidden")) and row.get("coverage") == "model"
+
+
 def self_test(root: Path) -> int:
     """The closed schema must pass the fixture and refuse each leak shape."""
     fx = json.loads((root / "tools/fixtures/model.json").read_text())
     row = {k: fx[k] for k in ("id", "model", "name", "soc")}
     fails = []
+    # the index's status rule: a hidden, modelled prototype passes; listed,
+    # unmodelled or a reference design does not
+    proto = {"status": "preprod", "hidden": True, "coverage": "model"}
+    if not status_ok(proto):
+        fails.append("hidden modelled preprod board refused")
+    for label, r in (("a listed preprod board", proto | {"hidden": False}),
+                     ("an unmodelled preprod board", proto | {"coverage": "no-netlist"}),
+                     ("a hidden modelled reference design", proto | {"status": "reference"})):
+        if status_ok(r):
+            fails.append(f"not refused: {label}")
     if check_model(fx, row):
         fails.append(f"fixture refused: {check_model(fx, row)}")
     # must-accept: a drawing's rail named for two loads

@@ -1,0 +1,2320 @@
+{
+ "schema": 2,
+ "id": "med-mt88-mx",
+ "model": "MED-MT88-MX",
+ "name": "Virginia",
+ "soc": "MT8370/MT8390",
+ "tier": "netlist",
+ "rails": [
+  {
+   "id": "r-net013",
+   "name": "net013",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-d1004"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net015",
+   "name": "net015",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r100"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD28_MSDC1"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net016",
+   "name": "net016",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r101"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD28_MSDC2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net019",
+   "name": "net019",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r1701"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net079",
+   "name": "net079",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-q1001",
+    "m-q1003"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net099",
+   "name": "net099",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r102"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD28_IODPI"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net142",
+   "name": "net142",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u210"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD075_EMI0",
+     "AVDD075_EMI2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net144",
+   "name": "net144",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r239"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net145",
+   "name": "net145",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u220"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U300",
+     "U350"
+    ]
+   }
+  },
+  {
+   "id": "r-net146",
+   "name": "net146",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u201vbuck3"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD2_EMI0",
+     "AVDD2_EMI2"
+    ],
+    "connectors": [],
+    "parts": [
+     "U300",
+     "U350"
+    ]
+   }
+  },
+  {
+   "id": "r-net149",
+   "name": "net149",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r248"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net150",
+   "name": "net150",
+   "v": null,
+   "input": null,
+   "made_by": [],
+   "loads": {
+    "soc": [
+     "AVDD33_USB_P0",
+     "AVDD33_USB_P1",
+     "AVDD33_USB_P2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net151",
+   "name": "net151",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u201vbuck4"
+   ],
+   "loads": {
+    "soc": [
+     "AVDDQ_EMI0",
+     "AVDDQ_EMI2"
+    ],
+    "connectors": [],
+    "parts": [
+     "U300",
+     "U350"
+    ]
+   }
+  },
+  {
+   "id": "r-net208",
+   "name": "net208",
+   "v": null,
+   "input": "input",
+   "made_by": [],
+   "loads": {
+    "soc": [],
+    "connectors": [
+     {
+      "refdes": "J2502",
+      "pins": [
+       "22",
+       "24",
+       "26",
+       "28"
+      ],
+      "header40": false
+     }
+    ],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net259",
+   "name": "net259",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vpu"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_ADSP"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net262",
+   "name": "net262",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vmodem"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_APU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net265",
+   "name": "net265",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vgpu11",
+    "m-u200vgpu12"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_CORE"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net268",
+   "name": "net268",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vproc2"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_GPU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net271",
+   "name": "net271",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vproc1"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_MM"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net274",
+   "name": "net274",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u201vbuck1",
+    "m-u201vbuck2"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_PROC_B"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net277",
+   "name": "net277",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vcore"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_PROC_L"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net280",
+   "name": "net280",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsram-md"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_APU"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net282",
+   "name": "net282",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsram-others"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_GPU"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net284",
+   "name": "net284",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsram-proc2"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_PROC_B"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net285",
+   "name": "net285",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsram-proc1"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_PROC_L"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net459",
+   "name": "net459",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r400"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U400"
+    ]
+   }
+  },
+  {
+   "id": "r-net460",
+   "name": "net460",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r401"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U400"
+    ]
+   }
+  },
+  {
+   "id": "r-net597",
+   "name": "net597",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r262"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U201"
+    ]
+   }
+  },
+  {
+   "id": "r-net611",
+   "name": "net611",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r215"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U201"
+    ]
+   }
+  },
+  {
+   "id": "r-net612",
+   "name": "net612",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r216"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U201"
+    ]
+   }
+  },
+  {
+   "id": "r-net613",
+   "name": "net613",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r217"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U201"
+    ]
+   }
+  },
+  {
+   "id": "r-net619",
+   "name": "net619",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r277"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net663",
+   "name": "net663",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r1226"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net744",
+   "name": "net744",
+   "v": 0.9,
+   "input": null,
+   "made_by": [
+    "m-u200va09"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net745",
+   "name": "net745",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-u200va12"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD12_CKSQ",
+     "AVDD12_HDMITX21",
+     "AVDD12_PCIE",
+     "AVDD12_SSUSB",
+     "AVDD12_USB_P0",
+     "AVDD12_USB_P1",
+     "AVDD12_USB_P2"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net746",
+   "name": "net746",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-u200vrf12"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD12_AUXADC",
+     "AVDD12_CSI0",
+     "AVDD12_CSI1",
+     "AVDD12_DPTX",
+     "AVDD12_DSI",
+     "AVDD12_EDPTX",
+     "AVDD12_EMI0",
+     "AVDD12_EMI2",
+     "AVDD12_PLLGP1",
+     "AVDD12_PLLGP2",
+     "AVDD12_PLLGP34"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net748",
+   "name": "net748",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vaud18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net749",
+   "name": "net749",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vaux18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net752",
+   "name": "net752",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vbif28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net757",
+   "name": "net757",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u1003"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [
+     {
+      "refdes": "J1000",
+      "pins": [
+       "A4",
+       "A9",
+       "B4",
+       "B9"
+      ],
+      "header40": false
+     }
+    ],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net758",
+   "name": "net758",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vcamio"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net760",
+   "name": "net760",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vcn13"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net761",
+   "name": "net761",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vcn18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net762",
+   "name": "net762",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u200vcn33-1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net763",
+   "name": "net763",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u200vcn33-2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net765",
+   "name": "net765",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-u1701"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net766",
+   "name": "net766",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vefuse"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD18_VQPS"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net767",
+   "name": "net767",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vemc"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net768",
+   "name": "net768",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vfe28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net771",
+   "name": "net771",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vibr"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net772",
+   "name": "net772",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r2524"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2500"
+    ]
+   }
+  },
+  {
+   "id": "r-net774",
+   "name": "net774",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vio18"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD18_IODPI",
+     "DVDD18_IOEMMC",
+     "DVDD18_IOLM",
+     "DVDD18_IOLT",
+     "DVDD18_IORM",
+     "DVDD18_IORT",
+     "DVDD18_MSDC1",
+     "DVDD18_MSDC2"
+    ],
+    "connectors": [],
+    "parts": [
+     "U200",
+     "U2100"
+    ]
+   }
+  },
+  {
+   "id": "r-net775",
+   "name": "net775",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-sh200"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD18_APU",
+     "AVDD18_AUXADC",
+     "AVDD18_CKSQ",
+     "AVDD18_DPTX",
+     "AVDD18_DSI",
+     "AVDD18_EDPTX",
+     "AVDD18_EMI0",
+     "AVDD18_EMI2",
+     "AVDD18_HDMITX21",
+     "AVDD18_PCIE",
+     "AVDD18_PLLGP1",
+     "AVDD18_PLLGP2",
+     "AVDD18_PLLGP34",
+     "AVDD18_PROC",
+     "AVDD18_SSUSB",
+     "AVDD18_USB_P0",
+     "AVDD18_USB_P1",
+     "AVDD18_USB_P2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net776",
+   "name": "net776",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vio28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net778",
+   "name": "net778",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vm18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net780",
+   "name": "net780",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vpa"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net785",
+   "name": "net785",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vrf18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net790",
+   "name": "net790",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r1200"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net791",
+   "name": "net791",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vs1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net794",
+   "name": "net794",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r1201"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net795",
+   "name": "net795",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vs2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-net797",
+   "name": "net797",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsim1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net798",
+   "name": "net798",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vsim2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net799",
+   "name": "net799",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u1002"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U201"
+    ]
+   }
+  },
+  {
+   "id": "r-net800",
+   "name": "net800",
+   "v": 1.1,
+   "input": null,
+   "made_by": [
+    "m-r209"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net801",
+   "name": "net801",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-r210"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net802",
+   "name": "net802",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r220"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net804",
+   "name": "net804",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r203"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net805",
+   "name": "net805",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r208"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net806",
+   "name": "net806",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r205"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net807",
+   "name": "net807",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r201"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net808",
+   "name": "net808",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r202"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net809",
+   "name": "net809",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r204"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net810",
+   "name": "net810",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r206"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net811",
+   "name": "net811",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r207"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net813",
+   "name": "net813",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u200vufs"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net814",
+   "name": "net814",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vusb"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  },
+  {
+   "id": "r-net815",
+   "name": "net815",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u200vxo22"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U200"
+    ]
+   }
+  }
+ ],
+ "makers": [
+  {
+   "id": "m-d1004",
+   "refdes": "D1004",
+   "kind": "protection",
+   "in": "r-net208",
+   "out": "r-net013",
+   "control": null
+  },
+  {
+   "id": "m-q1001",
+   "refdes": "Q1001",
+   "kind": "switch",
+   "in": "r-net757",
+   "out": "r-net079",
+   "control": "s-q1001"
+  },
+  {
+   "id": "m-q1003",
+   "refdes": "Q1003",
+   "kind": "switch",
+   "in": "r-net013",
+   "out": "r-net079",
+   "control": "s-q1003"
+  },
+  {
+   "id": "m-r100",
+   "refdes": "R100",
+   "kind": "link",
+   "in": "r-net797",
+   "out": "r-net015",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r101",
+   "refdes": "R101",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net016",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r102",
+   "refdes": "R102",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net099",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r1200",
+   "refdes": "R1200",
+   "kind": "link",
+   "in": "r-net791",
+   "out": "r-net790",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r1201",
+   "refdes": "R1201",
+   "kind": "link",
+   "in": "r-net795",
+   "out": "r-net794",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r1226",
+   "refdes": "R1226",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net663",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r1701",
+   "refdes": "R1701",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net019",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r201",
+   "refdes": "R201",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net807",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r202",
+   "refdes": "R202",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net808",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r203",
+   "refdes": "R203",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net804",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r204",
+   "refdes": "R204",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net809",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r205",
+   "refdes": "R205",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net806",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r206",
+   "refdes": "R206",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net810",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r207",
+   "refdes": "R207",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net811",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r208",
+   "refdes": "R208",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net805",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r209",
+   "refdes": "R209",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net800",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r210",
+   "refdes": "R210",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net801",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r215",
+   "refdes": "R215",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net611",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r216",
+   "refdes": "R216",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net612",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r217",
+   "refdes": "R217",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net613",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r220",
+   "refdes": "R220",
+   "kind": "link",
+   "in": "r-net799",
+   "out": "r-net802",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r239",
+   "refdes": "R239",
+   "kind": "link",
+   "in": "r-net791",
+   "out": "r-net144",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r248",
+   "refdes": "R248",
+   "kind": "link",
+   "in": "r-net814",
+   "out": "r-net149",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r2524",
+   "refdes": "R2524",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net772",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r262",
+   "refdes": "R262",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net597",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r277",
+   "refdes": "R277",
+   "kind": "link",
+   "in": "r-net791",
+   "out": "r-net619",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r400",
+   "refdes": "R400",
+   "kind": "link",
+   "in": "r-net767",
+   "out": "r-net459",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r401",
+   "refdes": "R401",
+   "kind": "link",
+   "in": "r-net813",
+   "out": "r-net460",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-sh200",
+   "refdes": "SH200",
+   "kind": "link",
+   "in": "r-net774",
+   "out": "r-net775",
+   "control": null,
+   "link": "short"
+  },
+  {
+   "id": "m-u1002",
+   "refdes": "U1002",
+   "kind": "buck",
+   "in": "r-net013",
+   "out": "r-net799",
+   "control": "s-u1002"
+  },
+  {
+   "id": "m-u1003",
+   "refdes": "U1003",
+   "kind": "switch",
+   "in": "r-net765",
+   "out": "r-net757",
+   "control": "s-u1003"
+  },
+  {
+   "id": "m-u1701",
+   "refdes": "U1701",
+   "kind": "boost",
+   "in": "r-net019",
+   "out": "r-net765",
+   "control": "s-u1701"
+  },
+  {
+   "id": "m-u200va09",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net744",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200va12",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net745",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vaud18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net748",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vaux18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net749",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vbif28",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net752",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcamio",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net758",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcn13",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net760",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcn18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net761",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcn33-1",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net762",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcn33-2",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net763",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vcore",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net804",
+   "out": "r-net277",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vefuse",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net766",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vemc",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net767",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vfe28",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net768",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vgpu11",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net800",
+   "out": "r-net265",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vgpu12",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net801",
+   "out": "r-net265",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vibr",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net771",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vio18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net774",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vio28",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net776",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vm18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net778",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vmodem",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net805",
+   "out": "r-net262",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vpa",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net806",
+   "out": "r-net780",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vproc1",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net807",
+   "out": "r-net271",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vproc2",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net808",
+   "out": "r-net268",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vpu",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net809",
+   "out": "r-net259",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vrf12",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net746",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vrf18",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net785",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vs1",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net810",
+   "out": "r-net791",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vs2",
+   "refdes": "U200",
+   "kind": "buck",
+   "in": "r-net811",
+   "out": "r-net795",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsim1",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net797",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsim2",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net798",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsram-md",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net280",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsram-others",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net282",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsram-proc1",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net285",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vsram-proc2",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net794",
+   "out": "r-net284",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vufs",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net790",
+   "out": "r-net813",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vusb",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net814",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u200vxo22",
+   "refdes": "U200",
+   "kind": "ldo",
+   "in": "r-net802",
+   "out": "r-net815",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u201vbuck1",
+   "refdes": "U201",
+   "kind": "buck",
+   "in": "r-net611",
+   "out": "r-net274",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u201vbuck2",
+   "refdes": "U201",
+   "kind": "buck",
+   "in": "r-net611",
+   "out": "r-net274",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u201vbuck3",
+   "refdes": "U201",
+   "kind": "buck",
+   "in": "r-net612",
+   "out": "r-net146",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u201vbuck4",
+   "refdes": "U201",
+   "kind": "buck",
+   "in": "r-net613",
+   "out": "r-net151",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u210",
+   "refdes": "U210",
+   "kind": "buck",
+   "in": "r-net799",
+   "out": "r-net142",
+   "control": "s-u210"
+  },
+  {
+   "id": "m-u220",
+   "refdes": "U220",
+   "kind": "ldo",
+   "in": "r-net619",
+   "out": "r-net145",
+   "control": "s-u220"
+  }
+ ],
+ "signals": [
+  {
+   "id": "s-q1001",
+   "role": "gate",
+   "driver": {
+    "kind": "pull",
+    "to": null,
+    "dir": "divider"
+   }
+  },
+  {
+   "id": "s-q1003",
+   "role": "gate",
+   "driver": {
+    "kind": "pull",
+    "to": null,
+    "dir": "divider"
+   }
+  },
+  {
+   "id": "s-u1002",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": null,
+    "dir": "divider"
+   }
+  },
+  {
+   "id": "s-u1003",
+   "role": "gate",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "USB0_DRV_VBUS"
+    ],
+    "dir": "down"
+   }
+  },
+  {
+   "id": "s-u1701",
+   "role": "enable",
+   "driver": {
+    "kind": "circuit",
+    "pads": [
+     "USB2_DRV_VBUS"
+    ]
+   }
+  },
+  {
+   "id": "s-u210",
+   "role": "enable",
+   "driver": {
+    "kind": "circuit",
+    "pads": []
+   }
+  },
+  {
+   "id": "s-u220",
+   "role": "enable",
+   "driver": {
+    "kind": "pull",
+    "to": "r-net774",
+    "dir": "up"
+   }
+  }
+ ],
+ "walks": [
+  {
+   "id": "cold-boot",
+   "label": "Power-on",
+   "steps": [
+    {
+     "stage": "off",
+     "label": "Unplugged",
+     "state": "off"
+    },
+    {
+     "stage": "power-applied",
+     "label": "Plugged in, SoC in reset",
+     "state": "power-applied"
+    },
+    {
+     "stage": "u-boot",
+     "label": "U-Boot running",
+     "state": "power-applied"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "power-applied"
+    }
+   ]
+  }
+ ],
+ "states": [
+  {
+   "id": "off",
+   "label": "Unplugged",
+   "rails": {
+    "r-net142": "off",
+    "r-net144": "off",
+    "r-net145": "off",
+    "r-net146": "off",
+    "r-net149": "off",
+    "r-net151": "off",
+    "r-net208": "off",
+    "r-net280": "off",
+    "r-net282": "off",
+    "r-net284": "off",
+    "r-net285": "off",
+    "r-net459": "off",
+    "r-net460": "off",
+    "r-net597": "off",
+    "r-net663": "off",
+    "r-net744": "off",
+    "r-net745": "off",
+    "r-net746": "off",
+    "r-net748": "off",
+    "r-net757": "off",
+    "r-net758": "off",
+    "r-net760": "off",
+    "r-net761": "off",
+    "r-net762": "off",
+    "r-net763": "off",
+    "r-net765": "off",
+    "r-net766": "off",
+    "r-net767": "off",
+    "r-net771": "off",
+    "r-net772": "off",
+    "r-net774": "off",
+    "r-net776": "off",
+    "r-net778": "off",
+    "r-net785": "off",
+    "r-net790": "off",
+    "r-net794": "off",
+    "r-net797": "off",
+    "r-net798": "off",
+    "r-net799": "off",
+    "r-net800": "off",
+    "r-net801": "off",
+    "r-net802": "off",
+    "r-net804": "off",
+    "r-net805": "off",
+    "r-net806": "off",
+    "r-net807": "off",
+    "r-net808": "off",
+    "r-net809": "off",
+    "r-net810": "off",
+    "r-net811": "off",
+    "r-net813": "off",
+    "r-net815": "off",
+    "r-net013": "off",
+    "r-net015": "off",
+    "r-net016": "off",
+    "r-net019": "off",
+    "r-net079": "off",
+    "r-net099": "off",
+    "r-net150": "off",
+    "r-net259": "off",
+    "r-net262": "off",
+    "r-net265": "off",
+    "r-net268": "off",
+    "r-net271": "off",
+    "r-net274": "off",
+    "r-net277": "off",
+    "r-net611": "off",
+    "r-net612": "off",
+    "r-net613": "off",
+    "r-net619": "off",
+    "r-net749": "off",
+    "r-net752": "off",
+    "r-net768": "off",
+    "r-net775": "off",
+    "r-net780": "off",
+    "r-net791": "off",
+    "r-net795": "off",
+    "r-net814": "off"
+   }
+  },
+  {
+   "id": "power-applied",
+   "label": "Plugged in, SoC in reset",
+   "rails": {
+    "r-net142": "x",
+    "r-net144": "x",
+    "r-net145": "x",
+    "r-net146": "x",
+    "r-net149": "x",
+    "r-net151": "x",
+    "r-net208": "on",
+    "r-net280": "x",
+    "r-net282": "x",
+    "r-net284": "x",
+    "r-net285": "x",
+    "r-net459": "x",
+    "r-net460": "x",
+    "r-net597": "x",
+    "r-net663": "x",
+    "r-net744": "x",
+    "r-net745": "x",
+    "r-net746": "x",
+    "r-net748": "x",
+    "r-net757": "x",
+    "r-net758": "x",
+    "r-net760": "x",
+    "r-net761": "x",
+    "r-net762": "x",
+    "r-net763": "x",
+    "r-net765": "x",
+    "r-net766": "x",
+    "r-net767": "x",
+    "r-net771": "x",
+    "r-net772": "x",
+    "r-net774": "x",
+    "r-net776": "x",
+    "r-net778": "x",
+    "r-net785": "x",
+    "r-net790": "x",
+    "r-net794": "x",
+    "r-net797": "x",
+    "r-net798": "x",
+    "r-net799": "x",
+    "r-net800": "x",
+    "r-net801": "x",
+    "r-net802": "x",
+    "r-net804": "x",
+    "r-net805": "x",
+    "r-net806": "x",
+    "r-net807": "x",
+    "r-net808": "x",
+    "r-net809": "x",
+    "r-net810": "x",
+    "r-net811": "x",
+    "r-net813": "x",
+    "r-net815": "x",
+    "r-net013": "on",
+    "r-net015": "x",
+    "r-net016": "x",
+    "r-net019": "x",
+    "r-net079": "x",
+    "r-net099": "x",
+    "r-net150": "x",
+    "r-net259": "x",
+    "r-net262": "x",
+    "r-net265": "x",
+    "r-net268": "x",
+    "r-net271": "x",
+    "r-net274": "x",
+    "r-net277": "x",
+    "r-net611": "x",
+    "r-net612": "x",
+    "r-net613": "x",
+    "r-net619": "x",
+    "r-net749": "x",
+    "r-net752": "x",
+    "r-net768": "x",
+    "r-net775": "x",
+    "r-net780": "x",
+    "r-net791": "x",
+    "r-net795": "x",
+    "r-net814": "x"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "walk": "cold-boot",
+   "from": "off",
+   "to": "power-applied",
+   "trigger": "power-applied"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "u-boot"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "linux"
+  }
+ ]
+}

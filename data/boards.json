@@ -79,6 +79,32 @@
    "shares_layout_with": "aml-a311d-cc"
   },
   {
+   "id": "med-mt83-ace",
+   "model": "MED-MT83-ACE",
+   "name": "Livia",
+   "soc": "MT8385",
+   "vendor": "MediaTek",
+   "status": "preprod",
+   "hidden": true,
+   "rev": "V0.1",
+   "coverage": "model",
+   "shape": "model",
+   "shares_layout_with": null
+  },
+  {
+   "id": "med-mt88-mx",
+   "model": "MED-MT88-MX",
+   "name": "Virginia",
+   "soc": "MT8370/MT8390",
+   "vendor": "MediaTek",
+   "status": "preprod",
+   "hidden": true,
+   "rev": "V0.4",
+   "coverage": "model",
+   "shape": "model",
+   "shares_layout_with": null
+  },
+  {
    "id": "roc-rk3328-cc",
    "model": "ROC-RK3328-CC",
    "name": "Renegade",

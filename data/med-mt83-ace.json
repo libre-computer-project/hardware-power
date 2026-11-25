@@ -1,0 +1,1366 @@
+{
+ "schema": 2,
+ "id": "med-mt83-ace",
+ "model": "MED-MT83-ACE",
+ "name": "Livia",
+ "soc": "MT8385",
+ "tier": "netlist",
+ "rails": [
+  {
+   "id": "r-3v3-m-2-vin",
+   "name": "3V3_M.2_VIN",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-r85"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-avdd18-soc",
+   "name": "AVDD18_SOC",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-sh2101"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD18_AP",
+     "AVDD18_CPU",
+     "AVDD18_MD",
+     "AVDD18_PLLGP",
+     "AVDD18_SSUSB",
+     "AVDD18_UFS",
+     "AVDD18_USB",
+     "AVDD18_WBG"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd28-msdc1",
+   "name": "DVDD28_MSDC1",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r90161"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD28_MSDC1"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd28-sim1",
+   "name": "DVDD28_SIM1",
+   "v": null,
+   "input": null,
+   "made_by": [],
+   "loads": {
+    "soc": [
+     "DVDD28_SIM1"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd28-sim2",
+   "name": "DVDD28_SIM2",
+   "v": null,
+   "input": null,
+   "made_by": [],
+   "loads": {
+    "soc": [
+     "DVDD28_SIM2"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-core",
+   "name": "DVDD_CORE",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vcore"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD04_DSI",
+     "DVDD_CORE"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-gpu",
+   "name": "DVDD_GPU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vgpu"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_GPU"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-modem",
+   "name": "DVDD_MODEM",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vmodem"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_MODEM"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-proc-b",
+   "name": "DVDD_PROC_B",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vproc11"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_PROC_B"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-proc-l",
+   "name": "DVDD_PROC_L",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vproc12"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_PROC_L"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-dvdd-sram-core",
+   "name": "DVDD_SRAM_CORE",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vsram-others"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_CORE"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-dvdd-sram-proc-b",
+   "name": "DVDD_SRAM_PROC_B",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vsram-proc11"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_PROC_B"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-dvdd-sram-proc-l",
+   "name": "DVDD_SRAM_PROC_L",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vsram-proc12"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_PROC_L"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-dvdd-vsram-gpu-pmu",
+   "name": "DVDD_VSRAM_GPU_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vsram-gpu"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_SRAM_GPU"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-emi-vdd2",
+   "name": "EMI_VDD2",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vdram1"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD2_EMI"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-emi-vddq",
+   "name": "EMI_VDDQ",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vdram2"
+   ],
+   "loads": {
+    "soc": [
+     "AVDDQ_EMI"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-lpddr4-vdd1",
+   "name": "LPDDR4_VDD1",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2002"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-n51890147",
+   "name": "N51890147",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r90327"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD18_DDR"
+    ],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-n53777833",
+   "name": "N53777833",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-r117"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-power-3v3",
+   "name": "POWER_3V3",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-power-3v3-vin",
+   "name": "POWER_3V3_VIN",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-r9"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-va12-pmu",
+   "name": "VA12_PMU",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-u2001va12"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD12_CSI",
+     "AVDD12_DSI",
+     "AVDD12_MD",
+     "AVDD12_PLLGP",
+     "AVDD12_UFS",
+     "AVDD12_USB",
+     "AVDD12_WBG"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vad-5v",
+   "name": "VAD_5V",
+   "v": 5.0,
+   "input": "USB-C",
+   "made_by": [],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vaud28-pmu",
+   "name": "VAUD28_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vaud28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vaux18-pmu",
+   "name": "VAUX18_PMU",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u2001vaux18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vbif28-pmu",
+   "name": "VBIF28_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vbif28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vbus",
+   "name": "VBUS",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-r90326"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcc-3v3",
+   "name": "VCC_3V3",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u5"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [
+     {
+      "refdes": "J6",
+      "pins": [
+       "22"
+      ],
+      "header40": false
+     },
+     {
+      "refdes": "J7",
+      "pins": [
+       "22"
+      ],
+      "header40": false
+     },
+     {
+      "refdes": "J8",
+      "pins": [
+       "22"
+      ],
+      "header40": false
+     }
+    ],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vcn18-pmu-it66121",
+   "name": "VCN18_PMU_IT66121",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u2001vcn18"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vcn33-pmu-it66121",
+   "name": "VCN33_PMU_IT66121",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u2001vcn33"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vefuse-pmu",
+   "name": "VEFUSE_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vefuse"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD_VQPS"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vemc-pmu",
+   "name": "VEMC_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vemc"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vio18-pmu",
+   "name": "VIO18_PMU",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-u2001vio18"
+   ],
+   "loads": {
+    "soc": [
+     "DVDD18_IOBL",
+     "DVDD18_IOLM",
+     "DVDD18_IOLT",
+     "DVDD18_IORB",
+     "DVDD18_IORT",
+     "DVDD18_MSDC0"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vio28-pmu",
+   "name": "VIO28_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vio28"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vmc-pmu",
+   "name": "VMC_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vmc"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vpa-pmu",
+   "name": "VPA_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vpa"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vrf12-pmu-it66121",
+   "name": "VRF12_PMU_IT66121",
+   "v": 1.2,
+   "input": null,
+   "made_by": [
+    "m-u2001vrf12"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vs1-pmu",
+   "name": "VS1_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vs1"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vs1-pmu-vin",
+   "name": "VS1_PMU_VIN",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-r90260"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-vs2-pmu",
+   "name": "VS2_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vs2"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vsys",
+   "name": "VSYS",
+   "v": 5.0,
+   "input": null,
+   "made_by": [
+    "m-r4"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-vusb-pmu",
+   "name": "VUSB_PMU",
+   "v": null,
+   "input": null,
+   "made_by": [
+    "m-u2001vusb"
+   ],
+   "loads": {
+    "soc": [
+     "AVDD33_USB"
+    ],
+    "connectors": [],
+    "parts": [
+     "U2001"
+    ]
+   }
+  },
+  {
+   "id": "r-wifi-1v8",
+   "name": "WIFI_1V8",
+   "v": 1.8,
+   "input": null,
+   "made_by": [
+    "m-r92"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [
+     {
+      "refdes": "J2",
+      "pins": [
+       "20",
+       "22"
+      ],
+      "header40": false
+     }
+    ],
+    "parts": []
+   }
+  },
+  {
+   "id": "r-wifi-3v3",
+   "name": "WIFI_3V3",
+   "v": 3.3,
+   "input": null,
+   "made_by": [
+    "m-u4"
+   ],
+   "loads": {
+    "soc": [],
+    "connectors": [],
+    "parts": []
+   }
+  }
+ ],
+ "makers": [
+  {
+   "id": "m-r117",
+   "refdes": "R117",
+   "kind": "link",
+   "in": "r-vsys",
+   "out": "r-n53777833",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r4",
+   "refdes": "R4",
+   "kind": "link",
+   "in": "r-vad-5v",
+   "out": "r-vsys",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r85",
+   "refdes": "R85",
+   "kind": "link",
+   "in": "r-vsys",
+   "out": "r-3v3-m-2-vin",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r9",
+   "refdes": "R9",
+   "kind": "link",
+   "in": "r-vsys",
+   "out": "r-power-3v3-vin",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r90161",
+   "refdes": "R90161",
+   "kind": "link",
+   "in": "r-vmc-pmu",
+   "out": "r-dvdd28-msdc1",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r90260",
+   "refdes": "R90260",
+   "kind": "link",
+   "in": "r-vs1-pmu",
+   "out": "r-vs1-pmu-vin",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r90326",
+   "refdes": "R90326",
+   "kind": "link",
+   "in": "r-vad-5v",
+   "out": "r-vbus",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r90327",
+   "refdes": "R90327",
+   "kind": "link",
+   "in": "r-lpddr4-vdd1",
+   "out": "r-n51890147",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-r92",
+   "refdes": "R92",
+   "kind": "link",
+   "in": "r-vcn18-pmu-it66121",
+   "out": "r-wifi-1v8",
+   "control": null,
+   "link": "jumper"
+  },
+  {
+   "id": "m-sh2101",
+   "refdes": "SH2101",
+   "kind": "link",
+   "in": "r-vio18-pmu",
+   "out": "r-avdd18-soc",
+   "control": null,
+   "link": "short"
+  },
+  {
+   "id": "m-u1",
+   "refdes": "U1",
+   "kind": "buck",
+   "in": "r-power-3v3-vin",
+   "out": "r-power-3v3",
+   "control": "s-u1"
+  },
+  {
+   "id": "m-u2001va12",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-va12-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vaud28",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vaud28-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vaux18",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vaux18-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vbif28",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vbif28-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vcn18",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs1-pmu",
+   "out": "r-vcn18-pmu-it66121",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vcn33",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vcn33-pmu-it66121",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vcore",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-dvdd-core",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vdram1",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-emi-vdd2",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vdram2",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-emi-vdd2",
+   "out": "r-emi-vddq",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vefuse",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs1-pmu",
+   "out": "r-vefuse-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vemc",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vemc-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vgpu",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-dvdd-gpu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vio18",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs1-pmu",
+   "out": "r-vio18-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vio28",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vio28-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vmc",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vmc-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vmodem",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-dvdd-modem",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vpa",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-vpa-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vproc11",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-dvdd-proc-b",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vproc12",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-dvdd-proc-l",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vrf12",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-vrf12-pmu-it66121",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vs1",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-vs1-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vs2",
+   "refdes": "U2001",
+   "kind": "buck",
+   "in": "r-vsys",
+   "out": "r-vs2-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vsram-gpu",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-dvdd-vsram-gpu-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vsram-others",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-dvdd-sram-core",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vsram-proc11",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-dvdd-sram-proc-b",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vsram-proc12",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vs2-pmu",
+   "out": "r-dvdd-sram-proc-l",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2001vusb",
+   "refdes": "U2001",
+   "kind": "ldo",
+   "in": "r-vsys",
+   "out": "r-vusb-pmu",
+   "control": null,
+   "pmic": true
+  },
+  {
+   "id": "m-u2002",
+   "refdes": "U2002",
+   "kind": "ldo",
+   "in": "r-vs1-pmu-vin",
+   "out": "r-lpddr4-vdd1",
+   "control": "s-u2002"
+  },
+  {
+   "id": "m-u4",
+   "refdes": "U4",
+   "kind": "buck",
+   "in": "r-3v3-m-2-vin",
+   "out": "r-wifi-3v3",
+   "control": "s-u4"
+  },
+  {
+   "id": "m-u5",
+   "refdes": "U5",
+   "kind": "buck",
+   "in": "r-n53777833",
+   "out": "r-vcc-3v3",
+   "control": "s-u5"
+  }
+ ],
+ "signals": [
+  {
+   "id": "s-u1",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "PERIPHERAL_EN9"
+    ],
+    "dir": null
+   }
+  },
+  {
+   "id": "s-u2002",
+   "role": "enable",
+   "driver": {
+    "kind": "tie",
+    "rail": "r-vio18-pmu"
+   }
+  },
+  {
+   "id": "s-u4",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "PERIPHERAL_EN9"
+    ],
+    "dir": null
+   }
+  },
+  {
+   "id": "s-u5",
+   "role": "enable",
+   "driver": {
+    "kind": "pad",
+    "pads": [
+     "PERIPHERAL_EN3"
+    ],
+    "dir": null
+   }
+  }
+ ],
+ "walks": [
+  {
+   "id": "cold-boot",
+   "label": "Power-on",
+   "steps": [
+    {
+     "stage": "off",
+     "label": "Unplugged",
+     "state": "off"
+    },
+    {
+     "stage": "power-applied",
+     "label": "Plugged in, SoC in reset",
+     "state": "power-applied"
+    },
+    {
+     "stage": "u-boot",
+     "label": "U-Boot running",
+     "state": "power-applied"
+    },
+    {
+     "stage": "linux",
+     "label": "Linux running",
+     "state": "linux"
+    }
+   ]
+  }
+ ],
+ "states": [
+  {
+   "id": "off",
+   "label": "Unplugged",
+   "rails": {
+    "r-3v3-m-2-vin": "off",
+    "r-avdd18-soc": "off",
+    "r-dvdd28-msdc1": "off",
+    "r-dvdd28-sim1": "off",
+    "r-dvdd28-sim2": "off",
+    "r-dvdd-core": "off",
+    "r-dvdd-gpu": "off",
+    "r-dvdd-modem": "off",
+    "r-dvdd-proc-b": "off",
+    "r-dvdd-proc-l": "off",
+    "r-dvdd-sram-core": "off",
+    "r-dvdd-sram-proc-b": "off",
+    "r-dvdd-sram-proc-l": "off",
+    "r-dvdd-vsram-gpu-pmu": "off",
+    "r-emi-vdd2": "off",
+    "r-emi-vddq": "off",
+    "r-lpddr4-vdd1": "off",
+    "r-n51890147": "off",
+    "r-n53777833": "off",
+    "r-power-3v3": "off",
+    "r-power-3v3-vin": "off",
+    "r-va12-pmu": "off",
+    "r-vad-5v": "off",
+    "r-vaud28-pmu": "off",
+    "r-vaux18-pmu": "off",
+    "r-vbif28-pmu": "off",
+    "r-vbus": "off",
+    "r-vcc-3v3": "off",
+    "r-vcn18-pmu-it66121": "off",
+    "r-vcn33-pmu-it66121": "off",
+    "r-vefuse-pmu": "off",
+    "r-vemc-pmu": "off",
+    "r-vio18-pmu": "off",
+    "r-vio28-pmu": "off",
+    "r-vmc-pmu": "off",
+    "r-vpa-pmu": "off",
+    "r-vrf12-pmu-it66121": "off",
+    "r-vs1-pmu": "off",
+    "r-vs1-pmu-vin": "off",
+    "r-vs2-pmu": "off",
+    "r-vsys": "off",
+    "r-vusb-pmu": "off",
+    "r-wifi-1v8": "off",
+    "r-wifi-3v3": "off"
+   }
+  },
+  {
+   "id": "power-applied",
+   "label": "Plugged in, SoC in reset",
+   "rails": {
+    "r-3v3-m-2-vin": "on",
+    "r-avdd18-soc": "on",
+    "r-dvdd28-msdc1": "off",
+    "r-dvdd28-sim1": "x",
+    "r-dvdd28-sim2": "x",
+    "r-dvdd-core": "on",
+    "r-dvdd-gpu": "on",
+    "r-dvdd-modem": "on",
+    "r-dvdd-proc-b": "on",
+    "r-dvdd-proc-l": "on",
+    "r-dvdd-sram-core": "on",
+    "r-dvdd-sram-proc-b": "on",
+    "r-dvdd-sram-proc-l": "on",
+    "r-dvdd-vsram-gpu-pmu": "on",
+    "r-emi-vdd2": "on",
+    "r-emi-vddq": "on",
+    "r-lpddr4-vdd1": "x",
+    "r-n51890147": "x",
+    "r-n53777833": "on",
+    "r-power-3v3": "x",
+    "r-power-3v3-vin": "on",
+    "r-va12-pmu": "on",
+    "r-vad-5v": "on",
+    "r-vaud28-pmu": "on",
+    "r-vaux18-pmu": "on",
+    "r-vbif28-pmu": "off",
+    "r-vbus": "on",
+    "r-vcc-3v3": "x",
+    "r-vcn18-pmu-it66121": "off",
+    "r-vcn33-pmu-it66121": "off",
+    "r-vefuse-pmu": "off",
+    "r-vemc-pmu": "on",
+    "r-vio18-pmu": "on",
+    "r-vio28-pmu": "on",
+    "r-vmc-pmu": "off",
+    "r-vpa-pmu": "off",
+    "r-vrf12-pmu-it66121": "off",
+    "r-vs1-pmu": "on",
+    "r-vs1-pmu-vin": "on",
+    "r-vs2-pmu": "on",
+    "r-vsys": "on",
+    "r-vusb-pmu": "on",
+    "r-wifi-1v8": "off",
+    "r-wifi-3v3": "x"
+   }
+  },
+  {
+   "id": "linux",
+   "label": "Linux running",
+   "rails": {
+    "r-3v3-m-2-vin": "on",
+    "r-avdd18-soc": "on",
+    "r-dvdd28-msdc1": "off",
+    "r-dvdd28-sim1": "x",
+    "r-dvdd28-sim2": "x",
+    "r-dvdd-core": "on",
+    "r-dvdd-gpu": "x",
+    "r-dvdd-modem": "on",
+    "r-dvdd-proc-b": "on",
+    "r-dvdd-proc-l": "on",
+    "r-dvdd-sram-core": "on",
+    "r-dvdd-sram-proc-b": "on",
+    "r-dvdd-sram-proc-l": "on",
+    "r-dvdd-vsram-gpu-pmu": "x",
+    "r-emi-vdd2": "on",
+    "r-emi-vddq": "on",
+    "r-lpddr4-vdd1": "x",
+    "r-n51890147": "x",
+    "r-n53777833": "on",
+    "r-power-3v3": "x",
+    "r-power-3v3-vin": "on",
+    "r-va12-pmu": "on",
+    "r-vad-5v": "on",
+    "r-vaud28-pmu": "x",
+    "r-vaux18-pmu": "off",
+    "r-vbif28-pmu": "off",
+    "r-vbus": "on",
+    "r-vcc-3v3": "x",
+    "r-vcn18-pmu-it66121": "on",
+    "r-vcn33-pmu-it66121": "on",
+    "r-vefuse-pmu": "off",
+    "r-vemc-pmu": "on",
+    "r-vio18-pmu": "on",
+    "r-vio28-pmu": "off",
+    "r-vmc-pmu": "off",
+    "r-vpa-pmu": "off",
+    "r-vrf12-pmu-it66121": "on",
+    "r-vs1-pmu": "on",
+    "r-vs1-pmu-vin": "on",
+    "r-vs2-pmu": "on",
+    "r-vsys": "on",
+    "r-vusb-pmu": "on",
+    "r-wifi-1v8": "on",
+    "r-wifi-3v3": "x"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "walk": "cold-boot",
+   "from": "off",
+   "to": "power-applied",
+   "trigger": "power-applied"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "power-applied",
+   "trigger": "u-boot"
+  },
+  {
+   "walk": "cold-boot",
+   "from": "power-applied",
+   "to": "linux",
+   "trigger": "linux"
+  }
+ ]
+}
