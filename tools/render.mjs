@@ -97,6 +97,21 @@ await writeFile(path.join(ROOT, "llms.txt"), [
   `> ${desc}`, "",
   "Part of Libre Computer (https://libre.computer/llms.txt). Each board's page lists its power rails as HTML: voltage, what makes each rail and how it is switched, and what it feeds.", "",
   "## Boards", "",
-  ...boards.map((b) => `- [${b.model ? `${b.name} ${b.model}` : b.name}](${ORIGIN}/${b.id}/)`), "",
+  ...await Promise.all(boards.map(async (b) =>
+    `- [${b.model ? `${b.name} ${b.model}` : b.name}](${ORIGIN}/${b.id}/): ${railFact(await json(`data/${b.id}.json`))}`)), "",
 ].join("\n"));
+
+/** One line of what a board's page says, for llms.txt: how many rails, the
+ *  power input, the voltages, and what makes them (regulators by kind). */
+function railFact(doc) {
+  const rails = doc.rails || [];
+  const ins = rails.filter((r) => r.input).map((r) => `${r.name}${r.v != null ? ` ${r.v} V` : ""} from ${r.input}`);
+  const volts = [...new Set(rails.map((r) => r.v).filter((v) => v != null))].sort((a, b) => b - a);
+  const KIND = { buck: "buck", ldo: "LDO", boost: "boost", switch: "load switch" };
+  const n = {};
+  for (const m of doc.makers || []) if (KIND[m.kind]) n[m.kind] = (n[m.kind] || 0) + 1;
+  const makers = Object.entries(n).map(([k, c]) => `${c} ${KIND[k]}${c > 1 ? (k === "switch" ? "es" : "s") : ""}`);
+  return [`${rails.length} rails`, ...(ins.length ? [`input ${ins.join(", ")}`] : []),
+    ...(volts.length ? [`at ${volts.join(", ")} V`] : []), ...(makers.length ? [`made by ${makers.join(", ")}`] : [])].join("; ");
+}
 console.log(`rendered ${boards.length} board pages, robots.txt, sitemap.xml, llms.txt`);
