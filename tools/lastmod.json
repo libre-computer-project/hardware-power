@@ -1,0 +1,42 @@
+{
+ "https://power.hardware.libre.computer/": {
+  "hash": "ddbcea20f791dd4f",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-s905x-cc/": {
+  "hash": "9cec6092011b90cc",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-s905x-cc-v2/": {
+  "hash": "27b534f33bd45091",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-s805x-ac/": {
+  "hash": "b4b68f483040fad2",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-s805x-ac-v2/": {
+  "hash": "0cc951ecbf0149d0",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-a311d-cc/": {
+  "hash": "f15d346fbbc338f1",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/aml-s905d3-cc/": {
+  "hash": "8cc80f589111eecb",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/roc-rk3328-cc/": {
+  "hash": "abd746ef161a29ee",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/all-h3-cc/": {
+  "hash": "9c313e494eafe84c",
+  "date": "2026-11-26"
+ },
+ "https://power.hardware.libre.computer/roc-rk3399-pc/": {
+  "hash": "51710a07fd622462",
+  "date": "2026-11-26"
+ }
+}
